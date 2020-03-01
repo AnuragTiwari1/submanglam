@@ -1,117 +1,90 @@
 import * as React from "react"
-import { View, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
+import { View, Image, ImageBackground, StyleSheet, Dimensions } from "react-native"
 import { NavigationInjectedProps } from "react-navigation"
-import { Button, Header, Screen, Text, Wallpaper } from "../../components"
-import { color, spacing } from "../../theme"
-const bowserLogo = require("./bowser.png")
+import { Text } from "../../components"
+import { spacing } from "../../theme"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import AntIcons from "react-native-vector-icons/AntDesign"
 
-const FULL: ViewStyle = { flex: 1 }
-const CONTAINER: ViewStyle = {
-  backgroundColor: color.transparent,
-  paddingHorizontal: spacing[4],
-}
-const TEXT: TextStyle = {
-  color: color.palette.white,
-  fontFamily: "Montserrat",
-}
-const BOLD: TextStyle = { fontWeight: "bold" }
-const HEADER: TextStyle = {
-  paddingTop: spacing[3],
-  paddingBottom: spacing[4] + spacing[1],
-  paddingHorizontal: 0,
-}
-const HEADER_TITLE: TextStyle = {
-  ...TEXT,
-  ...BOLD,
-  fontSize: 12,
-  lineHeight: 15,
-  textAlign: "center",
-  letterSpacing: 1.5,
-}
-const TITLE_WRAPPER: TextStyle = {
-  ...TEXT,
-  textAlign: "center",
-}
-const TITLE: TextStyle = {
-  ...TEXT,
-  ...BOLD,
-  fontSize: 28,
-  lineHeight: 38,
-  textAlign: "center",
-}
-const ALMOST: TextStyle = {
-  ...TEXT,
-  ...BOLD,
-  fontSize: 26,
-  fontStyle: "italic",
-}
-const BOWSER: ImageStyle = {
-  alignSelf: "center",
-  marginVertical: spacing[5],
-  maxWidth: "100%",
-}
-const CONTENT: TextStyle = {
-  ...TEXT,
-  color: "#BAB6C8",
-  fontSize: 15,
-  lineHeight: 22,
-  marginBottom: spacing[5],
-}
-const CONTINUE: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-  backgroundColor: "#5D2555",
-}
-const CONTINUE_TEXT: TextStyle = {
-  ...TEXT,
-  ...BOLD,
-  fontSize: 13,
-  letterSpacing: 2,
-}
-const FOOTER: ViewStyle = { backgroundColor: "#20162D" }
-const FOOTER_CONTENT: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-}
-
+const { width } = Dimensions.get("window")
 export interface WelcomeScreenProps extends NavigationInjectedProps<{}> {}
 
-export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props => {
-  const nextScreen = React.useMemo(() => () => props.navigation.navigate("demo"), [
-    props.navigation,
-  ])
+const imgUrl = "https://i.pinimg.com/564x/05/8b/0e/058b0ea70bee2dc34ad8a2ef9c959f83.jpg"
+const imageWidth = width * 0.8
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: `${spacing[1]}%`,
+  },
+  details: {
+    flex: 1,
+    alignItems: "center",
+  },
+  hero: {
+    borderWidth: spacing[2],
+    borderColor: "#FFF",
+  },
+  heroImageContainer: {
+    alignItems: "center",
+    elevation: 4,
+    flex: 2,
+    justifyContent: "center",
+  },
+  buttonContainer: {
+    backgroundColor: "#fff",
+    padding: spacing[4],
+    borderRadius: 45,
+    alignItems: "center",
+    justifyContent: "center",
+    margin: spacing[3],
+  },
+  iconRowContainer: {
+    flexDirection: "row",
+    width: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+})
+
+export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props => {
   return (
-    <View style={FULL}>
-      <Wallpaper />
-      <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-        <Header headerTx="welcomeScreen.poweredBy" style={HEADER} titleStyle={HEADER_TITLE} />
-        <Text style={TITLE_WRAPPER}>
-          <Text style={TITLE} text="Your new app, " />
-          <Text style={ALMOST} text="almost" />
-          <Text style={TITLE} text="!" />
-        </Text>
-        <Text style={TITLE} preset="header" tx="welcomeScreen.readyForLaunch" />
-        <Image source={bowserLogo} style={BOWSER} />
-        <Text style={CONTENT}>
-          This probably isn't what your app is going to look like. Unless your designer handed you
-          this screen and, in that case, congrats! You're ready to ship.
-        </Text>
-        <Text style={CONTENT}>
-          For everyone else, this is where you'll see a live preview of your fully functioning app
-          using Ignite.
-        </Text>
-      </Screen>
-      <SafeAreaView style={FOOTER}>
-        <View style={FOOTER_CONTENT}>
-          <Button
-            style={CONTINUE}
-            textStyle={CONTINUE_TEXT}
-            tx="welcomeScreen.continue"
-            onPress={nextScreen}
+    <ImageBackground
+      source={{ uri: imgUrl }}
+      style={{ width: "100%", height: "100%" }}
+      blurRadius={1.2}
+    >
+      <View style={styles.container}>
+        <View style={styles.heroImageContainer}>
+          <Image
+            style={styles.hero}
+            source={{ uri: imgUrl }}
+            width={imageWidth}
+            height={imageWidth}
+            resizeMode="cover"
+            borderRadius={imageWidth / 2}
           />
+          <View style={styles.iconRowContainer}>
+            <TouchableOpacity style={styles.buttonContainer}>
+              <AntIcons name="heart" size={35} color={"red"} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonContainer}>
+              <AntIcons name="pushpin" size={35} color={"red"} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </SafeAreaView>
-    </View>
+        <View style={styles.details}>
+          <Text preset={["header"]}>Errza Scarlet</Text>
+          <Text>23, 5'6</Text>
+          <Text>Hindu,Punjabi</Text>
+          <Text>Software Developer</Text>
+
+          <View style={{ marginTop: spacing[8], alignItems: "center" }}>
+            <AntIcons name="up" size={20} color={"white"} />
+            <Text>Swipe up to know more</Text>
+          </View>
+        </View>
+      </View>
+    </ImageBackground>
   )
 }

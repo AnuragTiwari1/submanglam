@@ -10,7 +10,7 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-stor
 
 import { contains } from "ramda"
 import { enableScreens } from "react-native-screens"
-
+import { SHOW_STORYBOOK } from "react-native-dotenv"
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
@@ -85,10 +85,9 @@ const APP_NAME = "Matchup"
 // Should we show storybook instead of our app?
 //
 // ⚠️ Leave this as `false` when checking into git.
-const SHOW_STORYBOOK = false
 
 let RootComponent = App
-if (__DEV__ && SHOW_STORYBOOK) {
+if (__DEV__ && (SHOW_STORYBOOK || false)) {
   // Only include Storybook if we're in dev mode
   const { StorybookUIRoot } = require("../storybook")
   RootComponent = StorybookUIRoot
