@@ -1,7 +1,7 @@
 import * as React from "react"
 import { View, Image, ImageBackground, StyleSheet, Dimensions } from "react-native"
 import { NavigationInjectedProps } from "react-navigation"
-import { Text } from "../../components"
+import { Text, TabBar } from "../../components"
 import { spacing } from "../../theme"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import AntIcons from "react-native-vector-icons/AntDesign"
@@ -79,11 +79,12 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
           <Text>Hindu,Punjabi</Text>
           <Text>Software Developer</Text>
 
-          <View style={{ marginTop: spacing[8], alignItems: "center" }}>
+          <View style={{ marginTop: `${spacing[2]}%`, alignItems: "center" }}>
             <AntIcons name="up" size={20} color={"white"} />
             <Text>Swipe up to know more</Text>
           </View>
         </View>
+        <TabBar />
       </View>
     </ImageBackground>
   )
