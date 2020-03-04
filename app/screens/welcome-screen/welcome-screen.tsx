@@ -58,7 +58,9 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
         <View style={styles.heroImageContainer}>
           <Image
             style={styles.hero}
-            source={{ uri: imgUrl }}
+            source={{
+              uri: imgUrl,
+            }}
             width={imageWidth}
             height={imageWidth}
             resizeMode="cover"
