@@ -175,7 +175,8 @@
       "react-native/sort-styles": "off",
       "react-native/no-color-literals": "off",
       "@typescript-eslint/no-use-before-define":1,
-      "react-native/no-inline-styles": 1
+      "react-native/no-inline-styles": 1,
+      "@typescript-eslint/interface-name-prefix":0
     }
   }
 }

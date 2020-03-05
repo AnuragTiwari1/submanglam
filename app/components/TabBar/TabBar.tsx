@@ -15,16 +15,12 @@ export interface TabBarProps {}
 
 export const TabBarIconContainer = ({ children, onPress, tabName, isActive = false }) => {
   return (
-    <TouchableOpacity
-      style={[
-        styles.ICON_CONTAINER,
-        { backgroundColor: isActive ? "blue" : "rgba(0,0,0,0)" },
-      ]}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={[styles.ICON_CONTAINER]} onPress={onPress}>
       {children}
       {isActive && (
-        <Text style={{ marginHorizontal: spacing[2], marginTop: spacing[1] / 2 }}>{tabName}</Text>
+        <Text preset={["primary", "bold"]} style={{ marginHorizontal: spacing[2] }}>
+          {tabName}
+        </Text>
       )}
     </TouchableOpacity>
   )

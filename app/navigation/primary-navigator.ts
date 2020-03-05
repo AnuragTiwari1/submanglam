@@ -7,7 +7,7 @@ export const PrimaryNavigator = createNativeStackNavigator(
     demo: { screen: DemoScreen },
   },
   {
-    initialRouteName: "demo",
+    initialRouteName: "welcome",
     headerMode: "none",
   },
 )

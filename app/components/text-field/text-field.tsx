@@ -1,6 +1,6 @@
 import * as React from "react"
 import { View, TextInput, TextStyle, ViewStyle } from "react-native"
-import { color, spacing, typography } from "../../theme"
+import { color, spacing } from "../../theme"
 import { translate } from "../../i18n"
 import { Text } from "../"
 import { TextFieldProps } from "./text-field.props"
@@ -13,7 +13,6 @@ const CONTAINER: ViewStyle = {
 
 // the base styling for the TextInput
 const INPUT: TextStyle = {
-  fontFamily: typography.primary,
   color: color.text,
   minHeight: 44,
   fontSize: 18,

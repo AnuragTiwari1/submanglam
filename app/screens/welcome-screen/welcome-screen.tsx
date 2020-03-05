@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: `${spacing[1]}%`,
+    paddingBottom: spacing[1],
   },
   details: {
     flex: 1,
@@ -76,14 +77,14 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
           </View>
         </View>
         <View style={styles.details}>
-          <Text preset={["header"]}>Errza Scarlet</Text>
-          <Text>23, 5'6</Text>
-          <Text>Hindu,Punjabi</Text>
-          <Text>Software Developer</Text>
+          <Text preset={["header", "white"]}>Errza Scarlet</Text>
+          <Text preset="dullWhite">23, 5'6</Text>
+          <Text preset="dullWhite">Hindu,Punjabi</Text>
+          <Text preset="dullWhite">Software Developer</Text>
 
           <View style={{ marginTop: `${spacing[2]}%`, alignItems: "center" }}>
-            <AntIcons name="up" size={20} color={"white"} />
-            <Text>Swipe up to know more</Text>
+            <AntIcons name="up" size={15} color={"white"} />
+            <Text preset={["white",'small']}>Swipe up to know more</Text>
           </View>
         </View>
         <TabBar />

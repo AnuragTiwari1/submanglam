@@ -1,18 +1,52 @@
 import { Platform } from "react-native"
 
-/**
- * Just the font names.
- *
- * The various styles of fonts are defined in the <Text /> component.
- */
-export const typography = {
-  /**
-   * The primary font.  Used in most places.
-   */
-  primary: Platform.select({ ios: "Montserrat", android: "Montserrat" }),
+interface IWeights {
+  [key: string]:
+    | "400"
+    | "normal"
+    | "bold"
+    | "100"
+    | "200"
+    | "300"
+    | "500"
+    | "600"
+    | "700"
+    | "800"
+    | "900"
+    | undefined
+}
+const fonts = {
+  Nunito: {
+    weights: {
+      Regular: "400",
+      Bold: "900",
+    } as IWeights,
+  },
+  Anson: {
+    weights: {
+      Regular: "400",
+      Bold: "900",
+    },
+  },
+}
 
-  /**
-   * An alternate font used for perhaps titles and stuff.
-   */
-  secondary: Platform.select({ ios: "Montserrat", android: "Montserrat" }),
+interface IParams {
+  family?: "Nunito" | "Anson"
+  weight?: "Regular" | "Bold"
+}
+
+export const getFontStyleObject = (params: IParams = {}) => {
+  const { family = "Nunito", weight = "Regular" } = params
+
+  const { weights } = fonts[family]
+
+  if (Platform.OS === "android") {
+    const suffix = weights[weight] ? weight : ""
+    return { fontFamily: family + (suffix.length ? `-${suffix}` : "") }
+  }
+
+  return {
+    fontFamily: family,
+    fontWeight: weights[weight] || weights.Regular,
+  }
 }

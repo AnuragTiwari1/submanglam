@@ -1,11 +1,13 @@
 import * as React from "react"
-import { Dimensions, Image, StyleSheet, Text, View, ViewStyle } from "react-native"
+import { Dimensions, Image, StyleSheet, View, ViewStyle } from "react-native"
 import FastImage from "react-native-fast-image"
 import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import Animated from "react-native-reanimated"
 import Carousel, { CarouselStatic } from "react-native-snap-carousel"
 import { NavigationInjectedProps } from "react-navigation"
 import BottomSheet from "reanimated-bottom-sheet"
+import { spacing } from "../../theme"
+import { Text } from "../../components"
 
 const { width, height } = Dimensions.get("window")
 const FULL: ViewStyle = { flex: 1 }
@@ -46,7 +48,7 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = props => {
   const renderContent = () => {
     return (
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>San Francisco Airport</Text>
+        <Text preset={["header"]}>San Francisco Airport</Text>
         <Text style={styles.panelSubtitle}>International Airport - 40 miles away</Text>
         <View style={styles.panelButton}>
           <Text style={styles.panelButtonTitle}>Directions</Text>
@@ -184,16 +186,12 @@ const styles = StyleSheet.create({
     width: 50,
   },
 
+  // user details (content)
   panel: {
-    height: 600,
-    padding: 20,
+    padding: `${spacing[1]}%`,
     backgroundColor: "#fff",
   },
 
-  panelTitle: {
-    fontSize: 27,
-    height: 35,
-  },
   panelSubtitle: {
     fontSize: 14,
     color: "gray",
