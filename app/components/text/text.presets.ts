@@ -37,11 +37,18 @@ export const presets = {
   muted: {
     color: color.palette.lightGrey,
   },
+  paragraph: {
+    color: color.palette.darkGrey,
+    fontSize: 16,
+  },
   label: {
     fontSize: 16,
   },
   header: {
     fontSize: 35,
+    ...getFontStyleObject({ family: "Anson", weight: "Regular" }),
+  },
+  fontAnson: {
     ...getFontStyleObject({ family: "Anson", weight: "Regular" }),
   },
   underline: {

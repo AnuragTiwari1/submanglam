@@ -1,7 +1,8 @@
 import createNativeStackNavigator from "react-native-screens/createNativeStackNavigator"
 import { WelcomeScreen, DemoScreen } from "../screens"
+import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 
-export const PrimaryNavigator = createNativeStackNavigator(
+export const PrimaryNavigator = createSharedElementStackNavigator(
   {
     welcome: { screen: WelcomeScreen },
     demo: { screen: DemoScreen },

@@ -4,12 +4,14 @@
 
 import "./i18n"
 import React, { useState, useEffect } from "react"
-import { AppRegistry, YellowBox } from "react-native"
+import { AppRegistry, YellowBox, UIManager } from "react-native"
 import { StatefulNavigator, BackButtonHandler, exitRoutes } from "./navigation"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 
 import { contains } from "ramda"
 import { enableScreens } from "react-native-screens"
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
