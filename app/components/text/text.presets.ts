@@ -54,6 +54,10 @@ export const presets = {
   underline: {
     textDecorationLine: "underline",
   },
+  link: {
+    textDecorationLine: "underline",
+    color: color.palette.link,
+  },
 }
 
 /**

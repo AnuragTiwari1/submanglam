@@ -1,8 +1,16 @@
 import * as React from "react"
-import { KeyboardAvoidingView, Platform, ScrollView, StatusBar, View } from "react-native"
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native"
 import { SafeAreaView } from "react-navigation"
-import { ScreenProps } from "./screen.props"
 import { isNonScrolling, offsets, presets } from "./screen.presets"
+import { ScreenProps } from "./screen.props"
 
 const isIos = Platform.OS === "ios"
 
@@ -61,3 +69,13 @@ export function Screen(props: ScreenProps) {
     return <ScreenWithScrolling {...props} />
   }
 }
+
+const DismissKeyboardHOC = Comp => {
+  return ({ children, ...props }) => (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <Comp {...props}>{children}</Comp>
+    </TouchableWithoutFeedback>
+  )
+}
+
+export const DismissKeyboardView = DismissKeyboardHOC(View)

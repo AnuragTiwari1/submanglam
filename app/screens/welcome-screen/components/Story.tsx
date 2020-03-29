@@ -7,7 +7,6 @@ import { PanGestureHandler, TouchableOpacity } from "react-native-gesture-handle
 import AntIcons from "react-native-vector-icons/AntDesign"
 import { SharedElement } from "react-navigation-shared-element"
 import { TabBar, Text } from "../../../components"
-import { useNavigation } from "../../../hooks/useNavigation"
 import { spacing } from "../../../theme"
 import { IUserStory } from "../../types"
 
@@ -64,7 +63,6 @@ const styles = StyleSheet.create({
 
 const Story: React.FunctionComponent<StoryProps> = props => {
   const transY = new Animated.Value(0)
-  const { navigate } = useNavigation()
 
   const animatedOpacity = transY.interpolate({
     inputRange: [-200, 0],
@@ -132,7 +130,7 @@ const Story: React.FunctionComponent<StoryProps> = props => {
             if (hasEnded) {
               if (e.nativeEvent.translationY < scrollOffset) {
                 transY.setValue(0)
-                navigate("demo")
+                props.navigateTo("demo")
                 return null
               }
               transY.setValue(0)
