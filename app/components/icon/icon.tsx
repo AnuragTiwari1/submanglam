@@ -5,6 +5,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import Entypo from "react-native-vector-icons/Entypo"
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons"
 import AntIcons from "react-native-vector-icons/AntDesign"
+
 const ROOT: ImageStyle = {
   resizeMode: "contain",
 }
@@ -75,4 +76,8 @@ export const Report = props => {
 
 export const SendIcon = props => {
   return <FontAwesome name="send" size={25} color={"#0088cc"} {...props} />
+}
+
+export const CloseIcon = props => {
+  return <MaterialCommunity name="close-circle" size={25} color={"red"} />
 }

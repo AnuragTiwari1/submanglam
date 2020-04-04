@@ -58,6 +58,12 @@ export const presets = {
     textDecorationLine: "underline",
     color: color.palette.link,
   },
+  validationError: {
+    color: color.palette.angry,
+    fontSize: 15,
+    marginTop: 5,
+    padding: "1%",
+  },
 }
 
 /**

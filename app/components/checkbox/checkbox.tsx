@@ -1,14 +1,28 @@
 import * as React from "react"
-import { TouchableOpacity, TextStyle, ViewStyle, View } from "react-native"
+import {
+  TouchableOpacity,
+  TextStyle,
+  ViewStyle,
+  View,
+  StyleSheet,
+  LayoutAnimation,
+} from "react-native"
 import { Text } from "../"
 import { color, spacing } from "../../theme"
 import { CheckboxProps } from "./checkbox.props"
 import { mergeAll, flatten } from "ramda"
+import AntIcons from "react-native-vector-icons/AntDesign"
 
 const ROOT: ViewStyle = {
   flexDirection: "row",
-  paddingVertical: spacing[1],
+  paddingVertical: spacing[2],
   alignSelf: "flex-start",
+  alignItems: "center",
+  justifyContent: "center",
+  //inactiveStyles
+  borderWidth: 1,
+  borderColor: color.line,
+  borderRadius: 2,
 }
 
 const DIMENSIONS = { width: 16, height: 16 }
@@ -32,23 +46,37 @@ const FILL: ViewStyle = {
 const LABEL: TextStyle = { paddingLeft: spacing[2] }
 
 export function Checkbox(props: CheckboxProps) {
-  const numberOfLines = props.multiline ? 0 : 1
-
   const rootStyle = mergeAll(flatten([ROOT, props.style]))
   const outlineStyle = mergeAll(flatten([OUTLINE, props.outlineStyle]))
   const fillStyle = mergeAll(flatten([FILL, props.fillStyle]))
 
-  const onPress = props.onToggle ? () => props.onToggle && props.onToggle(!props.value) : null
+  const onPress = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
 
+    return props.onToggle ? () => props.onToggle && props.onToggle(!props.value) : null
+  }
   return (
     <TouchableOpacity
       activeOpacity={1}
       disabled={!props.onToggle}
       onPress={onPress}
-      style={rootStyle}
+      style={[rootStyle, props.value ? styles.activeStyles : {}]}
     >
-      <View style={outlineStyle}>{props.value && <View style={fillStyle} />}</View>
-      <Text text={props.text} tx={props.tx} numberOfLines={numberOfLines} style={LABEL} />
+      <Text style={[LABEL, props.value ? styles.activeLabel : {}]}>{props.text}</Text>
+      {props.value ? (
+        <AntIcons name="check" size={25} style={{ marginStart: "auto" }} color={color.primary} />
+      ) : null}
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  activeStyles: {
+    paddingHorizontal: spacing[1],
+    borderColor: color.primary,
+    elevation: 2,
+  },
+  activeLabel: {
+    color: color.primary,
+  },
+})

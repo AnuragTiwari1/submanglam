@@ -5,7 +5,7 @@ import { Button } from "react-native-paper"
 import { NavigationScreenProp, ThemeColors } from "react-navigation"
 import { Screen, Text, DismissKeyboardView } from "../components"
 import { FormInput } from "../components/formInput"
-// import { useStores } from "../models/root-store"
+import { useStores } from "../models/root-store"
 import { color, spacing } from "../theme"
 
 export interface LoginScreenProps extends NavigationScreenProp<{}> {}
@@ -84,6 +84,7 @@ const FormComponent = ({ type }: FormProps) => {
       password: "",
     },
   })
+  const { navigationStore } = useStores()
 
   return (
     <View style={styles.INPUT_CONTAINER}>
@@ -101,7 +102,7 @@ const FormComponent = ({ type }: FormProps) => {
       <Text style={{ marginTop: spacing[3] }} preset={["center", "white"]}>
         <Text>Need help?</Text>
         <Text>&nbsp; &nbsp;|&nbsp; &nbsp;</Text>
-        <Text>Register</Text>
+        <Text onPress={() => navigationStore.navigateTo("register")}>Register</Text>
       </Text>
     </View>
   )
