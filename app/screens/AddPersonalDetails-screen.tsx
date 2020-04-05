@@ -18,36 +18,36 @@ const defaultData = {
   location: "Pune",
   age: 24,
 }
-export const AddPersonalDetailsScreen: React.FunctionComponent<
-  AddPersonalDetailsScreenProps
-> = observer(props => {
-  // const { someStore } = useStores()
-  const methods = useForm({
-    defaultValues: defaultData,
-  })
-  return (
-    <View style={{ flex: 1 }}>
-      <ScrollView style={styles.rootContainer}>
-        <Text style={{ fontSize: 28 }} preset={["header"]}>
-          Hi Anurag,
-        </Text>
-        <Text style={{ fontSize: 28 }} preset={["header"]}>
-          Tell us more about yourself...
-        </Text>
-        <FormContext {...methods}>
-          <PersonalDetailsForm />
-        </FormContext>
-      </ScrollView>
-      <Button
-        style={{ padding: spacing[2], marginTop: spacing[2] }}
-        mode="contained"
-        // onPress={() => onSignIn()}
-      >
-        Next
-      </Button>
-    </View>
-  )
-})
+export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetailsScreenProps> = observer(
+  (props) => {
+    // const { someStore } = useStores()
+    const methods = useForm({
+      defaultValues: defaultData,
+    })
+    return (
+      <View style={{ flex: 1 }}>
+        <ScrollView style={styles.rootContainer}>
+          <Text style={{ fontSize: 28 }} preset={["header"]}>
+            Hi Anurag,
+          </Text>
+          <Text style={{ fontSize: 28 }} preset={["header"]}>
+            Tell us more about yourself...
+          </Text>
+          <FormContext {...methods}>
+            <PersonalDetailsForm />
+          </FormContext>
+        </ScrollView>
+        <Button
+          style={{ padding: spacing[2], marginTop: spacing[2] }}
+          mode="contained"
+          // onPress={() => onSignIn()}
+        >
+          Next
+        </Button>
+      </View>
+    )
+  },
+)
 
 const PersonalDetailsForm = () => {
   const methods = useFormContext()
@@ -83,26 +83,14 @@ const PersonalDetailsForm = () => {
           onChangeName="onPress"
         /> */}
 
-      {/* <FormDatePicker
+      <FormDatePicker
         label="Date of birth"
         placeholder="Pick your date of birth"
-        maximumDate={
-          new Date(
-            moment(new Date())
-              .subtract(18, "year")
-              .format(),
-          )
-        }
-        minimumDate={
-          new Date(
-            moment(new Date())
-              .subtract(150, "year")
-              .format(),
-          )
-        }
+        maximumDate={new Date(moment(new Date()).subtract(18, "year").format())}
+        minimumDate={new Date(moment(new Date()).subtract(150, "year").format())}
         name="dateOfBirth"
-      /> */}
-      <FormInput name="dateOfBirth" label="Date of Birth" placeholder="Pick your Date of Birth" />
+      />
+      {/* <FormInput name="dateOfBirth" label="Date of Birth" placeholder="Pick your Date of Birth" /> */}
       <FormInput
         name="age"
         label="Age"

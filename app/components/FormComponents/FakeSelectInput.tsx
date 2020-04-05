@@ -5,6 +5,7 @@ import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture
 import { spacing, color } from "../../theme"
 import { CloseIcon } from "../icon/icon"
 import { TextInput } from "react-native-paper"
+import { inputContainerStyle } from "../formInput"
 
 export interface IFakeSelectInput {
   value: any
@@ -13,10 +14,11 @@ export interface IFakeSelectInput {
   errorMessage?: string
   children: (showModal: boolean, setShowModal: Function) => void
   renderItem?: (x: any) => React.ReactElement
-  isDisabled?: boolean
   onClear?: Function
-  clearable?: boolean
-  noLabel?: boolean
+}
+
+const defaultRenderItem = ({ value, style }) => {
+  return <Text style={style}>{value.value}</Text>
 }
 
 export const FakeSelectInput = (props: IFakeSelectInput) => {
@@ -27,73 +29,31 @@ export const FakeSelectInput = (props: IFakeSelectInput) => {
     errorMessage,
     children,
     isDisabled = false,
-    renderItem = () => <></>,
-    clearable = false,
-    onClear = () => {},
-    noLabel = false,
+    renderItem = defaultRenderItem,
   } = props
 
   const inputRef = React.createRef()
 
   const [showModal, setShowModal] = React.useState(false)
-  React.useEffect(() => {
-    if (!showModal) {
-      inputRef.current.blur()
-    }
-  }, [showModal])
-
-  console.log("the value<>>>>>", value)
 
   return (
     <TouchableWithoutFeedback
       style={{ marginVertical: `${spacing[1]}%` }}
       onPress={() => {
-        console.log("hijuh")
+        setShowModal(true)
       }}
     >
-      {/* {!noLabel && <Text preset={["label"]}>{label}</Text>} */}
-
-      {/* {clearable && !!value && (
-          <TouchableOpacity
-            style={{ paddingHorizontal: spacing[1] }}
-            onPress={e => (clearable && typeof onClear === "function" ? onClear() : {})}
-          >
-            {clearable && <CloseIcon />}
-          </TouchableOpacity>
-        )} */}
-      {/* {typeof value === "string" ? (
-          <Text
-            preset={value ? (isDisabled ? ["muted", "text"] : ["normal"]) : ["muted", "text"]}
-            style={{ marginLeft: `${value ? 0 : spacing[1]}%`, ...placeholderStyle }}
-          >
-            {value || placeholder || label}
-          </Text>
-        ) : !!value ? (
-          renderItem(value)
-        ) : (
-          <Text
-            preset={["muted", "text"]}
-            style={{
-              marginLeft: `${spacing[1]}%`,
-              ...placeholderStyle,
-            }}
-          >
-            {placeholder || label}
-          </Text>
-        )} */}
       <TextInput
-        ref={inputRef}
-        label={label}
-        placeholder={placeholder}
-        style={{ backgroundColor: color.palette.white, color }}
-        value={value}
-        disabled
-        onFocus={() => {
-          setShowModal(true)
+        {...{ value, label }}
+        style={inputContainerStyle}
+        render={(renderProps) => {
+          return !!renderProps.value ? (
+            renderItem(renderProps)
+          ) : (
+            <Text preset="muted">{renderProps.placeholder}</Text>
+          )
         }}
       />
-
-      {/* {!!errorMessage && <Text preset={["validationError"]}>{errorMessage}</Text>} */}
       {children(showModal, setShowModal)}
     </TouchableWithoutFeedback>
   )

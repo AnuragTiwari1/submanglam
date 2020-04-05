@@ -3,13 +3,27 @@ import { TextInput } from "react-native-paper"
 import { useFormContext, Controller, ControllerProps } from "react-hook-form"
 import { spacing, color } from "../theme"
 import { View } from "react-native"
-import { Text } from "./text/text";
+import { Text } from "./text/text"
 
-interface FormInputProps extends React.ComponentProps<typeof TextInput>,ControllerProps<any> {
+interface FormInputProps extends React.ComponentProps<typeof TextInput>, ControllerProps<any> {
   required?: boolean
-  placeholder?:string
-  value?:string
-  label?:string
+  placeholder?: string
+  value?: string
+  label?: string
+}
+
+export const inputContainerStyle={
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 0.4,
+  },
+  shadowOpacity: 0.3,
+  shadowRadius: 1.65,
+  elevation: 2,
+  backgroundColor: color.palette.white,
+  borderWidth: 0.4,
+  marginVertical: `${spacing[0]}%`,
 }
 
 export const FormInput = (props: FormInputProps) => {
@@ -31,21 +45,9 @@ export const FormInput = (props: FormInputProps) => {
       as={
         <StyledTextInput
           label={required ? `${label}*` : label}
-          errorMessage={errors?.[name]?.message}
+          errorMessage={`${errors?.[name]?.message}`}
           placeholder={placeholder}
-          style={{
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 0.4,
-            },
-            shadowOpacity: 0.30,
-            shadowRadius: 1.65,
-            elevation: 2,
-            backgroundColor:color.palette.white,
-            borderWidth:0.2,
-            marginVertical:`${spacing[0]}%`
-          }}
+          style={inputContainerStyle}
           {...rest}
         />
       }
@@ -53,7 +55,7 @@ export const FormInput = (props: FormInputProps) => {
       onChange={
         onChange && typeof onChange === "function"
           ? onChange
-          : args => {
+          : (args) => {
               return {
                 value: args[0].nativeEvent.text,
               }
@@ -64,7 +66,7 @@ export const FormInput = (props: FormInputProps) => {
   )
 }
 
-export const StyledTextInput = props => {
+export const StyledTextInput = (props) => {
   const { containerStyle, ...rest } = props
   return (
     <View style={{ paddingVertical: spacing[1], ...containerStyle }}>
@@ -74,9 +76,9 @@ export const StyledTextInput = props => {
 }
 
 export const FormTextArea = (props: FormInputProps & { limit?: number }) => {
-  const { watch } = useFormContext();
-  const value = watch(props.name) || '';
-  const { limit = 500 } = props;
+  const { watch } = useFormContext()
+  const value = watch(props.name) || ""
+  const { limit = 500 } = props
   return (
     <>
       <FormInput
@@ -87,10 +89,11 @@ export const FormTextArea = (props: FormInputProps & { limit?: number }) => {
         {...props}
       />
       <Text
-        preset={['small', 'muted']}
-        style={{ alignSelf: 'flex-end', paddingHorizontal: `${spacing[0]}%` }}>
+        preset={["small", "muted"]}
+        style={{ alignSelf: "flex-end", paddingHorizontal: `${spacing[0]}%` }}
+      >
         {value.length}/{limit.toString()}
       </Text>
     </>
-  );
-};
+  )
+}
