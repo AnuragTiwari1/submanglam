@@ -41,7 +41,7 @@ export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetail
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          onPress={() => navigationStore.navigateTo("ProfessionalDetails")}
+          onPress={() => navigationStore.navigateTo("professionalDetails")}
         >
           Next
         </Button>
@@ -111,6 +111,21 @@ const PersonalDetailsForm = () => {
         name="complexion"
         label="Complexion"
         list={["Light Skin", "Fair Skin", "Olive Skin", "Brown"]}
+      />
+
+      <FormPicker
+        name="bloodGroup"
+        label="Blood Group"
+        list={["A +ve", "A -ve", "AB +ve", "AB -ve", "B +ve", "B -ve", "O +ve", "O -ve", "Unknown"]}
+      />
+
+      <FormPicker label="Physically Challenged" name="physicallyChallenged" list={["Yes", "No"]} />
+
+      <FormInput
+        name="hobbies"
+        label="Hobbies"
+        placeholder="Tell us what you enjoy doing"
+        required
       />
 
       <FormPicker

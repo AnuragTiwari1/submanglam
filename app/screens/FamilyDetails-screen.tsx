@@ -6,11 +6,11 @@ import { Button } from "react-native-paper"
 import { NavigationScreenProp } from "react-navigation"
 import { Checkbox, Text } from "../components"
 import { FormPicker } from "../components/FormComponents/FormPicker"
-import { FormInput } from "../components/formInput"
+import { FormInput, FormTextArea } from "../components/formInput"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
 
-export interface ProfessionalDetailsScreenProps {
+export interface FamilyDetailsScreenProps {
   navigation: NavigationScreenProp<{}>
 }
 
@@ -20,7 +20,7 @@ const defaultData = {
   age: 24,
 }
 
-export const ProfessionalDetailsScreen: React.FunctionComponent<ProfessionalDetailsScreenProps> = observer(
+export const FamilyDetailsScreen: React.FunctionComponent<FamilyDetailsScreenProps> = observer(
   (props) => {
     const { navigationStore } = useStores()
     const methods = useForm({
@@ -30,7 +30,7 @@ export const ProfessionalDetailsScreen: React.FunctionComponent<ProfessionalDeta
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.rootContainer}>
           <Text style={{ fontSize: 28 }} preset={["header"]}>
-            Lets build some ground about your professional life...
+            Tell us to your family and idea of marriage
           </Text>
           <FormContext {...methods}>
             <PersonalDetailsForm />
@@ -53,57 +53,38 @@ const PersonalDetailsForm = () => {
 
   return (
     <View style={styles.personalFormContainer}>
-      <View style={{ marginVertical: `${spacing[1]}%` }}>
-        <Text>Select whichever fit your situation?</Text>
-        <View style={{ flexDirection: "row", marginTop: spacing[2] }}>
-          <Controller
-            name="employed"
-            as={<Checkbox text="Working" style={{ flex: 1, marginEnd: `${spacing[1]}%` }} />}
-            onChangeName="onPress"
-          />
-          <Checkbox
-            text="Studying"
-            value={false}
-            style={{ flex: 1, marginStart: `${spacing[1]}%` }}
-          />
-        </View>
-      </View>
-
       <FormInput
-        name="profession"
-        label="Profession"
-        placeholder="Tell us about your profession"
+        label="Father Profession"
+        name="fatherProfession"
+        placeholder="Tell us about your father profession"
         required
       />
       <FormInput
-        name="companyName"
-        label="Company Name"
-        placeholder="What is name of company you work with?"
+        label="Mother Profession"
+        name="motherProfession"
+        placeholder="Tell us about your mother profession"
         required
       />
 
-      <FormPicker
-        name="salary"
-        label="Salary"
-        list={[
-          "Upto 10,000",
-          "Upto 20,000",
-          "Upto 30,000",
-          "Upto 40,000",
-          "Upto 50,000",
-          "Upto 60,000",
-          "Upto 70,000",
-          "Upto 80,000",
-          "Upto 90,000",
-          "Upto 1 Lakh",
-        ]}
+      <FormTextArea
+        name="expectation"
+        label="Expectations"
+        placeholder="What is your take on idea of marriage?"
+        required
       />
 
       <FormInput
-        label="College Name"
-        name="collegeName"
-        placeholder="What is name of college you attended(ing)?"
-        required
+        name="phone"
+        label="Your Mobile Number"
+        placeholder="Enter your contact number"
+        mask="(+91) [0000] [000] [000]"
+      />
+
+      <FormInput
+        name="parentPhone"
+        label="Your Parent's Contact Number"
+        placeholder="Enter your parents contact number"
+        mask="(+91) [0000] [000] [000]"
       />
     </View>
   )
