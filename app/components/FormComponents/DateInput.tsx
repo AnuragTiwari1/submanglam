@@ -29,7 +29,6 @@ export const DateInput = (props: IDatePickerInput) => {
     maximumDate,
     minimumDate,
     renderItem,
-    isDisabled,
   } = props
 
   const [selectedDate, setSelectedDate] = React.useState(new Date())
@@ -56,7 +55,6 @@ export const DateInput = (props: IDatePickerInput) => {
         label,
         errorMessage,
         renderItem,
-        isDisabled,
       }}
     >
       {(showModal, setShowModal) => {

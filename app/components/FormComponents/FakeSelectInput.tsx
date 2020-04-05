@@ -44,8 +44,8 @@ export const FakeSelectInput = (props: IFakeSelectInput) => {
       }}
     >
       <TextInput
-        {...{ value, label }}
-        style={inputContainerStyle}
+        {...{ value, label, errorMessage, placeholder }}
+        style={[inputContainerStyle, { marginVertical: 0 }]}
         render={(renderProps) => {
           return !!renderProps.value ? (
             renderItem(renderProps)

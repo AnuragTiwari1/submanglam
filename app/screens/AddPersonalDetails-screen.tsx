@@ -10,6 +10,7 @@ import { FormDatePicker } from "../components/FormComponents/DateInput"
 import moment from "moment"
 import { FormInput, FormTextArea } from "../components/formInput"
 import { Button } from "react-native-paper"
+import { FormPicker } from "../components/FormComponents/FormPicker"
 
 export interface AddPersonalDetailsScreenProps extends NavigationScreenProps<{}> {}
 
@@ -71,18 +72,6 @@ const PersonalDetailsForm = () => {
         </View>
       </View>
 
-      {/* <Controller
-          name="gender"
-          as={
-            <Checkbox
-              text="Female"
-              value={false}
-              style={{ flex: 1, marginStart: `${spacing[1]}%` }}
-            />
-          }
-          onChangeName="onPress"
-        /> */}
-
       <FormDatePicker
         label="Date of birth"
         placeholder="Pick your date of birth"
@@ -90,25 +79,46 @@ const PersonalDetailsForm = () => {
         minimumDate={new Date(moment(new Date()).subtract(150, "year").format())}
         name="dateOfBirth"
       />
-      {/* <FormInput name="dateOfBirth" label="Date of Birth" placeholder="Pick your Date of Birth" /> */}
+
       <FormInput
         name="age"
         label="Age"
         placeholder="What is your age?"
         required
+        mask={"[00] Years"}
         defaultValue={"24"}
         disabled
+        keyboardType="numeric"
       />
-      <FormInput name="height" label="Height" placeholder="What is your height?" required />
-      <FormInput name="weight" label="Weight" placeholder="What is your Weight?" required />
       <FormInput
-        name="complexation"
-        label="Complexation"
-        placeholder="What is your Complexatio?"
+        name="height"
+        label="Height"
+        placeholder="What is your height?"
         required
+        mask="[0]' [09]"
+        keyboardType="numeric"
+      />
+      <FormInput
+        name="weight"
+        label="Weight (in kg)"
+        placeholder="What is your Weight?"
+        required
+        keyboardType="numeric"
+        mask="[009]"
       />
 
-      <FormInput name="location" label="Location" placeholder="Where are you located?" required />
+      <FormPicker
+        name="complexion"
+        label="Complexion"
+        list={["Light Skin", "Fair Skin", "Olive Skin", "Brown"]}
+      />
+
+      <FormPicker
+        name="location"
+        label="Location"
+        list={["Kolhapur", "Sangli", "Satara", "Pune"]}
+      />
+
       <FormTextArea
         name="address"
         label="Address"

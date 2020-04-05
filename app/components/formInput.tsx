@@ -4,15 +4,18 @@ import { useFormContext, Controller, ControllerProps } from "react-hook-form"
 import { spacing, color } from "../theme"
 import { View } from "react-native"
 import { Text } from "./text/text"
+import TextInputMask from "react-native-text-input-mask"
 
-interface FormInputProps extends React.ComponentProps<typeof TextInput>, ControllerProps<any> {
+export interface FormInputProps
+  extends React.ComponentProps<typeof TextInput>,
+    ControllerProps<any> {
   required?: boolean
   placeholder?: string
   value?: string
   label?: string
 }
 
-export const inputContainerStyle={
+export const inputContainerStyle = {
   shadowColor: "#000",
   shadowOffset: {
     width: 0,
@@ -23,7 +26,7 @@ export const inputContainerStyle={
   elevation: 2,
   backgroundColor: color.palette.white,
   borderWidth: 0.4,
-  marginVertical: `${spacing[0]}%`,
+  marginVertical: `${spacing[1]}%`,
 }
 
 export const FormInput = (props: FormInputProps) => {
@@ -52,13 +55,18 @@ export const FormInput = (props: FormInputProps) => {
         />
       }
       name={name}
+      onChangeName={props.mask ? "onChangeText" : "onChange"}
       onChange={
         onChange && typeof onChange === "function"
           ? onChange
           : (args) => {
-              return {
-                value: args[0].nativeEvent.text,
-              }
+              return props.mask
+                ? {
+                    value: args[0],
+                  }
+                : {
+                    value: args[0].nativeEvent.text,
+                  }
             }
       }
       {...{ defaultValue, control }}
@@ -67,12 +75,21 @@ export const FormInput = (props: FormInputProps) => {
 }
 
 export const StyledTextInput = (props) => {
-  const { containerStyle, ...rest } = props
-  return (
-    <View style={{ paddingVertical: spacing[1], ...containerStyle }}>
-      <TextInput {...rest} />
-    </View>
-  )
+  const { containerStyle, mask, ...rest } = props
+  const extraProps = mask
+    ? {
+        render: (renderProps) => {
+          return (
+            <TextInputMask
+              mask={mask}
+              {...renderProps}
+              value={renderProps.value?.value || renderProps.value}
+            />
+          )
+        },
+      }
+    : {}
+  return <TextInput {...rest} {...extraProps} />
 }
 
 export const FormTextArea = (props: FormInputProps & { limit?: number }) => {
