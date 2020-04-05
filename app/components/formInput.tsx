@@ -1,10 +1,10 @@
 import React from "react"
+import { Controller, ControllerProps, useFormContext } from "react-hook-form"
 import { TextInput } from "react-native-paper"
-import { useFormContext, Controller, ControllerProps } from "react-hook-form"
-import { spacing, color } from "../theme"
-import { View } from "react-native"
-import { Text } from "./text/text"
 import TextInputMask from "react-native-text-input-mask"
+import { color, spacing } from "../theme"
+import { Text } from "./text/text"
+import { View } from "react-native"
 
 export interface FormInputProps
   extends React.ComponentProps<typeof TextInput>,
@@ -75,7 +75,7 @@ export const FormInput = (props: FormInputProps) => {
 }
 
 export const StyledTextInput = (props) => {
-  const { containerStyle, mask, ...rest } = props
+  const { mask, ...rest } = props
   const extraProps = mask
     ? {
         render: (renderProps) => {
@@ -97,12 +97,12 @@ export const FormTextArea = (props: FormInputProps & { limit?: number }) => {
   const value = watch(props.name) || ""
   const { limit = 500 } = props
   return (
-    <>
+    <View style={{ marginVertical: `${spacing[1]}%` }}>
       <FormInput
-        multiline
+        multiline={true}
         numberOfLines={3}
         textAlignVertical="top"
-        inputContainerStyle={{ height: 350 }}
+        style={[inputContainerStyle, { marginVertical: 0, height: 150 }]}
         {...props}
       />
       <Text
@@ -111,6 +111,6 @@ export const FormTextArea = (props: FormInputProps & { limit?: number }) => {
       >
         {value.length}/{limit.toString()}
       </Text>
-    </>
+    </View>
   )
 }

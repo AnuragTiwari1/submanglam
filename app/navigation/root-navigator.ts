@@ -4,6 +4,7 @@ import {
   LoginScreen,
   AddPersonalDetailsScreen,
   SignupScreen,
+  ProfessionalDetailsScreen,
 } from "../screens" // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export const RootNavigator = createStackNavigator(

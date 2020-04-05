@@ -1,18 +1,18 @@
-import * as React from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, ScrollView, StyleSheet, View } from "react-native"
-import { Screen, Text, Checkbox } from "../components"
-// import { useStores } from "../models/root-store"
-import { color, spacing } from "../theme"
-import { NavigationScreenProps } from "react-navigation"
-import { useForm, Controller, FormContext, useFormContext } from "react-hook-form"
-import { FormDatePicker } from "../components/FormComponents/DateInput"
 import moment from "moment"
-import { FormInput, FormTextArea } from "../components/formInput"
+import * as React from "react"
+import { Controller, FormContext, useForm, useFormContext } from "react-hook-form"
+import { ScrollView, StyleSheet, View } from "react-native"
 import { Button } from "react-native-paper"
+import { NavigationScreenProp } from "react-navigation"
+import { Checkbox, Text } from "../components"
+import { FormDatePicker } from "../components/FormComponents/DateInput"
 import { FormPicker } from "../components/FormComponents/FormPicker"
+import { FormInput, FormTextArea } from "../components/formInput"
+import { useStores } from "../models/root-store"
+import { spacing } from "../theme"
 
-export interface AddPersonalDetailsScreenProps extends NavigationScreenProps<{}> {}
+export interface AddPersonalDetailsScreenProps extends NavigationScreenProp<{}> {}
 
 const defaultData = {
   gender: "male",
@@ -21,7 +21,7 @@ const defaultData = {
 }
 export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetailsScreenProps> = observer(
   (props) => {
-    // const { someStore } = useStores()
+    const { navigationStore } = useStores()
     const methods = useForm({
       defaultValues: defaultData,
     })
@@ -41,7 +41,7 @@ export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetail
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          // onPress={() => onSignIn()}
+          onPress={() => navigationStore.navigateTo("ProfessionalDetails")}
         >
           Next
         </Button>

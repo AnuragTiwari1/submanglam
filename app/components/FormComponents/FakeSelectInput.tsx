@@ -1,11 +1,9 @@
 import React from "react"
-import { View } from "react-native"
-import { Text } from "../text/text"
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler"
-import { spacing, color } from "../../theme"
-import { CloseIcon } from "../icon/icon"
+import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { TextInput } from "react-native-paper"
+import { spacing } from "../../theme"
 import { inputContainerStyle } from "../formInput"
+import { Text } from "../text/text"
 
 export interface IFakeSelectInput {
   value: any
@@ -28,11 +26,8 @@ export const FakeSelectInput = (props: IFakeSelectInput) => {
     label,
     errorMessage,
     children,
-    isDisabled = false,
     renderItem = defaultRenderItem,
   } = props
-
-  const inputRef = React.createRef()
 
   const [showModal, setShowModal] = React.useState(false)
 

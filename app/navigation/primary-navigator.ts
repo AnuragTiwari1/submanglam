@@ -5,6 +5,7 @@ import {
   LoginScreen,
   AddPersonalDetailsScreen,
   SignupScreen,
+  ProfessionalDetailsScreen,
 } from "../screens"
 import { createStackNavigator } from "react-navigation-stack"
 import { createSwitchNavigator } from "react-navigation"
@@ -53,6 +54,9 @@ export const PrimaryNavigator = createStackNavigator(
   {
     addPersonalDetails: {
       screen: AddPersonalDetailsScreen,
+    },
+    professionalDetails: {
+      screen: ProfessionalDetailsScreen,
     },
   },
   {
