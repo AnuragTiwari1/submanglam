@@ -1,12 +1,5 @@
 import { createStackNavigator } from "react-navigation-stack"
 import { PrimaryNavigator } from "./primary-navigator"
-import {
-  LoginScreen,
-  AddPersonalDetailsScreen,
-  SignupScreen,
-  ProfessionalDetailsScreen,
-  FamilyDetailsScreen,
-} from "../screens" // eslint-disable-line @typescript-eslint/no-unused-vars
 
 export const RootNavigator = createStackNavigator(
   {

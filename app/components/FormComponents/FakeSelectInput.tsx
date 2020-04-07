@@ -16,7 +16,7 @@ export interface IFakeSelectInput {
 }
 
 const defaultRenderItem = ({ value, style }) => {
-  return <Text style={style}>{value.value}</Text>
+  return <Text style={style}>{value}</Text>
 }
 
 export const FakeSelectInput = (props: IFakeSelectInput) => {

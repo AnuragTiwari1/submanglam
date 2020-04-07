@@ -39,7 +39,7 @@ export const FamilyDetailsScreen: React.FunctionComponent<FamilyDetailsScreenPro
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          onPress={() => navigationStore.navigateTo("familyDetails")}
+          onPress={() => navigationStore.navigateTo("addPictureScreen")}
         >
           Next
         </Button>

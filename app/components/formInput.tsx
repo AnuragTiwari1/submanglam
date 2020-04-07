@@ -59,15 +59,7 @@ export const FormInput = (props: FormInputProps) => {
       onChange={
         onChange && typeof onChange === "function"
           ? onChange
-          : (args) => {
-              return props.mask
-                ? {
-                    value: args[0],
-                  }
-                : {
-                    value: args[0].nativeEvent.text,
-                  }
-            }
+          : (args) => (props.mask ? args[0] : args[0].nativeEvent.text)
       }
       {...{ defaultValue, control }}
     />
