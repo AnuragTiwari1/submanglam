@@ -41,7 +41,7 @@ export const AddPictureScreen: React.FunctionComponent<AddPictureScreenProps> = 
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          onPress={() => navigationStore.navigateTo("familyDetails")}
+          onPress={() => navigationStore.navigateTo("primaryStack")}
         >
           Next
         </Button>
