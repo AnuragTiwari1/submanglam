@@ -13,10 +13,6 @@ export interface File {
   type: string
 }
 
-const getFileName = (image: IImage) => {
-  return image.path.split("/").reverse()[0]
-}
-
 const emptyImage =
   "https://previews.123rf.com/images/blankstock/blankstock1811/blankstock181101708/112886250-add-user-line-icon-profile-avatar-sign-male-person-silhouette-symbol-gradient-pattern-line-button-ad.jpg"
 
