@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const SignupScreen: React.FunctionComponent<SignupScreenProps> = observer(props => {
+export const SignupScreen: React.FunctionComponent<SignupScreenProps> = observer((props) => {
   return (
     <ImageBackground
       source={require("../../assets/images/login_image.jpg")}
@@ -37,7 +37,7 @@ export const SignupScreen: React.FunctionComponent<SignupScreenProps> = observer
     >
       <DismissKeyboardView style={styles.ROOT}>
         <Text preset="header">Let's get you on board ...</Text>
-        <SignupForm onSignIn={() => props.navigation.navigate("addPersonalDetails")} />
+        <SignupForm onSignIn={() => props.navigation.navigate("createProfileStack")} />
         <Text preset={["center", "dullWhite", "small"]}>
           By continuing you agree to our{" "}
           <Text preset={["link", "small"]} url="https://github.com/site/terms">

@@ -3,6 +3,7 @@ import { PrimaryNavigator } from "./primary-navigator"
 import { AuthNavigator } from "./auth-navigator"
 import { CreateProfileNavigator } from "./createProfile-navigator"
 import { createSwitchNavigator } from "react-navigation"
+import { LandingScreen } from "../screens"
 
 export const RootNavigator = createSwitchNavigator(
   {

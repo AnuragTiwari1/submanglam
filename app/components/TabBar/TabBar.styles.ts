@@ -11,6 +11,7 @@ export const tabBarStyles = {
     alignSelf: "center",
     minWidth: width * 0.7,
     borderRadius: width * 0.3,
+    marginBottom: `${spacing[1]}%`,
   } as ViewStyle,
 
   ICON_CONTAINER: {

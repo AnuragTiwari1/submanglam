@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const Story: React.FunctionComponent<StoryProps> = props => {
+const Story: React.FunctionComponent<StoryProps> = (props) => {
   const transY = new Animated.Value(0)
 
   const animatedOpacity = transY.interpolate({
@@ -125,7 +125,7 @@ const Story: React.FunctionComponent<StoryProps> = props => {
         </View>
         <PanGestureHandler
           onGestureEvent={handleGesture}
-          onHandlerStateChange={e => {
+          onHandlerStateChange={(e) => {
             const hasEnded = e.nativeEvent.state === 5
             if (hasEnded) {
               if (e.nativeEvent.translationY < scrollOffset) {
@@ -152,7 +152,6 @@ const Story: React.FunctionComponent<StoryProps> = props => {
             </View>
           </Animated.View>
         </PanGestureHandler>
-        <TabBar />
       </View>
     </ImageBackground>
   )
