@@ -4,8 +4,11 @@ import { View } from "react-native"
 import { Text, SearchIcon } from "../"
 import { tabBarStyles as styles } from "./TabBar.styles"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { spacing } from "../../theme"
-export interface TabBarProps {}
+import { spacing, color } from "../../theme"
+import { Face, ChatIcon } from "../icon/icon"
+import { SceneRendererProps, NavigationState } from "react-native-tab-view"
+
+export interface TabBarProps extends SceneRendererProps , NavigationState<NavigationStateType>{}
 
 /**
  * React.FunctionComponent for your hook(s) needs
@@ -26,22 +29,19 @@ export const TabBarIconContainer = ({ children, onPress, tabName, isActive = fal
   )
 }
 
-export const TabBar: React.FunctionComponent<TabBarProps> = props => {
+export const TabBar: React.FunctionComponent<TabBarProps> = (props) => {
   // const { someStore } = useStores()
 
   return (
     <View style={styles.WRAPPER}>
-      <TabBarIconContainer tabName="Home" isActive>
+      <TabBarIconContainer tabName="Explore" isActive>
         <SearchIcon />
       </TabBarIconContainer>
-      <TabBarIconContainer tabName="Home">
-        <SearchIcon />
+      <TabBarIconContainer tabName="Chat">
+        <ChatIcon color={color.primary} />
       </TabBarIconContainer>
-      <TabBarIconContainer tabName="Home">
-        <SearchIcon />
-      </TabBarIconContainer>
-      <TabBarIconContainer tabName="Home">
-        <SearchIcon />
+      <TabBarIconContainer tabName="Profile">
+        <Face color={color.primary} />
       </TabBarIconContainer>
     </View>
   )

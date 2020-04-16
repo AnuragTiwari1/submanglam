@@ -6,6 +6,14 @@ import { createStackNavigator } from "react-navigation-stack"
 import { TabView, SceneMap, NavigationState, SceneRendererProps } from "react-native-tab-view"
 import { TabBar } from "../components"
 
+type Route = {
+  key: string;
+  title: string;
+  icon: string;
+};
+
+export type NavigationStateType = NavigationState<Route>;
+
 export const PrimaryNavigatorTabs = () => {
   const [index, setIndex] = React.useState(0)
   const [routes] = React.useState([

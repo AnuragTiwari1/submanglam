@@ -42,42 +42,46 @@ export const OfficeBag = (props: IconProps) => {
   return <Entypo name="briefcase" color={"#000"} size={25} {...props} />
 }
 
-export const EducationCap = props => {
+export const EducationCap = (props) => {
   return <Entypo name="graduation-cap" color={"#000"} size={25} {...props} />
 }
 
-export const BalanceScale = props => {
+export const BalanceScale = (props) => {
   return <FontAwesome name="balance-scale" color={"#000"} size={25} {...props} />
 }
 
-export const HomeModern = props => {
+export const HomeModern = (props) => {
   return <MaterialCommunity name="home-modern" size={25} {...props} />
 }
 
-export const Hobbies = props => {
+export const Hobbies = (props) => {
   return <Entypo name="hour-glass" size={25} {...props} />
 }
 
-export const Face = props => {
+export const Face = (props) => {
   return <MaterialCommunity name="face" size={25} {...props} />
 }
 
-export const Dollar = props => {
+export const Dollar = (props) => {
   return <FontAwesome name="dollar" size={25} {...props} />
 }
 
-export const HeartIcon = props => {
+export const HeartIcon = (props) => {
   return <AntIcons name="heart" size={35} color={"red"} />
 }
 
-export const Report = props => {
+export const Report = (props) => {
   return <AntIcons name="notification" size={25} color={"red"} {...props} />
 }
 
-export const SendIcon = props => {
+export const SendIcon = (props) => {
   return <FontAwesome name="send" size={25} color={"#0088cc"} {...props} />
 }
 
-export const CloseIcon = props => {
+export const CloseIcon = (props) => {
   return <MaterialCommunity name="close-circle" size={25} color={"red"} />
+}
+
+export const ChatIcon = (props) => {
+  return <FontAwesome name="wechat" size={25} {...props} />
 }
