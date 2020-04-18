@@ -79,6 +79,7 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
         renderItem={({ item }) => {
           return <IntroCard {...item} />
         }}
+        keyExtractor={(item, index) => `${index}-${item.name}`}
         ListFooterComponent={<Text preset={["center", "muted"]}>That's all folks.</Text>}
       />
     </View>

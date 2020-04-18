@@ -1,14 +1,13 @@
-import { useObserver } from "mobx-react-lite"
 import * as React from "react"
-import { View } from "react-native"
-import { Text, SearchIcon } from "../"
-import { tabBarStyles as styles } from "./TabBar.styles"
+import { View, LayoutAnimation } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { spacing, color } from "../../theme"
-import { Face, ChatIcon } from "../icon/icon"
-import { SceneRendererProps, NavigationState } from "react-native-tab-view"
+import { NavigationState, SceneRendererProps } from "react-native-tab-view"
+import { Text } from "../"
+import { spacing } from "../../theme"
+import { tabBarStyles as styles } from "./TabBar.styles"
+import { NavigationStateType } from "../../navigation"
 
-export interface TabBarProps extends SceneRendererProps , NavigationState<NavigationStateType>{}
+export interface TabBarProps extends SceneRendererProps, NavigationState<NavigationStateType> {}
 
 /**
  * React.FunctionComponent for your hook(s) needs
@@ -34,15 +33,27 @@ export const TabBar: React.FunctionComponent<TabBarProps> = (props) => {
 
   return (
     <View style={styles.WRAPPER}>
-      <TabBarIconContainer tabName="Explore" isActive>
-        <SearchIcon />
-      </TabBarIconContainer>
-      <TabBarIconContainer tabName="Chat">
-        <ChatIcon color={color.primary} />
-      </TabBarIconContainer>
-      <TabBarIconContainer tabName="Profile">
-        <Face color={color.primary} />
-      </TabBarIconContainer>
+      {props.navigationState.routes.map((route, i) => {
+        return (
+          <TabBarIconContainer
+            tabName={route.title}
+            key={route.key}
+            onPress={() => {
+              LayoutAnimation.configureNext(
+                LayoutAnimation.create(
+                  200,
+                  LayoutAnimation.Types.linear,
+                  LayoutAnimation.Properties.scaleXY,
+                ),
+              )
+              props.jumpTo(route.key)
+            }}
+            isActive={i === props.navigationState.index}
+          >
+            {route.icon()}
+          </TabBarIconContainer>
+        )
+      })}
     </View>
   )
 }
