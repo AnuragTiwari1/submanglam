@@ -17,7 +17,7 @@ export const PrimaryNavigatorTabs = () => {
   const [index, setIndex] = React.useState(0)
   const [routes] = React.useState([
     { key: "landing", title: "Explore", icon: SearchIcon },
-    { key: "chat", title: "Chat", icon: ChatIcon },
+    { key: "chat", title: "Connect", icon: ChatIcon },
     { key: "profile", title: "Profile", icon: Face },
   ])
 

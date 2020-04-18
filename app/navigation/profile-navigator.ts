@@ -1,6 +1,5 @@
-import { createStackNavigator } from "react-navigation-stack"
-import { WelcomeScreen, DemoScreen } from "../screens"
 import { createSharedElementStackNavigator } from "react-navigation-shared-element"
+import { DemoScreen, WelcomeScreen } from "../screens"
 
 export const ProfileNavigator = createSharedElementStackNavigator(
   {

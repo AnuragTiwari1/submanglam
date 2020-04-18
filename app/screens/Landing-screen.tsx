@@ -57,7 +57,7 @@ const data: IntroProps[] = [
 export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observer((props) => {
   const { navigationStore } = useStores()
   return (
-    <View style={{ flex: 1, padding: 3 }}>
+    <View style={{ flex: 1, padding: 3,backgroundColor:'white' }}>
       <FlatList
         ListHeaderComponent={
           <View
