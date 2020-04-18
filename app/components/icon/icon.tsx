@@ -1,11 +1,10 @@
 import * as React from "react"
 import { Image, ImageStyle, View } from "react-native"
-import { icons } from "./icons"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
-import Entypo from "react-native-vector-icons/Entypo"
-import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons"
 import AntIcons from "react-native-vector-icons/AntDesign"
-import { color } from "react-native-reanimated"
+import Entypo from "react-native-vector-icons/Entypo"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
+import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons"
+import { icons } from "./icons"
 
 const ROOT: ImageStyle = {
   resizeMode: "contain",
@@ -68,7 +67,7 @@ export const Dollar = (props) => {
 }
 
 export const HeartIcon = (props) => {
-  return <AntIcons name="heart" size={35} color={"red"} />
+  return <AntIcons name="heart" size={35} color={"red"} {...props} />
 }
 
 export const Report = (props) => {
@@ -85,4 +84,16 @@ export const CloseIcon = (props) => {
 
 export const ChatIcon = (props) => {
   return <FontAwesome name="wechat" size={25} color="#3C40C6" {...props} />
+}
+
+export const SettingsIcon = (props) => {
+  return <AntIcons name="setting" size={25} {...props} />
+}
+
+export const EditIcon = (props) => {
+  return <Entypo name="edit" {...props} />
+}
+
+export const AddImages = (props) => {
+  return <Entypo name="images" {...props} />
 }

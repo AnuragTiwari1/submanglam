@@ -62,5 +62,3 @@ export const PrimaryNavigator = createStackNavigator(
  * react-navigation.
  */
 export const exitRoutes: string[] = ["landingScreen"]
-
-

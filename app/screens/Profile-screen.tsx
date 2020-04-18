@@ -1,24 +1,156 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
-import { Screen, Text } from "../components"
+import { ViewStyle, View, StyleSheet, Dimensions, Image } from "react-native"
 // import { useStores } from "../models/root-store"
-import { color } from "../theme"
+import { color, spacing } from "../theme"
 import { NavigationScreenProp } from "react-navigation"
+import { HeartIcon, Text, SettingsIcon, EditIcon, AddImages } from "../components"
+import Svg, { Circle } from "react-native-svg"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
+const { width } = Dimensions.get("window")
 export interface ProfileScreenProps {
   navigation: NavigationScreenProp<{}>
 }
 
-const ROOT: ViewStyle = {
-  backgroundColor: color.palette.black,
-}
+const imageWidth = width * 0.48 // this will take 1/3  of screen
+const iconWidth = 65
 
 export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observer((props) => {
   // const { someStore } = useStores()
   return (
-    <Screen style={ROOT} preset="scroll">
-      <Text preset="header">PROFILE</Text>
-    </Screen>
+    <View style={styles.container}>
+      <View style={styles.details}>
+        <View style={styles.heroImageContainer}>
+          <Image
+            style={styles.heroContainer}
+            source={{
+              uri: "https://i.pinimg.com/564x/c1/e1/50/c1e150a28e728df06b9c49b5e735b2ee.jpg",
+            }}
+            resizeMode="cover"
+          />
+          <Text preset="header">Yukino Yukinoshita, 24</Text>
+          <Text>Software Developer, Pune</Text>
+        </View>
+        <View
+          style={{
+            width: width * 0.8,
+            height: width * 0.8,
+            marginTop: spacing[2],
+            borderColor: "red",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          underlayColor="#ccc"
+        >
+          <View
+            style={{
+              ...styles.iconContainerCommon,
+              top: width * 0.1,
+            }}
+          >
+            <View style={[styles.iconContainer, { backgroundColor: color.palette.blue }]}>
+              <AddImages size={30} color={"#ffffff"} />
+            </View>
+            <Text preset="small">Add Media</Text>
+          </View>
+          <View
+            style={{
+              ...styles.iconContainerCommon,
+              bottom: width * 0.6,
+              right: 0,
+            }}
+          >
+            <View style={styles.iconContainer}>
+              <EditIcon size={30} color={color.palette.lightGrey} />
+            </View>
+            <Text preset="small">Edit Info</Text>
+          </View>
+          <View
+            style={{
+              ...styles.iconContainerCommon,
+              bottom: width * 0.6,
+              left: 0,
+            }}
+          >
+            <View style={styles.iconContainer}>
+              <SettingsIcon size={45} color={color.palette.lightGrey} />
+            </View>
+            <Text preset="small">Settings</Text>
+          </View>
+        </View>
+      </View>
+      <CircleCurve />
+      <Offers />
+    </View>
   )
+})
+
+const CircleCurve = () => {
+  return (
+    <Svg height="100" width={width}>
+      <Circle
+        cx={width / 2}
+        cy={`-${898 - 24 + 2}`}
+        r="898.5"
+        fill="#FFFFFF"
+        stroke="#C5CACD"
+        strokeWidth="2"
+      />
+    </Svg>
+  )
+}
+
+// this will be carousal but i am in hurry
+const Offers = () => {
+  return <OfferCard />
+}
+
+const OfferCard = () => {
+  return (
+    <View style={{ width: "100%", flex: 1 }}>
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+        <HeartIcon color="lightgreen" size={25} style={{ marginHorizontal: spacing[4] }} />
+        <Text preset={["text", "bold"]}>Increase Your Chances</Text>
+      </View>
+      <Text preset="center">Get unlimited likes with premium</Text>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingBottom: spacing[1],
+    backgroundColor: color.palette.offWhite,
+  },
+  details: {
+    flex: 3,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    backgroundColor: "white",
+  },
+  heroContainer: {
+    width: imageWidth,
+    height: imageWidth,
+    borderRadius: imageWidth / 2,
+  },
+  heroImageContainer: {
+    alignItems: "center",
+    elevation: 4,
+    justifyContent: "center",
+    marginVertical: spacing[2],
+  },
+  iconContainerCommon: {
+    position: "absolute",
+  },
+
+  iconContainer: {
+    backgroundColor: color.palette.offWhite,
+    alignItems: "center",
+    justifyContent: "center",
+    height: iconWidth,
+    width: iconWidth,
+    borderRadius: iconWidth / 2,
+  },
 })

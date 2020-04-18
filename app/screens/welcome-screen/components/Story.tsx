@@ -6,7 +6,8 @@ import FastImage from "react-native-fast-image"
 import { PanGestureHandler, TouchableOpacity } from "react-native-gesture-handler"
 import AntIcons from "react-native-vector-icons/AntDesign"
 import { SharedElement } from "react-navigation-shared-element"
-import { TabBar, Text } from "../../../components"
+import { Text } from "../../../components"
+import { useStores } from "../../../models/root-store"
 import { spacing } from "../../../theme"
 import { IUserStory } from "../../types"
 
@@ -62,8 +63,9 @@ const styles = StyleSheet.create({
 })
 
 const Story: React.FunctionComponent<StoryProps> = (props) => {
-  const transY = new Animated.Value(0)
+  const { navigationStore } = useStores()
 
+  const transY = new Animated.Value(0)
   const animatedOpacity = transY.interpolate({
     inputRange: [-200, 0],
     outputRange: [0, 1],
@@ -111,7 +113,21 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
             </SharedElement>
           </Animated.View>
 
-          <Animated.View style={[styles.iconRowContainer, { opacity: animatedOpacity }]}>
+          <Animated.View
+            style={{
+              ...styles.iconRowContainer,
+              opacity: animatedOpacity,
+              transform: [
+                {
+                  translateY: transY.interpolate({
+                    inputRange: [-400, 0, 400],
+                    outputRange: [100, 0, 0],
+                    extrapolate: "clamp",
+                  }),
+                },
+              ],
+            }}
+          >
             <TouchableOpacity style={styles.buttonContainer}>
               <AntIcons name="close" size={35} color={"red"} />
             </TouchableOpacity>
@@ -130,7 +146,7 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
             if (hasEnded) {
               if (e.nativeEvent.translationY < scrollOffset) {
                 transY.setValue(0)
-                props.navigateTo("demo")
+                navigationStore.navigateTo("demo")
                 return null
               }
               transY.setValue(0)

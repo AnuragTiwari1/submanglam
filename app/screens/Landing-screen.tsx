@@ -1,11 +1,11 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { Image, TouchableNativeFeedback, View } from "react-native"
+import { Image, View } from "react-native"
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler"
 import AntIcons from "react-native-vector-icons/AntDesign"
 import { NavigationScreenProp } from "react-navigation"
 import { Text } from "../components"
-// import { useStores } from "../models/root-store"
+import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
 export interface LandingScreenProps {
   navigation: NavigationScreenProp<{}>
@@ -55,7 +55,7 @@ const data: IntroProps[] = [
 ]
 
 export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observer((props) => {
-  // const { someStore } = useStores()
+  const { navigationStore } = useStores()
   return (
     <View style={{ flex: 1, padding: 3 }}>
       <FlatList
@@ -77,7 +77,7 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
         data={data}
         numColumns={2}
         renderItem={({ item }) => {
-          return <IntroCard {...item} />
+          return <IntroCard {...item} onPress={() => navigationStore.navigateTo("profile")} />
         }}
         keyExtractor={(item, index) => `${index}-${item.name}`}
         ListFooterComponent={<Text preset={["center", "muted"]}>That's all folks.</Text>}
@@ -88,10 +88,10 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
 
 const HEART_CONTAINER_DIMENSION = 40
 
-const IntroCard = (props: IntroProps) => {
+const IntroCard = (props: IntroProps & { onPress: Function }) => {
   return (
     <View style={{ flex: 1, margin: 5 }}>
-      <TouchableOpacity style={{ width: "100%" }}>
+      <TouchableOpacity style={{ width: "100%" }} onPress={props.onPress}>
         <Image
           source={{ uri: props.imgUrl }}
           style={{ width: "100%", height: 200, borderRadius: 12 }}
