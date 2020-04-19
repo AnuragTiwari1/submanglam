@@ -80,7 +80,7 @@ const Messages = () => {
         paddingTop: `${spacing[1]}%`,
       }}
     >
-      <Text preset={["primary"]}>Messages</Text>
+      <Text preset={["primary"]}>Messages (0)</Text>
       <FlatList
         data={[]}
         renderItem={() => null}
