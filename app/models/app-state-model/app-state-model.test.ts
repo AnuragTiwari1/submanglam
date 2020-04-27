@@ -1,7 +1,7 @@
-import { AppStateModelModel, AppStateModel } from "./app-state-model"
+import { AppStateModel, AppState } from "./app-state-model"
 
 test("can be created", () => {
-  const instance: AppStateModel = AppStateModelModel.create({})
+  const instance: AppState = AppStateModel.create({})
 
   expect(instance).toBeTruthy()
 })

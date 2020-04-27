@@ -2,7 +2,7 @@ import React from "react"
 import { LandingScreen, ProfileScreen, ChatScreen } from "../screens"
 import { ProfileNavigator } from "./profile-navigator"
 import { createStackNavigator } from "react-navigation-stack"
-import { TabView, SceneMap, NavigationState, SceneRendererProps } from "react-native-tab-view"
+import { TabView, SceneMap, NavigationState} from "react-native-tab-view"
 import { TabBar, SearchIcon, ChatIcon, Face } from "../components"
 
 type Route = {

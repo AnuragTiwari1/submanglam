@@ -1,29 +1,38 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { color } from "../../theme"
+import omit from "ramda/src/omit"
 
 /**
- * Model description here for TypeScript hints.
+ * this model contains possible state
+ * the app can be in
+ * eg: toast, network error
  */
-export const AppStateModelModel = types
+
+export const DEFAULT_APPSTATE = {
+  toast: {
+    text: "",
+    styles: "",
+  },
+}
+
+const toastModal = types.model("toastModal", {
+  text: types.string,
+  styles: types.string,
+})
+
+export const AppStateModel = types
   .model("AppStateModel", {
-    toast: {
-      text: types.string;
-      styles: keyof typeof(color)
-    },
+    toast: types.optional(toastModal, DEFAULT_APPSTATE.toast),
   })
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
-  .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .actions((self) => ({
+    setToast(newToast) {
+      self.toast = newToast
+    },
+  }))
+  .postProcessSnapshot(omit(["toast"]))
 
-/**
-  * Un-comment the following to omit model attributes from your snapshots (and from async storage).
-  * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
-
-  * Note that you'll need to import `omit` from ramda, which is already included in the project!
-  *  .postProcessSnapshot(omit(["password", "socialSecurityNumber", "creditCardNumber"]))
-  */
-
-type AppStateModelType = Instance<typeof AppStateModelModel>
-export interface AppStateModel extends AppStateModelType {}
-type AppStateModelSnapshotType = SnapshotOut<typeof AppStateModelModel>
-export interface AppStateModelSnapshot extends AppStateModelSnapshotType {}
+type AppStateType = Instance<typeof AppStateModel>
+export interface AppState extends AppStateType {}
+type AppStateSnapshotType = SnapshotOut<typeof AppStateModel>
+export interface AppStateSnapshot extends AppStateSnapshotType {}

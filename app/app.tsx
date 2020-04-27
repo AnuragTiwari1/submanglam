@@ -4,12 +4,13 @@
 
 import "./i18n"
 import React, { useState, useEffect } from "react"
-import { AppRegistry, YellowBox, UIManager } from "react-native"
+import { AppRegistry, YellowBox, UIManager, StatusBar } from "react-native"
 import { StatefulNavigator, BackButtonHandler, exitRoutes } from "./navigation"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 
 import { contains } from "ramda"
 import { enableScreens } from "react-native-screens"
+import { ToastProvider } from "./Provider/ToastProvider"
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 // This puts screens in a native ViewController or Activity. If you want fully native
@@ -71,7 +72,9 @@ export const App: React.FunctionComponent<{}> = () => {
   // otherwise, we're ready to render the app
   return (
     <RootStoreProvider value={rootStore}>
+      <StatusBar backgroundColor="white" barStyle="dark-content" />
       <BackButtonHandler canExit={canExit}>
+        <ToastProvider toast={rootStore.appStateStore.toast} />
         <StatefulNavigator />
       </BackButtonHandler>
     </RootStoreProvider>
@@ -93,4 +96,12 @@ if (__DEV__ && SHOW_STORYBOOK) {
   const { StorybookUIRoot } = require("../storybook")
   RootComponent = StorybookUIRoot
 }
+const SHOW_REACTOTRON = true
+if (__DEV__ && SHOW_REACTOTRON) {
+  console.log("trying to connect reactotron")
+  const Reactotron = require("../app/services/reactotron")
+  const reactotron = new Reactotron.Reactotron()
+  reactotron.setup()
+}
+
 AppRegistry.registerComponent(APP_NAME, () => RootComponent)

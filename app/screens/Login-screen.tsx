@@ -1,12 +1,12 @@
 import * as React from "react"
 import { FormContext, useForm } from "react-hook-form"
-import { Image, StyleSheet, View, ImageBackground } from "react-native"
+import { StyleSheet, View, ImageBackground } from "react-native"
 import { Button } from "react-native-paper"
-import { NavigationScreenProp, ThemeColors } from "react-navigation"
-import { Screen, Text, DismissKeyboardView } from "../components"
+import { NavigationScreenProp } from "react-navigation"
+import { Text, DismissKeyboardView } from "../components"
 import { FormInput } from "../components/formInput"
 import { useStores } from "../models/root-store"
-import { color, spacing } from "../theme"
+import { spacing } from "../theme"
 
 export interface LoginScreenProps extends NavigationScreenProp<{}> {}
 
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const LoginScreen: React.FunctionComponent<LoginScreenProps> = props => {
+export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
   // const { someStore } = useStores()
   return (
     <ImageBackground
@@ -51,7 +51,7 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = props => {
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit "
             </Text>
           </View>
-          <FormComponent type="signIn" />
+          <FormComponent />
 
           <Text style={{ marginBottom: spacing[2] }} preset={["center", "dullWhite", "small"]}>
             By continuing you agree to our{" "}
@@ -72,11 +72,7 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = props => {
   )
 }
 
-interface FormProps {
-  type: "signIn" | "signUp"
-}
-
-const FormComponent = ({ type }: FormProps) => {
+const FormComponent = () => {
   const [value, setValue] = React.useState("")
   const methods = useForm({
     defaultValues: {
@@ -84,7 +80,7 @@ const FormComponent = ({ type }: FormProps) => {
       password: "",
     },
   })
-  const { navigationStore } = useStores()
+  const { navigationStore,appStateStore } = useStores()
 
   return (
     <View style={styles.INPUT_CONTAINER}>
@@ -95,7 +91,7 @@ const FormComponent = ({ type }: FormProps) => {
       <Button
         style={{ padding: spacing[2], marginTop: spacing[2] }}
         mode="contained"
-        onPress={() => console.log("Pressed")}
+		  onPress={() => appStateStore.setToast({text:'This is first toast',styles:'success'})}
       >
         Sign In
       </Button>

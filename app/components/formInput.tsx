@@ -8,7 +8,7 @@ import { View } from "react-native"
 
 export interface FormInputProps
   extends React.ComponentProps<typeof TextInput>,
-    ControllerProps<any> {
+    Omit<ControllerProps<any>, "as"> {
   required?: boolean
   placeholder?: string
   value?: string
