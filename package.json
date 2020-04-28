@@ -120,8 +120,7 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-native|react-navigation|@react-navigation|@storybook|@react-native-community)",
-      "node_modules/(?!(react-native|@react-native-community))",
-	  "node_modules/(?!ramda)"
+      "node_modules/(?!(react-native|@react-native-community|ramda))"
     ]
   },
   "prettier": {

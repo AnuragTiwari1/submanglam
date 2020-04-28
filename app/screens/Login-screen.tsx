@@ -80,7 +80,7 @@ const FormComponent = () => {
       password: "",
     },
   })
-  const { navigationStore,appStateStore } = useStores()
+  const { navigationStore, appStateStore } = useStores()
 
   return (
     <View style={styles.INPUT_CONTAINER}>
@@ -91,7 +91,9 @@ const FormComponent = () => {
       <Button
         style={{ padding: spacing[2], marginTop: spacing[2] }}
         mode="contained"
-		  onPress={() => appStateStore.setToast({text:'This is first toast',styles:'success'})}
+        onPress={() =>
+          appStateStore.toast.setToast({ text: "This is first toast", styles: "success" })
+        }
       >
         Sign In
       </Button>
