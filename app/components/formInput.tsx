@@ -42,13 +42,12 @@ export const FormInput = (props: FormInputProps) => {
   } = props
 
   const { errors, control } = useFormContext()
-
   return (
     <Controller
       as={
         <StyledTextInput
           label={required ? `${label}*` : label}
-          errorMessage={`${errors?.[name]?.message}`}
+          error={`${errors?.[name]?.message ?? ""}`.length > 0}
           placeholder={placeholder}
           style={inputContainerStyle}
           {...rest}

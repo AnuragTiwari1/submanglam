@@ -20,8 +20,6 @@ export const ToastProvider = observer(() => {
     toast: { text, styles },
   } = appStateStore
 
-	console.log('the style>>>',styles,getStyles(styles))
-
   return (
     <Snackbar
       visible={text.length > 0}
