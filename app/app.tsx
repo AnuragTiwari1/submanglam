@@ -74,7 +74,7 @@ export const App: React.FunctionComponent<{}> = () => {
     <RootStoreProvider value={rootStore}>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
       <BackButtonHandler canExit={canExit}>
-        <ToastProvider toast={rootStore.appStateStore.toast} />
+        <ToastProvider />
         <StatefulNavigator />
       </BackButtonHandler>
     </RootStoreProvider>

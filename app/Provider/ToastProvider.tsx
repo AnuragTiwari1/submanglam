@@ -4,7 +4,7 @@ import { useStores } from "../models/root-store"
 import { ViewStyle } from "react-native"
 import { palette } from "../theme/palette"
 import { DEFAULT_APPSTATE } from "../models/app-state-model"
-import {observer} from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 
 const getStyles = (style: keyof typeof palette): ViewStyle => {
   return typeof style === "string"
@@ -14,19 +14,22 @@ const getStyles = (style: keyof typeof palette): ViewStyle => {
     : ((style || {}) as ViewStyle)
 }
 
-export const ToastProvider = observer(({ toast }) => {
+export const ToastProvider = observer(() => {
   const { appStateStore } = useStores()
+  const {
+    toast: { text, styles },
+  } = appStateStore
 
-  console.log("The toast>>>>>", appStateStore.toast)
+	console.log('the style>>>',styles,getStyles(styles))
 
   return (
     <Snackbar
-      visible={!!toast.text}
-      style={getStyles(toast?.styles ?? "success")}
-      duration={5000}
+      visible={text.length > 0}
+      style={getStyles(styles || "success")}
+      duration={2000}
       onDismiss={() => appStateStore.toast.setToast(DEFAULT_APPSTATE.toast)}
     >
-      {toast?.text}
+      {text}
     </Snackbar>
   )
 })
