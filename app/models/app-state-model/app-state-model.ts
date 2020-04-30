@@ -16,8 +16,8 @@ export const DEFAULT_APPSTATE = {
 
 const toastModal = types
   .model("toastModal", {
-    text: types.optional(types.string,""),
-    styles: types.optional(types.string,"")
+    text: types.optional(types.string, ""),
+    styles: types.optional(types.string, ""),
   })
   .actions((self) => ({
     setToast(newToast) {
@@ -28,7 +28,7 @@ const toastModal = types
 
 export const AppStateModel = types
   .model("AppStateModel", {
-    toast:toastModal
+    toast: types.optional(toastModal,DEFAULT_APPSTATE.toast)
   })
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

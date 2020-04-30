@@ -9,7 +9,7 @@ import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
 import { withHandleFormReject } from "../hocs/withHandleFormReject"
 import * as Yup from "yup"
-import { emailValidator } from "../validators/fields.ts"
+import { emailValidator } from "../validators/fields"
 import { useFetch } from "use-fetch-lib"
 
 export interface LoginScreenProps extends NavigationScreenProp<{}> {}

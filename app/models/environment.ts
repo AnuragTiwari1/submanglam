@@ -33,5 +33,4 @@ export class Environment {
   /**
    * Our api.
    */
-  api: Api
 }

@@ -18,6 +18,7 @@ const ROOT_STATE_STORAGE_KEY = "root"
 export async function createEnvironment() {
   const env = new Environment()
   await env.setup()
+  console.log('this is running>>>>>>,',env)
   return env
 }
 
