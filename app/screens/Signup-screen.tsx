@@ -7,9 +7,10 @@ import { DismissKeyboardView, Text } from "../components"
 import { FormInput } from "../components/formInput"
 import { spacing } from "../theme"
 import { useStores } from "../models/root-store"
-import { getYupValidationResolver } from "../validators/formUtils"
 import { registerForm } from "../validators/shapes"
 import { withHandleFormReject } from "../hocs/withHandleFormReject"
+import { useFetch } from "use-fetch-lib"
+
 export interface SignupScreenProps {
   navigation: NavigationScreenProp<SignupScreenProps>
 }
@@ -33,20 +34,42 @@ const styles = StyleSheet.create({
   },
 })
 
+const getCleanFormData = (formData: SignFormShape): SignupFormRequest => {
+  const { name, ...rest } = formData
+  return {
+    fullName: name,
+    ...rest,
+  }
+}
+
 export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
   const { appStateStore, navigationStore } = useStores()
 
   const methods = useForm<SignFormShape>({
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: "Anurag",
+      email: "anurag@test.mail",
+      password: "1",
     },
-    validationResolver: getYupValidationResolver(registerForm),
+    validationSchema: registerForm,
   })
 
-  const handleFormSubmit = (data) => {
-    console.log("boy you got it >>>>>>", data)
+  const [{ data, status }, service] = useFetch({
+	  url: "/register",
+    method: "post",
+  })
+
+  React.useEffect(() => {
+    if (status.isFulfilled) {
+		console.log('the api data>>>>',data)
+	}
+	  if(status.isRejected){
+		 appStateStore.toast.setToast({text:status.err,styles:'angry'})
+	  }
+  }, [status])
+
+  const handleFormSubmit = (formData) => {
+    service(getCleanFormData(formData))
   }
 
   return (
@@ -68,6 +91,7 @@ export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
           <Button
             style={{ padding: spacing[2], marginTop: spacing[2] }}
             mode="contained"
+            loading={status.isPending}
             onPress={methods.handleSubmit(handleFormSubmit)}
           >
             Sign Up

@@ -11,6 +11,7 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-stor
 import { contains } from "ramda"
 import { enableScreens } from "react-native-screens"
 import { ToastProvider } from "./Provider/ToastProvider"
+import { ServicesProvider } from "./Provider/ServicesProvider"
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 // This puts screens in a native ViewController or Activity. If you want fully native
@@ -74,8 +75,10 @@ export const App: React.FunctionComponent<{}> = () => {
     <RootStoreProvider value={rootStore}>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
       <BackButtonHandler canExit={canExit}>
-        <ToastProvider />
-        <StatefulNavigator />
+        <ServicesProvider>
+          <ToastProvider />
+          <StatefulNavigator />
+        </ServicesProvider>
       </BackButtonHandler>
     </RootStoreProvider>
   )
