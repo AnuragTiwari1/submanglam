@@ -7,6 +7,10 @@ import { Text, DismissKeyboardView } from "../components"
 import { FormInput } from "../components/formInput"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
+import { withHandleFormReject } from "../hocs/withHandleFormReject"
+import * as Yup from "yup"
+import { emailValidator } from "../validators/fields.ts"
+import { useFetch } from "use-fetch-lib"
 
 export interface LoginScreenProps extends NavigationScreenProp<{}> {}
 
@@ -29,7 +33,40 @@ const styles = StyleSheet.create({
 })
 
 export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
-  // const { someStore } = useStores()
+  const { navigationStore, appStateStore, authStore } = useStores()
+  const methods = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object().shape({
+      email: emailValidator,
+      password: Yup.string().required(),
+    }),
+  })
+
+  const [{ data, status }, service] = useFetch<LoginFormResponse>({
+    url: "/login",
+    method: "post",
+  })
+
+  const handleFormSubmit = (data) => {
+    service(data)
+  }
+
+  React.useEffect(() => {
+    if (status.isFulfilled) {
+      const { isProfileComplete } = data
+      authStore.setUser(data)
+      isProfileComplete
+        ? navigationStore.navigateTo("primaryStack")
+        : navigationStore.navigateTo("addPersonalDetails")
+    }
+    if (status.isRejected) {
+      appStateStore.toast.setToast({ text: status.err, styles: "angry" })
+    }
+  }, [status])
+
   return (
     <ImageBackground
       source={require("../../assets/images/login_image.jpg")}
@@ -51,8 +88,26 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit "
             </Text>
           </View>
-          <FormComponent />
+          <View style={styles.INPUT_CONTAINER}>
+            <FormContext {...methods}>
+              <FormComponent
+                handleFormReject={(text) => appStateStore.toast.setToast({ text, styles: "angry" })}
+              />
+            </FormContext>
 
+            <Button
+              style={{ padding: spacing[2], marginTop: spacing[2] }}
+              mode="contained"
+              onPress={methods.handleSubmit(handleFormSubmit)}
+            >
+              Sign In
+            </Button>
+            <Text style={{ marginTop: spacing[3] }} preset={["center", "white"]}>
+              <Text>Need help?</Text>
+              <Text>&nbsp; &nbsp;|&nbsp; &nbsp;</Text>
+              <Text onPress={() => navigationStore.navigateTo("register")}>Register</Text>
+            </Text>
+          </View>
           <Text style={{ marginBottom: spacing[2] }} preset={["center", "dullWhite", "small"]}>
             By continuing you agree to our{" "}
             <Text preset={["link", "small"]} url="https://github.com/site/terms">
@@ -72,36 +127,11 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
   )
 }
 
-const FormComponent = () => {
-  const [value, setValue] = React.useState("")
-  const methods = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  })
-  const { navigationStore, appStateStore } = useStores()
-
+const FormComponent = withHandleFormReject(() => {
   return (
-    <View style={styles.INPUT_CONTAINER}>
-      <FormContext {...methods}>
-        <FormInput name="email" label="Email" value={value} onChangeText={setValue} />
-        <FormInput name="password" label="Password" value={value} onChangeText={setValue} />
-      </FormContext>
-      <Button
-        style={{ padding: spacing[2], marginTop: spacing[2] }}
-        mode="contained"
-        onPress={() =>
-          appStateStore.toast.setToast({ text: "This is first toast", styles: "success" })
-        }
-      >
-        Sign In
-      </Button>
-      <Text style={{ marginTop: spacing[3] }} preset={["center", "white"]}>
-        <Text>Need help?</Text>
-        <Text>&nbsp; &nbsp;|&nbsp; &nbsp;</Text>
-        <Text onPress={() => navigationStore.navigateTo("register")}>Register</Text>
-      </Text>
+    <View>
+      <FormInput name="email" label="Email" />
+      <FormInput name="password" label="Password" />
     </View>
   )
-}
+})

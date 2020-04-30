@@ -42,33 +42,38 @@ const getCleanFormData = (formData: SignFormShape): SignupFormRequest => {
   }
 }
 
+const defaultSignupFormValues = {
+  name: "Anu",
+  email: "anu@rag.com",
+  password: "1",
+}
+
 export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
-  const { appStateStore, navigationStore } = useStores()
+  const { appStateStore, navigationStore, authStore } = useStores()
 
   const methods = useForm<SignFormShape>({
-    defaultValues: {
-      name: "Anurag",
-      email: "anurag@test.mail",
-      password: "1",
-    },
+    defaultValues: defaultSignupFormValues,
     validationSchema: registerForm,
   })
 
-  const [{ data, status }, service] = useFetch({
-	  url: "/register",
+  const [{ data, status }, service] = useFetch<SignupFormResponse>({
+    url: "/register",
     method: "post",
   })
 
   React.useEffect(() => {
+    const { watch } = methods
+
     if (status.isFulfilled) {
-		console.log('the api data>>>>',data)
-	}
-	  if(status.isRejected){
-		 appStateStore.toast.setToast({text:status.err,styles:'angry'})
-	  }
+      authStore.setUser({ email: watch("email"), token: data.success, firstName: watch("name") })
+      navigationStore.navigateTo("addPersonalDetails")
+    }
+    if (status.isRejected) {
+      appStateStore.toast.setToast({ text: status.err, styles: "angry" })
+    }
   }, [status])
 
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = (formData: SignFormShape) => {
     service(getCleanFormData(formData))
   }
 

@@ -8,6 +8,7 @@ export const AuthModel = types
     token: types.optional(types.string, ""),
     email: types.optional(types.string, ""),
     firstName: types.optional(types.string, ""),
+    isProfileComplete: types.optional(types.boolean, false),
   })
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -15,7 +16,8 @@ export const AuthModel = types
     setUser(newUser) {
       self.email = newUser.email
       self.token = newUser.token
-      self.firstName = newUser.firstName.split(" ")[0]
+      self.firstName = (newUser.firstName ?? "").split(" ")[0]
+      self.isProfileComplete = newUser.isProfileComplete || false
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 

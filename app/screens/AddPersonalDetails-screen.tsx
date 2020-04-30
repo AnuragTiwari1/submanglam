@@ -21,15 +21,16 @@ const defaultData = {
 }
 export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetailsScreenProps> = observer(
   (props) => {
-    const { navigationStore } = useStores()
+    const { navigationStore, authStore } = useStores()
     const methods = useForm({
       defaultValues: defaultData,
     })
+    console.log("authStore>>>>>>>", authStore)
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.rootContainer}>
           <Text style={{ fontSize: 28 }} preset={["header"]}>
-            Hi Anurag,
+            Hi {authStore.firstName},
           </Text>
           <Text style={{ fontSize: 28 }} preset={["header"]}>
             Tell us more about yourself...
