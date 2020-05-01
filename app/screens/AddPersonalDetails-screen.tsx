@@ -77,9 +77,13 @@ export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetail
       validationSchema: addPersonalDetailsForm,
     })
 
+    React.useEffect(() => {
+      methods.reset({ ...defaultData, ...getPersonalDetails(userProfileForm) })
+    }, [userProfileForm])
+
     const onFormSubmit = (data) => {
       const cleanData = getCleanFormData(data)
-      userProfileForm.update(cleanData)
+      userProfileForm.updateProfile(cleanData)
       navigationStore.navigateTo("professionalDetails")
     }
 

@@ -18,16 +18,15 @@ export const UserProfileModel = types
     dob: types.optional(types.string, ""),
   })
   .props({})
-  .views((self) => ({
-
-  })) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
-	update(newData){
-		self={
-		...self,
-			...newData
-		}
-	}
+    updateProfile(newData) {
+      const keys = Object.keys(newData)
+
+      keys.forEach((e, i) => {
+        self[e] = newData[e] || self[e]
+      })
+    },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 /**
