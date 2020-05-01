@@ -3,15 +3,16 @@ import { Modal, TouchableOpacity, View } from "react-native"
 import { spacing } from "../../theme"
 import { Text } from "../text/text"
 import { FakeSelectInput, IFakeSelectInput } from "./FakeSelectInput"
-import { Controller, ControllerProps } from "react-hook-form"
+import { Controller, ControllerProps, useFormContext } from "react-hook-form"
 
-interface ICommonPicker extends IFakeSelectInput {
-  setAction: Function
+interface ICommonPicker
+  extends Omit<IFakeSelectInput, "children" | "placeholder" | "value" | "as"> {
+  setAction?: Function
   list: string[] | { label: string; value: string | Record<any, any>; hidden?: boolean }[]
 }
 
 export const CommonPicker = (props: ICommonPicker) => {
-  const { setAction, value, placeholder, label, errorMessage, list } = props
+  const { setAction, value, placeholder, label, list, errorMessage } = props
   return (
     <FakeSelectInput
       {...{
@@ -99,11 +100,13 @@ export const CommonPicker = (props: ICommonPicker) => {
   )
 }
 
-export const FormPicker = (props: ICommonPicker & ControllerProps<any>) => {
+export const FormPicker = (props: ICommonPicker & Omit<ControllerProps<any>, "as">) => {
   const { name, ...rest } = props
+  const { errors } = useFormContext()
+
   return (
     <Controller
-      as={<CommonPicker {...rest} />}
+      as={<CommonPicker {...rest} errorMessage={errors?.[name]?.message} />}
       onChangeName="setAction"
       onChange={(args) => ({
         value: args[0],

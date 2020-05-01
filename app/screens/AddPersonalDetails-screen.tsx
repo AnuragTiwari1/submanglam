@@ -1,31 +1,88 @@
 import { observer } from "mobx-react-lite"
 import moment from "moment"
 import * as React from "react"
-import { Controller, FormContext, useForm, useFormContext } from "react-hook-form"
+import { FormContext, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { Button } from "react-native-paper"
 import { NavigationScreenProp } from "react-navigation"
-import { Checkbox, Text } from "../components"
+import { Text } from "../components"
 import { FormDatePicker } from "../components/FormComponents/DateInput"
 import { FormPicker } from "../components/FormComponents/FormPicker"
 import { FormInput, FormTextArea } from "../components/formInput"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
+import { addPersonalDetailsForm } from "../validators/shapes"
+import { withHandleFormReject } from "../hocs/withHandleFormReject"
+import { IAddPersonalDetailShape } from "./types"
+import { object } from "yup"
 
 export interface AddPersonalDetailsScreenProps extends NavigationScreenProp<{}> {}
 
-const defaultData = {
-  gender: "male",
+const defaultData: IAddPersonalDetailShape = {
+  gender: "",
   location: "Pune",
-  age: 24,
+  age: "",
+  height: "",
+  weight: "",
+  complexion: "",
+  bloodgroup: "",
+  hobbies: "",
+  address: "",
+  physically: "",
+  dob: "",
 }
+
+const getPersonalDetails = (object) =>
+  (({
+    gender,
+    location,
+    age,
+    height,
+    weight,
+    complexion,
+    bloodgroup,
+    hobbies,
+    address,
+    physically,
+    dob,
+  }) => ({
+    gender,
+    location,
+    age,
+    height,
+    weight,
+    complexion,
+    bloodgroup,
+    hobbies,
+    address,
+    physically,
+    dob,
+  }))(object)
+
+const getCleanFormData = (data) => {
+  const { age, height, weight, ...rest } = data
+  return {
+    ...rest,
+    age: Number(age.split(" ")[0]),
+    weight: Number(weight),
+    height: parseFloat(height.replace("' ", ".")),
+  }
+}
+
 export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetailsScreenProps> = observer(
   (props) => {
-    const { navigationStore, authStore } = useStores()
+    const { navigationStore, authStore, appStateStore, userProfileForm } = useStores()
     const methods = useForm({
-      defaultValues: defaultData,
+      defaultValues: { ...defaultData, ...getPersonalDetails(userProfileForm) },
+      validationSchema: addPersonalDetailsForm,
     })
-    console.log("authStore>>>>>>>", authStore)
+
+    const onFormSubmit = (data) => {
+      const cleanData = getCleanFormData(data)
+      userProfileForm.update(cleanData)
+      navigationStore.navigateTo("professionalDetails")
+    }
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.rootContainer}>
@@ -36,13 +93,15 @@ export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetail
             Tell us more about yourself...
           </Text>
           <FormContext {...methods}>
-            <PersonalDetailsForm />
+            <PersonalDetailsForm
+              handleFormReject={(text) => appStateStore.toast.setToast({ text, styles: "angry" })}
+            />
           </FormContext>
         </ScrollView>
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          onPress={() => navigationStore.navigateTo("professionalDetails")}
+          onPress={methods.handleSubmit(onFormSubmit)}
         >
           Next
         </Button>
@@ -51,34 +110,17 @@ export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetail
   },
 )
 
-const PersonalDetailsForm = () => {
-  const methods = useFormContext()
-  const isMale = methods.watch("gender") === "male"
-
+const PersonalDetailsForm = withHandleFormReject(() => {
   return (
     <View style={styles.personalFormContainer}>
-      <View style={{ marginVertical: `${spacing[1]}%` }}>
-        <Text>What is your Gender</Text>
-        <View style={{ flexDirection: "row", marginTop: spacing[2] }}>
-          <Controller
-            name="gender"
-            as={<Checkbox text="Male" style={{ flex: 1, marginEnd: `${spacing[1]}%` }} />}
-            onChangeName="onPress"
-          />
-          <Checkbox
-            text="Female"
-            value={false}
-            style={{ flex: 1, marginStart: `${spacing[1]}%` }}
-          />
-        </View>
-      </View>
+      <FormPicker name="gender" label="Select your gender" list={["male", "female"]} />
 
       <FormDatePicker
         label="Date of birth"
         placeholder="Pick your date of birth"
         maximumDate={new Date(moment(new Date()).subtract(18, "year").format())}
         minimumDate={new Date(moment(new Date()).subtract(150, "year").format())}
-        name="dateOfBirth"
+        name="dob"
       />
 
       <FormInput
@@ -87,8 +129,6 @@ const PersonalDetailsForm = () => {
         placeholder="What is your age?"
         required
         mask={"[00] Years"}
-        defaultValue={"24"}
-        disabled
         keyboardType="numeric"
       />
       <FormInput
@@ -115,12 +155,12 @@ const PersonalDetailsForm = () => {
       />
 
       <FormPicker
-        name="bloodGroup"
+        name="bloodgroup"
         label="Blood Group"
         list={["A +ve", "A -ve", "AB +ve", "AB -ve", "B +ve", "B -ve", "O +ve", "O -ve", "Unknown"]}
       />
 
-      <FormPicker label="Physically Challenged" name="physicallyChallenged" list={["Yes", "No"]} />
+      <FormPicker label="Physically Challenged" name="physically" list={["Yes", "No"]} />
 
       <FormInput
         name="hobbies"
@@ -143,7 +183,7 @@ const PersonalDetailsForm = () => {
       />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   rootContainer: {

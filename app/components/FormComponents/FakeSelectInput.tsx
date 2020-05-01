@@ -4,6 +4,7 @@ import { TextInput } from "react-native-paper"
 import { spacing } from "../../theme"
 import { inputContainerStyle } from "../formInput"
 import { Text } from "../text/text"
+import {useFormContext} from "react-hook-form"
 
 export interface IFakeSelectInput {
   value: any
@@ -26,7 +27,7 @@ export const FakeSelectInput = (props: IFakeSelectInput) => {
     label,
     errorMessage,
     children,
-    renderItem = defaultRenderItem,
+	  renderItem = defaultRenderItem,
   } = props
 
   const [showModal, setShowModal] = React.useState(false)
@@ -47,7 +48,8 @@ export const FakeSelectInput = (props: IFakeSelectInput) => {
           ) : (
             <Text preset="muted">{renderProps.placeholder}</Text>
           )
-        }}
+		}}
+		error={props?.errorMessage?.length>0}
       />
       {children(showModal, setShowModal)}
     </TouchableWithoutFeedback>

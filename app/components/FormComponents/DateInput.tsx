@@ -83,21 +83,26 @@ export const DateInput = (props: IDatePickerInput) => {
 export const FormDatePicker = (
   props: Omit<IDatePickerInput, "value" | "onSelectValue"> & {
     name: string
-    defaultData: string
-    rules: any
+    defaultData?: string
   },
 ) => {
   const { name, defaultData, rules, ...rest } = props
-  const { control, triggerValidation } = useFormContext()
+  const { control, triggerValidation, errors } = useFormContext()
   return (
     <Controller
-      as={<DateInput onTouchCancel={() => triggerValidation(name)} {...rest} />}
+      as={
+        <DateInput
+          onTouchCancel={() => triggerValidation(name)}
+          {...rest}
+          errorMessage={errors?.[name]?.message}
+        />
+      }
       defaultValue={defaultData}
       onChangeName="onSelectValue"
-      onChange={args => ({
+      onChange={(args) => ({
         value: args[0] ? moment(new Date(args[0])).format(Config.dateFormatString) : null,
       })}
-      {...{ name, control, rules }}
+      {...{ name, control }}
     />
   )
 }
