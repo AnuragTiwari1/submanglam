@@ -1,7 +1,7 @@
 import * as yup from "yup"
 import * as fields from "./fields"
 import { SignFormShape } from "../screens"
-import { IAddPersonalDetailShape } from "../screens/types"
+import { IAddPersonalDetailShape, IFamilyDetailsShape } from "../screens/types"
 import { BLOODGROUP, COMPLEXION } from "../constants"
 
 export const registerForm: yup.ObjectSchema<SignFormShape> = yup.object().shape({
@@ -28,3 +28,18 @@ export const addPersonalDetailsForm: yup.ObjectSchema<IAddPersonalDetailShape> =
     complexion: yup.mixed().oneOf(COMPLEXION, fields.SELECT_DROPDOWN),
     physically: yup.mixed().oneOf(["Yes", "No"], fields.SELECT_DROPDOWN),
   })
+
+export const addProfessinolDetails = yup.object().shape({
+  profession: fields.nameValidator,
+  officename: fields.nameValidator,
+  salary: yup.string().required(fields.SELECT_DROPDOWN),
+  education: fields.nameValidator,
+})
+
+export const familyDetailShape: yup.ObjectSchema<IFamilyDetailsShape> = yup.object().shape({
+  fatherprofession: fields.nameValidator,
+  motherprofession: fields.nameValidator,
+  expetations: fields.longTextValidator,
+  parentsmob1: fields.mobileValidator,
+  parentsmob2: fields.mobileValidator,
+})

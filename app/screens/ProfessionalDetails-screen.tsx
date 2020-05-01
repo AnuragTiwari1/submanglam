@@ -9,23 +9,55 @@ import { FormPicker } from "../components/FormComponents/FormPicker"
 import { FormInput } from "../components/formInput"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
-
+import { IAddProfessinolDetailShape } from "./types"
+import { SALARY } from "../constants"
+import { addProfessinolDetails } from "../validators/shapes"
+import {withHandleFormReject} from "../hocs/withHandleFormReject"
 export interface ProfessionalDetailsScreenProps {
   navigation: NavigationScreenProp<{}>
 }
 
-const defaultData = {
-  employed: "true",
-  location: "Pune",
-  age: 24,
+const defaultData: IAddProfessinolDetailShape = {
+  profession: "",
+  officename: "",
+  salary: "",
+  education: "",
+}
+
+const getProfessinolDetails = (object) =>
+  (({ profession, officename, salary, education }) => ({
+    profession,
+    officename,
+    salary: `${salary}`,
+    education,
+  }))(object)
+
+const getCleanFormData = (data) => {
+  const { salary, ...rest } = data
+  return {
+    ...rest,
+    salary: Number(salary),
+  }
 }
 
 export const ProfessionalDetailsScreen: React.FunctionComponent<ProfessionalDetailsScreenProps> = observer(
   (props) => {
-    const { navigationStore } = useStores()
+    const { navigationStore, userProfileForm, appStateStore } = useStores()
     const methods = useForm({
-      defaultValues: defaultData,
+      defaultValues: { ...defaultData, ...getProfessinolDetails(userProfileForm) },
+      validationSchema: addProfessinolDetails,
     })
+
+    const onFormSubmit = (data) => {
+      const cleanData = getCleanFormData(data)
+      userProfileForm.updateProfile(cleanData)
+      navigationStore.navigateTo("familyDetails")
+    }
+
+    React.useEffect(() => {
+      methods.reset({ ...defaultData, ...getProfessinolDetails(userProfileForm) })
+    }, [userProfileForm])
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.rootContainer}>
@@ -33,13 +65,15 @@ export const ProfessionalDetailsScreen: React.FunctionComponent<ProfessionalDeta
             Lets build some ground about your professional life...
           </Text>
           <FormContext {...methods}>
-            <PersonalDetailsForm />
+            <PersonalDetailsForm
+              handleFormReject={(text) => appStateStore.toast.setToast({ text, styles: "angry" })}
+            />
           </FormContext>
         </ScrollView>
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          onPress={() => navigationStore.navigateTo("familyDetails")}
+          onPress={methods.handleSubmit(onFormSubmit)}
         >
           Next
         </Button>
@@ -48,27 +82,11 @@ export const ProfessionalDetailsScreen: React.FunctionComponent<ProfessionalDeta
   },
 )
 
-const PersonalDetailsForm = () => {
+const PersonalDetailsForm = withHandleFormReject(() => {
   const methods = useFormContext()
 
   return (
     <View style={styles.personalFormContainer}>
-      <View style={{ marginVertical: `${spacing[1]}%` }}>
-        <Text>Select whichever fit your situation?</Text>
-        <View style={{ flexDirection: "row", marginTop: spacing[2] }}>
-          <Controller
-            name="employed"
-            as={<Checkbox text="Working" style={{ flex: 1, marginEnd: `${spacing[1]}%` }} />}
-            onChangeName="onPress"
-          />
-          <Checkbox
-            text="Studying"
-            value={false}
-            style={{ flex: 1, marginStart: `${spacing[1]}%` }}
-          />
-        </View>
-      </View>
-
       <FormInput
         name="profession"
         label="Profession"
@@ -76,38 +94,23 @@ const PersonalDetailsForm = () => {
         required
       />
       <FormInput
-        name="companyName"
+        name="officename"
         label="Company Name"
         placeholder="What is name of company you work with?"
         required
       />
 
-      <FormPicker
-        name="salary"
-        label="Salary"
-        list={[
-          "Upto 10,000",
-          "Upto 20,000",
-          "Upto 30,000",
-          "Upto 40,000",
-          "Upto 50,000",
-          "Upto 60,000",
-          "Upto 70,000",
-          "Upto 80,000",
-          "Upto 90,000",
-          "Upto 1 Lakh",
-        ]}
-      />
+      <FormPicker name="salary" label="Salary" list={SALARY} />
 
       <FormInput
-        label="College Name"
-        name="collegeName"
-        placeholder="What is name of college you attended(ing)?"
+        label="Education"
+        name="education"
+        placeholder="What is highest educational qualificatio you have?"
         required
       />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   rootContainer: {

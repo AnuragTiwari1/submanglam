@@ -1,31 +1,60 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { Controller, FormContext, useForm, useFormContext } from "react-hook-form"
+import { FormContext, useForm, useFormContext } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { Button } from "react-native-paper"
 import { NavigationScreenProp } from "react-navigation"
-import { Checkbox, Text } from "../components"
-import { FormPicker } from "../components/FormComponents/FormPicker"
+import { Text } from "../components"
 import { FormInput, FormTextArea } from "../components/formInput"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
+import { IFamilyDetailsShape } from "./types"
+import { familyDetailShape } from "../validators/shapes"
+import { withHandleFormReject } from "../hocs/withHandleFormReject"
 
 export interface FamilyDetailsScreenProps {
   navigation: NavigationScreenProp<{}>
 }
 
-const defaultData = {
-  employed: "true",
-  location: "Pune",
-  age: 24,
+const defaultData: IFamilyDetailsShape = {
+  fatherprofession: "",
+  motherprofession: "",
+  expetations: "",
+  parentsmob1: "",
+  parentsmob2: "",
+}
+
+const getFamilyDetails = (object) =>
+  (({ fatherprofession, motherprofession, expetations, parentsmob1, parentsmob2 }) => ({
+    fatherprofession,
+    motherprofession,
+    parentsmob2,
+    parentsmob1,
+    expetations,
+  }))(object)
+
+const getCleanFormData = (data) => {
+  return data
 }
 
 export const FamilyDetailsScreen: React.FunctionComponent<FamilyDetailsScreenProps> = observer(
   (props) => {
-    const { navigationStore } = useStores()
+    const { navigationStore, userProfileForm, appStateStore } = useStores()
     const methods = useForm({
-      defaultValues: defaultData,
+      defaultValues: { ...defaultData, ...getFamilyDetails(userProfileForm) },
+      validationSchema: familyDetailShape,
     })
+
+    React.useEffect(() => {
+      methods.reset({ ...defaultData, ...getFamilyDetails(userProfileForm) })
+    }, [userProfileForm])
+
+    const onFormSubmit = (data) => {
+      const cleanFormData = getCleanFormData(data)
+      userProfileForm.updateProfile(cleanFormData)
+      navigationStore.navigateTo("addPictureScreen")
+    }
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.rootContainer}>
@@ -33,13 +62,15 @@ export const FamilyDetailsScreen: React.FunctionComponent<FamilyDetailsScreenPro
             Tell us to your family and idea of marriage
           </Text>
           <FormContext {...methods}>
-            <PersonalDetailsForm />
+            <PersonalDetailsForm
+              handleFormReject={(text) => appStateStore.toast.setToast({ text, styles: "angry" })}
+            />
           </FormContext>
         </ScrollView>
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          onPress={() => navigationStore.navigateTo("addPictureScreen")}
+          onPress={methods.handleSubmit(onFormSubmit)}
         >
           Next
         </Button>
@@ -48,47 +79,47 @@ export const FamilyDetailsScreen: React.FunctionComponent<FamilyDetailsScreenPro
   },
 )
 
-const PersonalDetailsForm = () => {
+const PersonalDetailsForm = withHandleFormReject(() => {
   const methods = useFormContext()
 
   return (
     <View style={styles.personalFormContainer}>
       <FormInput
         label="Father Profession"
-        name="fatherProfession"
+        name="fatherprofession"
         placeholder="Tell us about your father profession"
         required
       />
       <FormInput
         label="Mother Profession"
-        name="motherProfession"
+        name="motherprofession"
         placeholder="Tell us about your mother profession"
         required
       />
 
       <FormTextArea
-        name="expectation"
+        name="expetations"
         label="Expectations"
         placeholder="What is your take on idea of marriage?"
         required
       />
 
       <FormInput
-        name="phone"
+        name="parentsmob1"
         label="Your Mobile Number"
         placeholder="Enter your contact number"
         mask="(+91) [0000] [000] [000]"
       />
 
       <FormInput
-        name="parentPhone"
+        name="parentsmob2"
         label="Your Parent's Contact Number"
         placeholder="Enter your parents contact number"
         mask="(+91) [0000] [000] [000]"
       />
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   rootContainer: {

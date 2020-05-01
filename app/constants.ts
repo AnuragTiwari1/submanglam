@@ -1,5 +1,28 @@
-export const COMPLEXION=["Light Skin", "Fair Skin", "Olive Skin", "Brown"]
+export const COMPLEXION = ["Light Skin", "Fair Skin", "Olive Skin", "Brown"]
 
-export const BLOODGROUP=["A +ve", "A -ve", "AB +ve", "AB -ve", "B +ve", "B -ve", "O +ve", "O -ve", "Unknown"];
+export const BLOODGROUP = [
+  "A +ve",
+  "A -ve",
+  "AB +ve",
+  "AB -ve",
+  "B +ve",
+  "B -ve",
+  "O +ve",
+  "O -ve",
+  "Unknown",
+]
 
-export const LOCATIONS=["Kolhapur", "Sangli", "Satara", "Pune"];
+export const LOCATIONS = ["Kolhapur", "Sangli", "Satara", "Pune"]
+
+export const SALARY = [
+  { label: "Upto 10,000", value: 10000 },
+  { label: "Upto 20,000", value: 20000 },
+  { label: "Upto 30,000", value: 30000 },
+  { label: "Upto 40,000", value: 40000 },
+  { label: "Upto 50,000", value: 50000 },
+  { label: "Upto 60,000", value: 60000 },
+  { label: "Upto 70,000", value: 70000 },
+  { label: "Upto 80,000", value: 80000 },
+  { label: "Upto 90,000", value: 90000 },
+  { label: "Upto 1 Lakh", value: 100000 },
+]

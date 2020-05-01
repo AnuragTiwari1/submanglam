@@ -48,9 +48,9 @@ const getPersonalDetails = (object) =>
   }) => ({
     gender,
     location,
-    age,
-    height,
-    weight,
+    age: `${age}`,
+    height: `${height}`,
+    weight: `${weight}`,
     complexion,
     bloodgroup,
     hobbies,

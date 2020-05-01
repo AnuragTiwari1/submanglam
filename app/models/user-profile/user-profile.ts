@@ -10,12 +10,22 @@ export const UserProfileModel = types
     location: types.optional(types.string, "Pune"),
     age: types.optional(types.number, 0),
     height: types.optional(types.number, 0),
+    weight: types.optional(types.number, 0),
     complexion: types.optional(types.string, ""),
     bloodgroup: types.optional(types.string, ""),
     hobbies: types.optional(types.string, ""),
     address: types.optional(types.string, ""),
     physically: types.optional(types.string, ""),
     dob: types.optional(types.string, ""),
+    profession: types.optional(types.string, ""),
+    officename: types.optional(types.string, ""),
+    salary: types.optional(types.number, 0),
+    education: types.optional(types.string, ""),
+    fatherprofession: types.optional(types.string, ""),
+    motherprofession: types.optional(types.string, ""),
+    expetations: types.optional(types.string, ""),
+    parentsmob1: types.optional(types.string, ""),
+    parentsmob2: types.optional(types.string, ""),
   })
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

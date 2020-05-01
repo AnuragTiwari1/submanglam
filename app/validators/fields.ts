@@ -20,3 +20,5 @@ export const longTextValidator = yup
   .string()
   .required(REQUIRED_FEILD)
   .max(500, "Must be less than 500 characters")
+
+export const mobileValidator = yup.string().required().min(10, INVALID_FEILD)
