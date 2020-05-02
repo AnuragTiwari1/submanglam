@@ -26,3 +26,5 @@ export const SALARY = [
   { label: "Upto 90,000", value: 90000 },
   { label: "Upto 1 Lakh", value: 100000 },
 ]
+
+export const ERROR_MESSAGE = "Opps! something went wrong. Please try after some time"

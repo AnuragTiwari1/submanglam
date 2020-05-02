@@ -23,9 +23,10 @@ export const UserProfileModel = types
     education: types.optional(types.string, ""),
     fatherprofession: types.optional(types.string, ""),
     motherprofession: types.optional(types.string, ""),
-    expetations: types.optional(types.string, ""),
+    expectations: types.optional(types.string, ""),
     parentsmob1: types.optional(types.string, ""),
     parentsmob2: types.optional(types.string, ""),
+    profilepic: types.optional(types.string, ""),
   })
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -36,6 +37,9 @@ export const UserProfileModel = types
       keys.forEach((e, i) => {
         self[e] = newData[e] || self[e]
       })
+    },
+    reset() {
+      self = {}
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 

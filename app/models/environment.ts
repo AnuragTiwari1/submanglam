@@ -3,11 +3,11 @@ if (__DEV__) {
   const { Reactotron } = require("../services/reactotron")
   ReactotronDev = Reactotron
 }
-
 /**
  * The environment is a place where services and shared dependencies between
  * models live.  They are made available to every model via dependency injection.
  */
+
 export class Environment {
   constructor() {
     // create each service
@@ -17,13 +17,14 @@ export class Environment {
     }
   }
 
+  
   async setup() {
-    // allow each service to setup
+    // allow each service	 to setup
     if (__DEV__) {
       await this.reactotron.setup()
     }
-    
-  }
+
+      }
 
   /**
    * Reactotron is only available in dev.

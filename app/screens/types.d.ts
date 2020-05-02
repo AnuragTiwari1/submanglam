@@ -48,7 +48,7 @@ export interface IAddProfessinolDetailShape {
 export interface IFamilyDetailsShape {
   fatherprofession: string
   motherprofession: string
-  expetations: string
+  expectations: string
   parentsmob1: string
   parentsmob2: string
 }

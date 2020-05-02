@@ -39,7 +39,7 @@ export const addProfessinolDetails = yup.object().shape({
 export const familyDetailShape: yup.ObjectSchema<IFamilyDetailsShape> = yup.object().shape({
   fatherprofession: fields.nameValidator,
   motherprofession: fields.nameValidator,
-  expetations: fields.longTextValidator,
+  expectations: fields.longTextValidator,
   parentsmob1: fields.mobileValidator,
   parentsmob2: fields.mobileValidator,
 })

@@ -19,18 +19,18 @@ export interface FamilyDetailsScreenProps {
 const defaultData: IFamilyDetailsShape = {
   fatherprofession: "",
   motherprofession: "",
-  expetations: "",
+  expectations: "",
   parentsmob1: "",
   parentsmob2: "",
 }
 
 const getFamilyDetails = (object) =>
-  (({ fatherprofession, motherprofession, expetations, parentsmob1, parentsmob2 }) => ({
+  (({ fatherprofession, motherprofession, expectations, parentsmob1, parentsmob2 }) => ({
     fatherprofession,
     motherprofession,
     parentsmob2,
     parentsmob1,
-    expetations,
+    expectations,
   }))(object)
 
 const getCleanFormData = (data) => {
@@ -98,7 +98,7 @@ const PersonalDetailsForm = withHandleFormReject(() => {
       />
 
       <FormTextArea
-        name="expetations"
+        name="expectations"
         label="Expectations"
         placeholder="What is your take on idea of marriage?"
         required

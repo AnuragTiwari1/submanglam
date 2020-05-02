@@ -6,6 +6,7 @@ import { Avatar } from "react-native-paper"
 import { errorMessage } from "../../utils/errorMessages"
 import { spacing } from "../../theme"
 
+
 export interface File {
   uri: string
   size: number
@@ -23,12 +24,6 @@ export const FormImagePicker = ({ name, defaultValue, control, ...rest }) => {
       name={name}
       valueName="source"
       onChangeName="setSource"
-      onChange={(args: [File]) => ({
-        name: args[0].name,
-        size: args[0].size,
-        uri: args[0].uri,
-        type: args[0].type,
-      })}
       {...{ defaultValue, control }}
     />
   )
@@ -48,31 +43,34 @@ const imagePickerOptions = {
     skipBackup: true,
     path: "images",
   },
-  rotation: 90,
+  rotation: 0,
 }
 
 export const ImagePicker = ({ source, handleReject, setSource, maxSize = 1 }) => {
   const handleImage = (selection: any) => {
     //handle cancel
-    if (selection.didCancel) {
-      throw new Error("Image selection canceled by user")
-    }
-    //handle error
-    else if (selection.error) {
-      throw new Error(errorMessage(selection.error))
-    }
-    //handle image size errors
-    else if (selection.fileSize > maxSize * 1000 * 1000) {
-      throw new Error(`Must be less than ${maxSize}MB`)
-    }
-    //set image
-    else {
-      setSource({
-        size: selection.fileSize,
-        name: selection.fileName,
-        type: selection.type,
-        uri: selection.uri,
-      } as File)
+    try {
+      if (selection.didCancel) {
+        throw new Error("Image selection canceled by user")
+      }
+      //handle error
+      else if (selection.error) {
+        throw new Error(errorMessage(selection.error))
+      }
+      //handle image size errors
+      else if (selection.fileSize > maxSize * 1000 * 1000) {
+        throw new Error(`Must be less than ${maxSize}MB`)
+      }
+      //set image
+      else {
+        setSource({
+          name: selection.fileName,
+          type: selection.type,
+          uri: selection.uri,
+        } as File)
+      }
+    } catch (e) {
+      handleReject(errorMessage(e))
     }
   }
 

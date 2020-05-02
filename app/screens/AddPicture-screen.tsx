@@ -8,19 +8,77 @@ import { Text } from "../components"
 import { FormImagePicker } from "../components/FormComponents/ImagePicker"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
-
+import { useFetch } from "use-fetch-lib"
+import axios from "axios"
+import { API_URL } from "react-native-dotenv"
+import { ERROR_MESSAGE } from "../constants"
 export interface AddPictureScreenProps {
   navigation: NavigationScreenProp<{}>
 }
 
 export const AddPictureScreen: React.FunctionComponent<AddPictureScreenProps> = observer(
   (props) => {
-    const { navigationStore } = useStores()
+    const { navigationStore, userProfileForm, appStateStore, authStore, userProfile } = useStores()
     const methods = useForm({
       defaultValues: {
-        profilePic: "",
+        profilePic: userProfileForm.profilepic || "",
       },
     })
+
+    const [isLoading, setLoading] = React.useState(false)
+
+    const onSubmit = () => {
+      //validate the image
+      let profilePic = methods.watch("profilePic")
+
+      if (!profilePic) {
+        //this handles the case when profile pic is "" || undefined || null
+        return appStateStore.toast.setToast({
+          text: "Please select a profile pic",
+          styles: "angry",
+        })
+      }
+
+      const formData = new FormData()
+      Object.keys(userProfileForm).forEach((e) => {
+        formData.append(e, userProfileForm[e])
+      })
+
+      if (profilePic.name) {
+        //proves that profilePic is typeof file
+        formData.append("file", profilePic)
+      }
+      setLoading(true)
+      axios
+        .request({
+          url: "/create/profile",
+          baseURL: API_URL,
+          data: formData,
+          headers: {
+            Authorization: `Bearer ${authStore.token}`,
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "POST",
+        })
+        .then(({ data }) => {
+          setLoading(false)
+          if (data.filename) {
+            userProfileForm.updateProfile({ profilepic: data.filename })
+          }
+          appStateStore.toast.setToast({
+            text: "You are all set. Profile updated successfully",
+            styles: "success",
+          })
+          userProfile.updateProfile(userProfileForm)
+          userProfileForm.reset()
+          navigationStore.navigateTo("primaryStack")
+        })
+        .catch((e) => {
+          appStateStore.toast.setToast({ text: ERROR_MESSAGE, styles: "angry" })
+
+          setLoading(false)
+        })
+    }
 
     return (
       <View style={{ flex: 1 }}>
@@ -34,16 +92,21 @@ export const AddPictureScreen: React.FunctionComponent<AddPictureScreenProps> = 
         </View>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <FormContext {...methods}>
-            <FormImagePicker name="profilePic" />
+            <FormImagePicker
+              name="profilePic"
+              handleReject={(text) => appStateStore.toast.setToast({ text, styles: "angry" })}
+            />
           </FormContext>
         </View>
 
         <Button
           style={{ padding: spacing[2], marginTop: spacing[2] }}
           mode="contained"
-          onPress={() => navigationStore.navigateTo("primaryStack")}
+          onPress={onSubmit}
+          disabled={isLoading}
+          loading={isLoading}
         >
-          Next
+          Done
         </Button>
       </View>
     )

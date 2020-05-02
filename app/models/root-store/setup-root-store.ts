@@ -18,7 +18,6 @@ const ROOT_STATE_STORAGE_KEY = "root"
 export async function createEnvironment() {
   const env = new Environment()
   await env.setup()
-  console.log('this is running>>>>>>,',env)
   return env
 }
 
@@ -50,7 +49,7 @@ export async function setupRootStore() {
   }
 
   // track changes & save to storage
-  onSnapshot(rootStore, snapshot => storage.save(ROOT_STATE_STORAGE_KEY, snapshot))
+  onSnapshot(rootStore, (snapshot) => storage.save(ROOT_STATE_STORAGE_KEY, snapshot))
 
   return rootStore
 }
