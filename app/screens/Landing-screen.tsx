@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { Image, View, RefreshControl } from "react-native"
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler"
@@ -9,11 +8,13 @@ import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
 import { useFetch } from "use-fetch-lib"
 import { getProfilePic } from "../utils/links"
+import { IUserStory } from "./types"
 export interface LandingScreenProps {
   navigation: NavigationScreenProp<{}>
 }
 
 interface IntroProps {
+  id:string
   name: string
   age: number
   profilepic: string
@@ -22,22 +23,36 @@ interface IntroProps {
   promoted?: boolean
 }
 
-export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observer((props) => {
-  const { navigationStore } = useStores()
+export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props) => {
+  const { navigationStore,peopleStore } = useStores()
 
   const [{ data, status }, service] = useFetch<{ profilelist: IntroProps[] }>({
     url: "/get/profilelist",
     method: "get",
     shouldDispatch: true,
   })
+
+  const [{ data: people, status: peopleLoadingStatus }, fetchPeople] = useFetch<{
+    peoplelist: IUserStory[]
+  }>({
+	  url: "/get/people",
+    method: "post",
+  })
+
   const [refreshing, setRefreshing] = React.useState(false)
 
   React.useEffect(() => {
     if (status.isFulfilled) {
-      console.log("promise resolved", status, refreshing)
       if (refreshing) setRefreshing(false)
     }
   }, [status])
+
+	React.useEffect(()=>{
+		if(peopleLoadingStatus.isFulfilled){
+			peopleStore.setPeoples(people.peoplelist)
+			navigationStore.navigateTo('profile')
+		}
+	},[peopleLoadingStatus])
 
   return (
     <View style={{ flex: 1, padding: 3, backgroundColor: "white" }}>
@@ -60,7 +75,14 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
         data={data?.profilelist || []}
         numColumns={2}
         renderItem={({ item }) => {
-          return <IntroCard {...item} onPress={() => navigationStore.navigateTo("profile")} />
+          return (
+            <IntroCard
+              {...item}
+              onPress={() => {
+                fetchPeople({id:item.id})
+              }}
+            />
+          )
         }}
         ListEmptyComponent={
           <Text preset={["header", "center"]}>
@@ -85,7 +107,7 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
       />
     </View>
   )
-})
+}
 
 const HEART_CONTAINER_DIMENSION = 40
 
@@ -113,7 +135,7 @@ const IntroCard = (props: IntroProps & { onPress: Function }) => {
         >
           <View>
             <Text preset={["white", "small"]}>
-              <Text>{props.name}</Text>, &nbsp;<Text>{props.age}</Text>
+              <Text>{props.name.split(' ')[0]}</Text>, &nbsp;<Text>{props.age}</Text>
             </Text>
             <Text
               style={{

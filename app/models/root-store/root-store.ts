@@ -3,6 +3,8 @@ import { NavigationStoreModel } from "../../navigation/navigation-store"
 import { AppStateModel, DEFAULT_APPSTATE } from "../app-state-model"
 import { AuthModel } from "../auth"
 import { UserProfileModel } from "../user-profile"
+import { PeopleModel } from "../people"
+import { PersonDetailsModel } from "../person-details"
 
 /**
  * A RootStore model.
@@ -13,6 +15,8 @@ export const RootStoreModel = types.model("RootStore").props({
   authStore: types.optional(AuthModel, {}),
   userProfile: types.optional(UserProfileModel, {}),
   userProfileForm: types.optional(UserProfileModel, {}),
+  peopleStore: types.optional(PeopleModel, {}),
+  personStore: types.optional(PersonDetailsModel, {}),
 })
 
 /**

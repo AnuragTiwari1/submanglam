@@ -19,8 +19,12 @@ export type IBasicUserInfo = {
 
 export type IUserStory = {
   id: string
-  source: Pick<ImageProps, "source">
-  basicInfo: IBasicUserInfo
+  profilepic: string
+  name: string
+  age: number
+  height: number
+  weight: number
+  profession: string
 }
 
 //forms types

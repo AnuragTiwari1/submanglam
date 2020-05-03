@@ -10,6 +10,7 @@ import { Text } from "../../../components"
 import { useStores } from "../../../models/root-store"
 import { spacing } from "../../../theme"
 import { IUserStory } from "../../types"
+import {getProfilePic} from "../../../utils/links"
 
 const { width } = Dimensions.get("window")
 export interface StoryProps {
@@ -72,13 +73,15 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
     extrapolate: "clamp",
   })
 
-  const { name, height, weight, profession, age } = props.story.basicInfo
+	console.log('the profile pic>>>>',getProfilePic(props.story.profilepic))
+
+  const { name, height, weight, profession, age } = props.story
 
   const handleGesture = Animated.event([{ nativeEvent: { translationY: transY } }])
 
   return (
     <ImageBackground
-      source={props.story.source}
+      source={{uri:getProfilePic(props.story.profilepic)}}
       style={{ width: "100%", height: "100%" }}
       blurRadius={1.2}
     >
@@ -107,7 +110,7 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
             <SharedElement id={"someRandomId"}>
               <Image
                 style={styles.heroContainer}
-                source={props.story.source}
+                source={{uri:getProfilePic(props.story.profilepic)}}
                 resizeMode={FastImage.resizeMode.cover}
               />
             </SharedElement>
@@ -158,7 +161,7 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
               {name} <Text>{age}</Text>
             </Text>
             <Text preset="dullWhite">
-              {weight} kg, {height.foot}"{height.inch}'
+              {weight} kg, {`${height.split('.')[0]}`}"{`${height.split('.')?.[1]}`}'
             </Text>
             <Text preset="dullWhite">{profession}</Text>
 
