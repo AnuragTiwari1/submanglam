@@ -73,7 +73,6 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
     extrapolate: "clamp",
   })
 
-	console.log('the profile pic>>>>',getProfilePic(props.story.profilepic))
 
   const { name, height, weight, profession, age } = props.story
 

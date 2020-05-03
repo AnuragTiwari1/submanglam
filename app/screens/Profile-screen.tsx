@@ -1,12 +1,13 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle, View, StyleSheet, Dimensions, Image } from "react-native"
-// import { useStores } from "../models/root-store"
+import { useStores } from "../models/root-store"
 import { color, spacing } from "../theme"
 import { NavigationScreenProp } from "react-navigation"
 import { HeartIcon, Text, SettingsIcon, EditIcon, AddImages } from "../components"
 import Svg, { Circle } from "react-native-svg"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import {getProfilePic} from "../utils/links"
 
 const { width } = Dimensions.get("window")
 export interface ProfileScreenProps {
@@ -17,7 +18,7 @@ const imageWidth = width * 0.48 // this will take 1/3  of screen
 const iconWidth = 65
 
 export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observer((props) => {
-  // const { someStore } = useStores()
+   const { userProfile, authStore } = useStores()
   return (
     <View style={styles.container}>
       <View style={styles.details}>
@@ -25,12 +26,12 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
           <Image
             style={styles.heroContainer}
             source={{
-              uri: "https://i.pinimg.com/564x/c1/e1/50/c1e150a28e728df06b9c49b5e735b2ee.jpg",
+              uri: getProfilePic(userProfile.profilepic),
             }}
             resizeMode="cover"
           />
-          <Text preset="header">Yukino Yukinoshita, 24</Text>
-          <Text>Software Developer, Pune</Text>
+          <Text preset="header">{authStore.firstName}, {userProfile.age}</Text>
+          <Text>{userProfile.profession}, {userProfile.location}</Text>
         </View>
         <View
           style={{
