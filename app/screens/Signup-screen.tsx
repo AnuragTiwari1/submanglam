@@ -1,6 +1,6 @@
 import * as React from "react"
 import { FormContext, useForm } from "react-hook-form"
-import { ImageBackground, StyleSheet, View } from "react-native"
+import { ImageBackground, StyleSheet, View, StatusBar } from "react-native"
 import { Button } from "react-native-paper"
 import { NavigationScreenProp } from "react-navigation"
 import { DismissKeyboardView, Text } from "../components"
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   ROOT: {
     flex: 1,
     padding: `${spacing[1]}%`,
+    paddingTop: StatusBar.currentHeight,
   },
 
   INPUT_CONTAINER: {
@@ -43,9 +44,9 @@ const getCleanFormData = (formData: SignFormShape): SignupFormRequest => {
 }
 
 const defaultSignupFormValues = {
-  name: "Anu",
-  email: "anu@rag.com",
-  password: "1",
+  name: "",
+  email: "",
+  password: "",
 }
 
 export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {

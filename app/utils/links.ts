@@ -14,6 +14,6 @@ export const handleLinkPress = async (url: string) => {
 
 export const getProfilePic = (filename: string) => {
   return __DEV__
-    ? `${API_URL.split(":8080")[0]}/api/public/images/b616371588118cbd.jpg`
-    : `${API_URL}/sabbmanglam/home/Webservices`
+    ? `${API_URL}/images/${filename}`
+    : `${API_URL}/images/${filename}`
 }

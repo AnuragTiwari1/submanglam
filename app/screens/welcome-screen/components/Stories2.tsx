@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Animated, Dimensions, Platform, StyleSheet, View } from "react-native"
+import { Animated, Dimensions, Platform, StyleSheet, View, StatusBar } from "react-native"
 import { IUserStory } from "../../types"
 import Story from "./Story"
 
@@ -76,6 +76,11 @@ export default class Stories extends React.PureComponent<StoriesProps, StoriesSt
   render(): React.Node {
     const { x } = this.state
     const { stories } = this.props
+
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor("transparent")
+    }
+
     return (
       <View style={styles.container}>
         {stories

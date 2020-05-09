@@ -14,7 +14,7 @@ export interface LandingScreenProps {
 }
 
 interface IntroProps {
-  id:string
+  id: string
   name: string
   age: number
   profilepic: string
@@ -24,7 +24,7 @@ interface IntroProps {
 }
 
 export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props) => {
-  const { navigationStore,peopleStore } = useStores()
+  const { navigationStore, peopleStore } = useStores()
 
   const [{ data, status }, service] = useFetch<{ profilelist: IntroProps[] }>({
     url: "/get/profilelist",
@@ -35,24 +35,24 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props
   const [{ data: people, status: peopleLoadingStatus }, fetchPeople] = useFetch<{
     peoplelist: IUserStory[]
   }>({
-	  url: "/get/people",
+    url: "/get/people",
     method: "post",
   })
 
   const [refreshing, setRefreshing] = React.useState(false)
 
   React.useEffect(() => {
-    if (status.isFulfilled) {
+    if (!status.isPending) {
       if (refreshing) setRefreshing(false)
     }
   }, [status])
 
-	React.useEffect(()=>{
-		if(peopleLoadingStatus.isFulfilled){
-			peopleStore.setPeoples(people.peoplelist)
-			navigationStore.navigateTo('profile')
-		}
-	},[peopleLoadingStatus])
+  React.useEffect(() => {
+    if (peopleLoadingStatus.isFulfilled) {
+      peopleStore.setPeoples(people.peoplelist)
+      navigationStore.navigateTo("profile")
+    }
+  }, [peopleLoadingStatus])
 
   return (
     <View style={{ flex: 1, padding: 3, backgroundColor: "white" }}>
@@ -79,7 +79,7 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props
             <IntroCard
               {...item}
               onPress={() => {
-                fetchPeople({id:item.id})
+                fetchPeople({ id: item.id })
               }}
             />
           )
@@ -111,7 +111,7 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props
 
 const HEART_CONTAINER_DIMENSION = 40
 
-const IntroCard = (props: IntroProps & { onPress: Function }) => {
+const IntroCard = (props: IntroProps & { onPress: (e: any) => void }) => {
   return (
     <View style={{ flex: 1, margin: 5 }}>
       <TouchableOpacity style={{ width: "100%" }} onPress={props.onPress}>
@@ -135,7 +135,7 @@ const IntroCard = (props: IntroProps & { onPress: Function }) => {
         >
           <View>
             <Text preset={["white", "small"]}>
-              <Text>{props.name.split(' ')[0]}</Text>, &nbsp;<Text>{props.age}</Text>
+              <Text>{props.name.split(" ")[0]}</Text>, &nbsp;<Text>{props.age}</Text>
             </Text>
             <Text
               style={{

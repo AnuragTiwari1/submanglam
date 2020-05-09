@@ -2,7 +2,6 @@
 import React from "react"
 import { View } from "react-native"
 import { NavigationInjectedProps } from "react-navigation"
-import { IUserStory } from "../types"
 import Stories2 from "./components/Stories2"
 import {observer} from "mobx-react-lite"
 import {useStores} from "../../models/root-store"
