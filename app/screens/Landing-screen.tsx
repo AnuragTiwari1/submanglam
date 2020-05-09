@@ -117,7 +117,7 @@ const IntroCard = (props: IntroProps & { onPress: (e: any) => void }) => {
       <TouchableOpacity style={{ width: "100%" }} onPress={props.onPress}>
         <Image
           source={{ uri: getProfilePic(props.profilepic) }}
-          style={{ width: "100%", height: 200, borderRadius: 12 }}
+          style={{ width: "100%", height: 300, borderRadius: 12 }}
         />
         <View
           style={{
@@ -147,18 +147,6 @@ const IntroCard = (props: IntroProps & { onPress: (e: any) => void }) => {
               {props.profession || "Student"}
             </Text>
           </View>
-          <TouchableOpacity
-            style={{
-              width: HEART_CONTAINER_DIMENSION,
-              height: HEART_CONTAINER_DIMENSION,
-              borderRadius: HEART_CONTAINER_DIMENSION / 2,
-              backgroundColor: "white",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <AntIcons name="heart" size={18} color={"red"} />
-          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>
