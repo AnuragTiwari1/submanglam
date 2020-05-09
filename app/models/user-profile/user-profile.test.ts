@@ -14,3 +14,13 @@ test("can up updateed", () => {
   expect(instance.location).toBe("Pune")
 })
 
+test("can be reset to default", () => {
+  const instance: UserProfile = UserProfileModel.create({
+    gender: "male",
+    age: 25,
+    location: "satara",
+  })
+
+  instance.reset()
+  expect(instance.location).toBe("Pune")
+})

@@ -1,5 +1,4 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { getSupportedBiometryType } from "react-native-keychain"
+import { Instance, SnapshotOut, types, applySnapshot } from "mobx-state-tree"
 
 /**
  * Model description here for TypeScript hints.
@@ -17,7 +16,7 @@ export const UserProfileModel = types
     address: types.optional(types.string, ""),
     physically: types.optional(types.string, ""),
     dob: types.optional(types.string, ""),
-    profession: types.optional(types.string, ""),
+    profession: types.optional(types.string, "Student"),
     officename: types.optional(types.string, ""),
     salary: types.optional(types.number, 0),
     education: types.optional(types.string, ""),
@@ -35,11 +34,27 @@ export const UserProfileModel = types
       const keys = Object.keys(newData)
 
       keys.forEach((e, i) => {
-        self[e] = newData[e] || self[e]
+        switch (e) {
+          case "age":
+            self[e] = Number(newData[e]) || self[e]
+            break
+          case "height":
+            self[e] = parseFloat(newData[e]) || self[e]
+            break
+          case "weight":
+            self[e] = Number(newData[e]) || self[e]
+            break
+          case "salary":
+            self[e] = Number(newData[e]) || self[e]
+            break
+          default:
+            self[e] = newData[e] || self[e]
+            break
+        }
       })
     },
     reset() {
-      self = {}
+      applySnapshot(self, {})
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 

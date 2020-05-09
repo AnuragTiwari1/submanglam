@@ -7,7 +7,8 @@ import { NavigationScreenProp } from "react-navigation"
 import { HeartIcon, Text, SettingsIcon, EditIcon, AddImages } from "../components"
 import Svg, { Circle } from "react-native-svg"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import {getProfilePic} from "../utils/links"
+import { getProfilePic } from "../utils/links"
+import { useFetch } from "use-fetch-lib"
 
 const { width } = Dimensions.get("window")
 export interface ProfileScreenProps {
@@ -18,7 +19,20 @@ const imageWidth = width * 0.48 // this will take 1/3  of screen
 const iconWidth = 65
 
 export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observer((props) => {
-   const { userProfile, authStore } = useStores()
+  const { userProfile, authStore } = useStores()
+  const [{ data, status }] = useFetch({
+    url: "/get/myprofile",
+    method: "get",
+    cache: true,
+    shouldDispatch: true,
+  })
+
+  React.useEffect(() => {
+    if (status.isFulfilled && data) {
+      userProfile.updateProfile(data.profile)
+    }
+  }, [status])
+
   return (
     <View style={styles.container}>
       <View style={styles.details}>
@@ -30,8 +44,12 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
             }}
             resizeMode="cover"
           />
-          <Text preset="header">{authStore.firstName}, {userProfile.age}</Text>
-          <Text>{userProfile.profession}, {userProfile.location}</Text>
+          <Text preset="header">
+            {authStore.firstName}, {userProfile.age}
+          </Text>
+          <Text>
+            {userProfile.profession}, {userProfile.location}
+          </Text>
         </View>
         <View
           style={{
