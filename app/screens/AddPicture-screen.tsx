@@ -12,6 +12,7 @@ import { useFetch } from "use-fetch-lib"
 import axios from "axios"
 import { API_URL } from "react-native-dotenv"
 import { ERROR_MESSAGE } from "../constants"
+import {getProfilePic} from "../utils/links"
 export interface AddPictureScreenProps {
   navigation: NavigationScreenProp<{}>
 }
@@ -21,7 +22,7 @@ export const AddPictureScreen: React.FunctionComponent<AddPictureScreenProps> = 
     const { navigationStore, userProfileForm, appStateStore, authStore, userProfile } = useStores()
     const methods = useForm({
       defaultValues: {
-        profilePic: userProfileForm.profilepic || "",
+        profilePic: getProfilePic(userProfileForm.profilepic) || "",
       },
     })
 
@@ -71,7 +72,7 @@ export const AddPictureScreen: React.FunctionComponent<AddPictureScreenProps> = 
           })
           userProfile.updateProfile(userProfileForm)
           userProfileForm.reset()
-          navigationStore.navigateTo("primaryStack")
+          navigationStore.navigateTo("landingScreen")
         })
         .catch((e) => {
           appStateStore.toast.setToast({ text: ERROR_MESSAGE, styles: "angry" })

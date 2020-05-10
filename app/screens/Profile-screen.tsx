@@ -1,14 +1,14 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, View, StyleSheet, Dimensions, Image } from "react-native"
+import { View, StyleSheet, Dimensions, Image, TouchableOpacity } from "react-native"
 import { useStores } from "../models/root-store"
 import { color, spacing } from "../theme"
 import { NavigationScreenProp } from "react-navigation"
 import { HeartIcon, Text, SettingsIcon, EditIcon, AddImages } from "../components"
 import Svg, { Circle } from "react-native-svg"
-import { TouchableOpacity } from "react-native-gesture-handler"
 import { getProfilePic } from "../utils/links"
 import { useFetch } from "use-fetch-lib"
+import { applySnapshot } from "mobx-state-tree"
 
 const { width } = Dimensions.get("window")
 export interface ProfileScreenProps {
@@ -19,7 +19,7 @@ const imageWidth = width * 0.48 // this will take 1/3  of screen
 const iconWidth = 65
 
 export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observer((props) => {
-  const { userProfile, authStore } = useStores()
+  const { userProfile, authStore, navigationStore, userProfileForm } = useStores()
   const [{ data, status }] = useFetch({
     url: "/get/myprofile",
     method: "get",
@@ -60,7 +60,6 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
             justifyContent: "center",
             alignItems: "center",
           }}
-          underlayColor="#ccc"
         >
           <View
             style={{
@@ -80,9 +79,15 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
               right: 0,
             }}
           >
-            <View style={styles.iconContainer}>
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={() => {
+                applySnapshot(userProfileForm, userProfile)
+                navigationStore.navigateTo("updateProfile")
+              }}
+            >
               <EditIcon size={30} color={color.palette.lightGrey} />
-            </View>
+            </TouchableOpacity>
             <Text preset="small">Edit Info</Text>
           </View>
           <View

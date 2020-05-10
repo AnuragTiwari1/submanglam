@@ -16,27 +16,21 @@ interface IWeights {
     | undefined
 }
 const fonts = {
-  Nunito: {
+  "SourceSansPro": {
     weights: {
       Regular: "400",
       Bold: "900",
     } as IWeights,
   },
-  Anson: {
-    weights: {
-      Regular: "400",
-      Bold: "900",
-    },
-  },
 }
 
 interface IParams {
-  family?: "Nunito" | "Anson"
+  family?: "SourceSansPro"
   weight?: "Regular" | "Bold"
 }
 
 export const getFontStyleObject = (params: IParams = {}) => {
-  const { family = "Nunito", weight = "Regular" } = params
+  const { family = "SourceSansPro", weight = "Regular" } = params
 
   const { weights } = fonts[family]
 

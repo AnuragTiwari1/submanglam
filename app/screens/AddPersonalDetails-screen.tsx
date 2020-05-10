@@ -30,6 +30,7 @@ const defaultData: IAddPersonalDetailShape = {
   address: "",
   physically: "",
   dob: "",
+  maritalstatus: "Single",
 }
 
 const getPersonalDetails = (object) =>
@@ -45,6 +46,7 @@ const getPersonalDetails = (object) =>
     address,
     physically,
     dob,
+    maritalstatus,
   }) => ({
     gender,
     location,
@@ -57,6 +59,7 @@ const getPersonalDetails = (object) =>
     address,
     physically,
     dob,
+    maritalstatus,
   }))(object)
 
 const getCleanFormData = (data) => {
@@ -156,6 +159,12 @@ const PersonalDetailsForm = withHandleFormReject(() => {
         name="complexion"
         label="Complexion"
         list={["Light Skin", "Fair Skin", "Olive Skin", "Brown"]}
+      />
+
+      <FormPicker
+        name="maritalstatus"
+        label="Marital Status"
+        list={["Single", "Married", "Divorced", "Seprated"]}
       />
 
       <FormPicker

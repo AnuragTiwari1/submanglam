@@ -46,10 +46,10 @@ export const presets = {
   },
   header: {
     fontSize: 35,
-    ...getFontStyleObject({ family: "Anson", weight: "Regular" }),
+    ...getFontStyleObject({ weight: "Regular" }),
   },
   fontAnson: {
-    ...getFontStyleObject({ family: "Anson", weight: "Regular" }),
+    ...getFontStyleObject({ weight: "Regular" }),
   },
   underline: {
     textDecorationLine: "underline",

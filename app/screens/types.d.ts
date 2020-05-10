@@ -40,6 +40,7 @@ export interface IAddPersonalDetailShape {
   physically: "Yes" | "No"
   hobbies: string
   address: string
+  maritalstatus: string
 }
 
 export interface IAddProfessinolDetailShape {

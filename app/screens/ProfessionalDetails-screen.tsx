@@ -28,7 +28,7 @@ const getProfessinolDetails = (object) =>
   (({ profession, officename, salary, education }) => ({
     profession,
     officename,
-    salary: `${salary}`,
+    salary: salary,
     education,
   }))(object)
 

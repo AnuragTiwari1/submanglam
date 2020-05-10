@@ -6,6 +6,7 @@ import { TabView, SceneMap, NavigationState, SceneRendererProps } from "react-na
 import { TabBar, SearchIcon, ChatIcon, Face } from "../components"
 import { View, StatusBar } from "react-native"
 import { useSafeArea } from "react-native-safe-area-context"
+import {CreateProfileNavigator} from "./createProfile-navigator"
 
 type Route = {
   key: string
@@ -50,6 +51,7 @@ export const PrimaryNavigator = createStackNavigator(
   {
     landingScreen: { screen: PrimaryNavigatorTabs },
     profile: { screen: ProfileNavigator },
+    updateProfile: { screen: CreateProfileNavigator },
   },
   {
     navigationOptions: { gesturesEnabled: false },

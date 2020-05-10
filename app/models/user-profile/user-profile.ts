@@ -18,6 +18,7 @@ export const UserProfileModel = types
     dob: types.optional(types.string, ""),
     profession: types.optional(types.string, "Student"),
     officename: types.optional(types.string, ""),
+    maritalstatus: types.optional(types.string, "Single"),
     salary: types.optional(types.number, 0),
     education: types.optional(types.string, ""),
     fatherprofession: types.optional(types.string, ""),
