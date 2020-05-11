@@ -97,3 +97,7 @@ export const EditIcon = (props) => {
 export const AddImages = (props) => {
   return <Entypo name="images" {...props} />
 }
+
+export const BloodIcon= props=> {
+	return <Entypo name="drop" {...props}/>
+}

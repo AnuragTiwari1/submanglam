@@ -10,7 +10,7 @@ import { Text } from "../../../components"
 import { useStores } from "../../../models/root-store"
 import { spacing } from "../../../theme"
 import { IUserStory } from "../../types"
-import {getProfilePic} from "../../../utils/links"
+import { getProfilePic } from "../../../utils/links"
 
 const { width } = Dimensions.get("window")
 export interface StoryProps {
@@ -20,9 +20,6 @@ export interface StoryProps {
 const imgUrl = "https://i.pinimg.com/564x/c1/e1/50/c1e150a28e728df06b9c49b5e735b2ee.jpg"
 const imageWidth = width * 0.8
 const scrollOffset = -150
-
-// https://i.pinimg.com/originals/e0/8a/07/e08a0787ab994363d58162b7e58e217d.jpg
-// https://i.pinimg.com/originals/11/9a/4b/119a4b42d90bce485c9230ee1e439f34.jpg
 
 const styles = StyleSheet.create({
   container: {
@@ -64,7 +61,7 @@ const styles = StyleSheet.create({
 })
 
 const Story: React.FunctionComponent<StoryProps> = (props) => {
-  const { navigationStore } = useStores()
+  const { navigationStore,personStore } = useStores()
 
   const transY = new Animated.Value(0)
   const animatedOpacity = transY.interpolate({
@@ -73,14 +70,13 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
     extrapolate: "clamp",
   })
 
-
-  const { name, height, weight, profession, age } = props.story
+  const { name, height, weight, profession, age, id, native } = props.story
 
   const handleGesture = Animated.event([{ nativeEvent: { translationY: transY } }])
 
   return (
     <ImageBackground
-      source={{uri:getProfilePic(props.story.profilepic)}}
+      source={{ uri: getProfilePic(props.story.profilepic) }}
       style={{ width: "100%", height: "100%" }}
       blurRadius={1.2}
     >
@@ -106,14 +102,15 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
               ],
             }}
           >
-            <SharedElement id={"someRandomId"}>
+            <SharedElement id={id}>
               <Image
                 style={styles.heroContainer}
-                source={{uri:getProfilePic(props.story.profilepic)}}
+                source={{ uri: getProfilePic(props.story.profilepic) }}
                 resizeMode={FastImage.resizeMode.cover}
               />
             </SharedElement>
           </Animated.View>
+
 
           <Animated.View
             style={{
@@ -147,8 +144,9 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
             const hasEnded = e.nativeEvent.state === 5
             if (hasEnded) {
               if (e.nativeEvent.translationY < scrollOffset) {
-                transY.setValue(0)
-                navigationStore.navigateTo("demo")
+				  transY.setValue(0)
+				  personStore.updateProfile(props.story)
+				  navigationStore.navigateTo("demo")
                 return null
               }
               transY.setValue(0)
@@ -160,9 +158,9 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
               {name} <Text>{age}</Text>
             </Text>
             <Text preset="dullWhite">
-              {weight} kg, {`${height.split('.')[0]}`}"{`${height.split('.')?.[1]}`}'
+              {weight} kg, {`${height.split(".")[0]}`}"{`${height.split(".")?.[1]}`}'
             </Text>
-            <Text preset="dullWhite">{profession}</Text>
+            <Text preset="dullWhite">{profession}, {native}</Text>
 
             <View style={{ marginTop: `${spacing[2]}%`, alignItems: "center" }}>
               <AntIcons name="up" size={15} color={"white"} />

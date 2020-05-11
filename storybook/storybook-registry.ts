@@ -1,3 +1,4 @@
+require("../app/components/EmptyPreference/EmptyPreference.story")
 require("../app/components/TabBar/TabBar.story")
 require("../app/components/text/text.story")
 require("../app/components/form-row/form-row.story")

@@ -1,7 +1,7 @@
 import * as React from "react"
-import { Dimensions, Image, StyleSheet, View, ViewStyle } from "react-native"
+import { Dimensions, StyleSheet, View } from "react-native"
 import FastImage from "react-native-fast-image"
-import { TouchableWithoutFeedback, FlatList } from "react-native-gesture-handler"
+import { FlatList } from "react-native-gesture-handler"
 import Animated from "react-native-reanimated"
 import Carousel, { CarouselStatic } from "react-native-snap-carousel"
 import { NavigationInjectedProps } from "react-navigation"
@@ -21,59 +21,91 @@ import {
   HeartIcon,
   Report,
   SendIcon,
+  EmptyPreference,
+  BloodIcon,
 } from "../../components"
 import { SharedElement } from "react-navigation-shared-element"
+import { useStores } from "../../models/root-store"
+import { observer } from "mobx-react-lite"
+import { useFetch } from "use-fetch-lib"
+import { PersonDetailsSnapshot } from "../../models/person-details"
+import { getProfilePic } from "../../utils/links"
+import { getSnapshot } from "mobx-state-tree"
+import { SALARY } from "../../constants"
 
 const { width, height } = Dimensions.get("window")
 export interface DemoScreenProps extends NavigationInjectedProps<{}> {}
-
-const imgList = [
-  "https://i.pinimg.com/564x/c1/e1/50/c1e150a28e728df06b9c49b5e735b2ee.jpg",
-  "https://i.pinimg.com/564x/6a/dd/e2/6adde23f402617ffd47ac38d161ffac4.jpg",
-  "https://i.pinimg.com/564x/05/8b/0e/058b0ea70bee2dc34ad8a2ef9c959f83.jpg",
-]
 
 const AnimatedView = Animated.View
 
 const snapPoints = ["30%", "70%"]
 
-const DemoScreen: React.FunctionComponent<DemoScreenProps> = props => {
+const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
   const _carousel = React.useRef<CarouselStatic<string> | null>(null)
   const bottomSheetRef = React.createRef<BottomSheet>()
   const fall = new Animated.Value(1)
+  const { personStore } = useStores()
+
+  const imgList = [
+    personStore.photo || personStore.profilepic,
+    personStore.photo2,
+    personStore.photo3,
+    personStore.photo4,
+    personStore.photo5,
+  ]
+    .filter((e) => e !== "profile.png")
+    .map((e) => getProfilePic(e))
+
+  const [{ data, status }] = useFetch({
+    url: `/get/person?id=${personStore.id}`,
+    dependencies: [personStore.id],
+    method: "get",
+    shouldDispatch: true,
+  })
+
+  React.useEffect(() => {
+    if (status.isFulfilled) {
+      personStore.updateProfile(data.person)
+    }
+  }, [status])
 
   const renderContent = () => {
     return (
       <View style={styles.panel}>
-        <Text preset={["xLarge", "fontAnson"]}>Erzza Scarlet - 24</Text>
-        <Text style={{ color: color.palette.darkGrey }} preset={["fontAnson"]}>
-          65kg, 5"11'
+        <Text preset={["xLarge", "fontAnson"]}>
+          {personStore.name} - {personStore.age}
+        </Text>
+        <Text preset={["fontAnson"]}>
+          {personStore.weight}kg, {`${personStore.height}`.split(".")[0]}"{" "}
+          {`${personStore.height}`.split(".")?.[1] || 0}'{" "}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center", marginTop: spacing[1] }}>
           <LocationIcon color={color.palette.darkGrey} size={IconSize.small} />
-          <Text preset={["muted", "small"]}>{`\xa0 Bengaluru, India`}</Text>
+          <Text preset={[ "small"]}>{`\xa0 ${personStore.native}, India`}</Text>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", marginTop: spacing[1] }}>
           <OfficeBag color={color.palette.darkGrey} size={IconSize.small - 1} />
-          <Text preset={["muted", "small"]}>{`\xa0 Software Developer`}</Text>
+          <Text preset={["small"]}>{`\xa0  ${personStore.profession}`}</Text>
         </View>
-        <Text preset={["paragraph"]} style={{ marginTop: `${spacing[1]}%` }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce elementum interdum felis,
-          sit amet condimentum nunc laoreet eget. Phasellus venenatis massa cursus odio feugiat, et
-          venenatis nunc scelerisque. Aliquam faucibus vehicula felis quis porttitor. Integer
-          convallis nibh quis urna lobortis finibus.
+        <Text preset={["paragraph"]} style={{ marginTop: `${spacing[1]}%`,color:'black' }}>
+          {personStore.expectations}
         </Text>
-        <Matches
-          traits={{
-            maritalStatus: "Married Before",
-            education: "Graduate",
-            native: "Patna, Bihar",
-            hobbies: "Travelling",
-            complexion: "Fair",
-            salary: "20k/Month",
-          }}
-        />
-        <AllDetails />
+        {/*
+			see this is how the prop should look
+          <Matches
+            traits={{
+              maritalStatus: "Married Before",
+              education: "Graduate",
+              native: "Patna, Bihar",
+              hobbies: "Travelling",
+              complexion: "Fair",
+              salary: "20k/Month",
+            }}
+          />
+		  */}
+        <EmptyPreference message="Set your preference to know your compatibilty. We won't disappoint you." />
+
+        <AllDetails {...getSnapshot(personStore)} />
       </View>
     )
   }
@@ -201,14 +233,14 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = props => {
       />
       <View>
         <Carousel
-          ref={c => {
+          ref={(c) => {
             _carousel.current = c
           }}
           onTouchMove={() => bottomSheetRef.current!.snapTo(0)}
           data={imgList}
           renderItem={({ item, index }) => {
             return (
-              <SharedElement id={"someRandomId"}>
+              <SharedElement id={personStore.id}>
                 <FastImage
                   style={{ width: width, height: height * 0.7 }}
                   source={{
@@ -228,7 +260,7 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = props => {
       {renderBottomButtons()}
     </View>
   )
-}
+})
 
 DemoScreen.sharedElements = (navigation, otherNavigation, showing) => {
   return ["someRandomId"]
@@ -287,75 +319,50 @@ const Matches = ({ traits }: { traits: any }) => {
   )
 }
 
-const AllDetails = () => {
+const AllDetails = (props: PersonDetailsSnapshot) => {
   return (
     <View style={styles.panel}>
-      <Text preset={["header", "large"]}>Profile Details</Text>
-      <View style={{ paddingStart: `2%`, marginBottom: spacing[8] }}>
-        <Text preset={["bold", "fontAnson", "large", "underline"]}>Appearance</Text>
-        <View style={styles.section}>
-          <Text>
-            <Text preset="bold">Complexation</Text>: Fair
-          </Text>
-          <Text>
-            <Text preset="bold">Height</Text>: 5"11'
-          </Text>
-          <Text>
-            <Text preset="bold">Weight</Text>: 65kg
-          </Text>
-          <Text>
-            <Text preset="bold">Age</Text>: 24
-          </Text>
-          <Text>
-            <Text preset="bold">Physical Disabilities</Text>: N/A
-          </Text>
-        </View>
-        <Text preset={["bold", "fontAnson", "large", "underline"]}>Profession</Text>
-        <View style={styles.section}>
-          <Text>
-            <Text preset="bold">Job Title</Text>: Software Developer
-          </Text>
-          <Text>
-            <Text preset="bold">For</Text>: Tik Tok Pvt. Ltd.
-          </Text>
-          <Text>
-            <Text preset="bold">At</Text>: Bengaluru,India
-          </Text>
-          <Text>
-            <Text preset="bold">Salary</Text>: 20k/Month
-          </Text>
-        </View>
-        <Text preset={["bold", "fontAnson", "large", "underline"]}>Education</Text>
-        <View style={styles.section}>
-          <Text>
-            <Text preset="bold">Highest Education</Text>: Graduate, Mechanical Engineering
-          </Text>
-          <Text>
-            <Text preset="bold">College/University</Text>: Pune University
-          </Text>
-          <Text>
-            <Text preset="bold">Attended From</Text>: 2014 to 2018
-          </Text>
-        </View>
-        <Text preset={["bold", "fontAnson", "large", "underline"]}>Marital Status</Text>
-        <View style={styles.section}>
-          <Text>
-            <Text preset="bold">Marital Status</Text>: Married Before
-          </Text>
-          <Text>Have a 5 year old Daughter</Text>
-        </View>
-        <Text preset={["bold", "fontAnson", "large", "underline"]}>Family Background</Text>
-        <View style={styles.section}>
-          <Text>
-            <Text preset="bold">Father Profession</Text>: Surgeon at AIIMS Delhi
-          </Text>
-          <Text>
-            <Text preset="bold">Mother Profession</Text>: Lecturer at IIT Delhi
-          </Text>
-          <Text>
-            <Text preset="bold">Contact</Text>: (+91)-9607155846
-          </Text>
-        </View>
+      <View style={styles.charaterRow}>
+        <BalanceScale style={{ flex: 1 }} size={23} />
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {props.maritalstatus}
+        </Text>
+      </View>
+      <View style={styles.charaterRow}>
+        <Face style={{ flex: 1 }} size={23} color="black"/>
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {props.complexion}
+        </Text>
+      </View>
+      <View style={styles.charaterRow}>
+        <Hobbies style={{ flex: 1 }} size={23} />
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {props.hobbies}
+        </Text>
+      </View>
+      <View style={styles.charaterRow}>
+        <EducationCap style={{ flex: 1 }} size={23} />
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {props.education}
+        </Text>
+      </View>
+      <View style={styles.charaterRow}>
+        <Dollar style={{ flex: 1 }} size={23} />
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {SALARY.find((e) => e.value === props.salary)?.label}
+        </Text>
+      </View>
+      <View style={styles.charaterRow}>
+        <OfficeBag style={{ flex: 1 }} size={23} />
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {props.officename}
+        </Text>
+			</View>
+				<View style={styles.charaterRow}>
+        <BloodIcon style={{ flex: 1 }} size={23} />
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {props.bloodgroup}
+        </Text>
       </View>
     </View>
   )
@@ -409,7 +416,13 @@ const styles = StyleSheet.create({
   // user details (content)
   panel: {
     paddingHorizontal: `${spacing[1]}%`,
-    backgroundColor: "#fff",
+	  backgroundColor: "#fff",
+	  paddingBottom:spacing[7]
+  },
+
+  charaterRow: {
+    flexDirection: "row",
+    marginTop: spacing[3],
   },
 
   traitIcon: {

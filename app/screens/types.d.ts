@@ -25,6 +25,7 @@ export type IUserStory = {
   height: number
   weight: number
   profession: string
+  native: string
 }
 
 //forms types
