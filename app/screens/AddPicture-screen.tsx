@@ -8,11 +8,10 @@ import { Text } from "../components"
 import { FormImagePicker } from "../components/FormComponents/ImagePicker"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
-import { useFetch } from "use-fetch-lib"
 import axios from "axios"
 import { API_URL } from "react-native-dotenv"
 import { ERROR_MESSAGE } from "../constants"
-import {getProfilePic} from "../utils/links"
+import { getProfilePic } from "../utils/links"
 export interface AddPictureScreenProps {
   navigation: NavigationScreenProp<{}>
 }
@@ -29,11 +28,11 @@ export const AddPictureScreen: React.FunctionComponent<AddPictureScreenProps> = 
     const [isLoading, setLoading] = React.useState(false)
 
     const onSubmit = () => {
-      //validate the image
-      let profilePic = methods.watch("profilePic")
+      // validate the image
+      const profilePic = methods.watch("profilePic")
 
       if (!profilePic) {
-        //this handles the case when profile pic is "" || undefined || null
+        // this handles the case when profile pic is "" || undefined || null
         return appStateStore.toast.setToast({
           text: "Please select a profile pic",
           styles: "angry",
@@ -46,7 +45,7 @@ export const AddPictureScreen: React.FunctionComponent<AddPictureScreenProps> = 
       })
 
       if (profilePic.name) {
-        //proves that profilePic is typeof file
+        // proves that profilePic is typeof file
         formData.append("file", profilePic)
       }
       setLoading(true)

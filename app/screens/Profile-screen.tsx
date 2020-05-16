@@ -67,9 +67,16 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
               top: width * 0.1,
             }}
           >
-            <View style={[styles.iconContainer, { backgroundColor: color.palette.blue }]}>
+            <TouchableOpacity
+
+              style={[styles.iconContainer, { backgroundColor: color.palette.blue }]} onPress={() => {
+                applySnapshot(userProfileForm, userProfile)
+                navigationStore.navigateTo("addMediaScreen")
+              }}
+            >
               <AddImages size={30} color={"#ffffff"} />
-            </View>
+            </TouchableOpacity>
+
             <Text preset="small">Add Media</Text>
           </View>
           <View

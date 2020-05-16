@@ -1,11 +1,10 @@
-import React from "react"
+import React, { useState } from "react"
 import { Controller } from "react-hook-form"
 import { TouchableOpacity, View } from "react-native"
 import ImagePickerLib from "react-native-image-picker"
 import { Avatar } from "react-native-paper"
 import { errorMessage } from "../../utils/errorMessages"
 import { spacing } from "../../theme"
-
 
 export interface File {
   uri: string
@@ -30,11 +29,11 @@ export const FormImagePicker = ({ name, defaultValue, control, ...rest }) => {
 }
 
 const getSource = (source, defaultImag) => {
-  return typeof source?.name === "string" //is file
+  return typeof source?.name === "string" // is file
     ? { uri: source.uri }
-    : typeof source === "string" && source //is string
-    ? { uri: source }
-    : { uri: defaultImag }
+    : typeof source === "string" && source // is string
+      ? { uri: source }
+      : { uri: defaultImag }
 }
 
 const imagePickerOptions = {
@@ -46,22 +45,24 @@ const imagePickerOptions = {
   rotation: 0,
 }
 
-export const ImagePicker = ({ source, handleReject, setSource, maxSize = 1 }) => {
+export const ImagePicker = ({ source, handleReject, children, setSource, maxSize = 1 }) => {
+  const [isEmpty, setIsEmpty] = useState(true)
+
   const handleImage = (selection: any) => {
-    //handle cancel
+    // handle cancel
     try {
       if (selection.didCancel) {
         throw new Error("Image selection canceled by user")
       }
-      //handle error
+      // handle error
       else if (selection.error) {
         throw new Error(errorMessage(selection.error))
       }
-      //handle image size errors
+      // handle image size errors
       else if (selection.fileSize > maxSize * 1000 * 1000) {
         throw new Error(`Must be less than ${maxSize}MB`)
       }
-      //set image
+      // set image
       else {
         setSource({
           name: selection.fileName,
@@ -74,7 +75,18 @@ export const ImagePicker = ({ source, handleReject, setSource, maxSize = 1 }) =>
     }
   }
 
-  return (
+  const openPicker = () => {
+    ImagePickerLib.showImagePicker(imagePickerOptions, handleImage)
+  }
+
+  React.useEffect(() => {
+    if (typeof source?.name === "string") setIsEmpty(false)
+    else if (typeof source === "string" && source !== "profile.png" && source) setIsEmpty(false)
+  }, [source])
+
+  return children ? (
+    children({ source: getSource(source), openPicker, isEmpty })
+  ) : (
     <View style={{ alignContent: "center", alignItems: "center" }}>
       <TouchableOpacity
         style={{
@@ -84,9 +96,7 @@ export const ImagePicker = ({ source, handleReject, setSource, maxSize = 1 }) =>
           padding: `${spacing[3]}%`,
           borderRadius: 5,
         }}
-        onPress={() => {
-          ImagePickerLib.showImagePicker(imagePickerOptions, handleImage)
-        }}
+        onPress={openPicker}
       >
         <Avatar.Image
           size={200}

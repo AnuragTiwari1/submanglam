@@ -14,7 +14,6 @@ import { spacing } from "../theme"
 import { addPersonalDetailsForm } from "../validators/shapes"
 import { withHandleFormReject } from "../hocs/withHandleFormReject"
 import { IAddPersonalDetailShape } from "./types"
-import { object } from "yup"
 
 export interface AddPersonalDetailsScreenProps extends NavigationScreenProp<{}> {}
 

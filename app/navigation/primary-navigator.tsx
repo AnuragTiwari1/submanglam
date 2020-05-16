@@ -1,12 +1,11 @@
 import React from "react"
-import { LandingScreen, ProfileScreen, ChatScreen } from "../screens"
+import { LandingScreen, ProfileScreen, ChatScreen, AddMediaScreen } from "../screens"
 import { ProfileNavigator } from "./profile-navigator"
 import { createStackNavigator } from "react-navigation-stack"
-import { TabView, SceneMap, NavigationState, SceneRendererProps } from "react-native-tab-view"
+import { TabView, SceneMap, NavigationState } from "react-native-tab-view"
 import { TabBar, SearchIcon, ChatIcon, Face } from "../components"
 import { View, StatusBar } from "react-native"
-import { useSafeArea } from "react-native-safe-area-context"
-import {CreateProfileNavigator} from "./createProfile-navigator"
+import { CreateProfileNavigator } from "./createProfile-navigator"
 
 type Route = {
   key: string
@@ -52,6 +51,7 @@ export const PrimaryNavigator = createStackNavigator(
     landingScreen: { screen: PrimaryNavigatorTabs },
     profile: { screen: ProfileNavigator },
     updateProfile: { screen: CreateProfileNavigator },
+    addMediaScreen: { screen: AddMediaScreen },
   },
   {
     navigationOptions: { gesturesEnabled: false },
