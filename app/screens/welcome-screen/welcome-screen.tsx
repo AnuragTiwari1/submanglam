@@ -3,18 +3,17 @@ import React from "react"
 import { View } from "react-native"
 import { NavigationInjectedProps } from "react-navigation"
 import Stories2 from "./components/Stories2"
-import {observer} from "mobx-react-lite"
-import {useStores} from "../../models/root-store"
+import { observer } from "mobx-react-lite"
+import { useStores } from "../../models/root-store"
 
 export interface WelcomeScreenProps extends NavigationInjectedProps<{}> {}
 
-
 export const WelcomeScreen = observer(() => {
-	const {peopleStore}=useStores()
+  const { peopleStore } = useStores()
 
-	return (
+  return (
     <View style={{ flex: 1 }}>
-      <Stories2 {...{ stories:peopleStore.peoplelist }} />
+      <Stories2 {...{ stories: peopleStore.peoplelist }} />
     </View>
   )
 })

@@ -1,4 +1,4 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { Instance, SnapshotOut, types, applySnapshot } from "mobx-state-tree"
 
 /**
  * Model description here for TypeScript hints.
@@ -62,6 +62,7 @@ export const PersonDetailsModel = types
         }
       })
     },
+    reset() { applySnapshot(self, {}) }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 /**

@@ -26,9 +26,10 @@ export type IUserStory = {
   weight: number
   profession: string
   native: string
+  expectations: string
 }
 
-//forms types
+// forms types
 
 export interface IAddPersonalDetailShape {
   gender: "male" | "female"

@@ -13,6 +13,7 @@ const personModal = types.model("person", {
   weight: types.optional(types.string, "0"),
   profession: types.optional(types.string, "Student"),
   native: types.optional(types.string, ""),
+  expectations: types.optional(types.string, "")
 })
 
 export const PeopleModel = types

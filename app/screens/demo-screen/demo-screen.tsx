@@ -64,6 +64,10 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
   })
 
   React.useEffect(() => {
+    return personStore.reset()
+  }, [])
+
+  React.useEffect(() => {
     if (status.isFulfilled) {
       personStore.updateProfile(data.person)
     }
@@ -81,13 +85,13 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center", marginTop: spacing[1] }}>
           <LocationIcon color={color.palette.darkGrey} size={IconSize.small} />
-          <Text preset={[ "small"]}>{`\xa0 ${personStore.native}, India`}</Text>
+          <Text preset={["small"]}>{`\xa0 ${personStore.native}, India`}</Text>
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", marginTop: spacing[1] }}>
           <OfficeBag color={color.palette.darkGrey} size={IconSize.small - 1} />
           <Text preset={["small"]}>{`\xa0  ${personStore.profession}`}</Text>
         </View>
-        <Text preset={["paragraph"]} style={{ marginTop: `${spacing[1]}%`,color:'black' }}>
+        <Text preset={["paragraph"]} style={{ marginTop: `${spacing[1]}%`, color: "black" }}>
           {personStore.expectations}
         </Text>
         {/*
@@ -114,7 +118,7 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
     return (
       <View>
         <View style={styles.headerContainer}>
-          <View style={[styles.headerBackground]}>{renderHandler()}</View>
+          <View style={styles.headerBackground}>{renderHandler()}</View>
         </View>
       </View>
     )
@@ -329,7 +333,7 @@ const AllDetails = (props: PersonDetailsSnapshot) => {
         </Text>
       </View>
       <View style={styles.charaterRow}>
-        <Face style={{ flex: 1 }} size={23} color="black"/>
+        <Face style={{ flex: 1 }} size={23} color="black" />
         <Text style={{ flex: 4 }} preset={["text"]}>
           {props.complexion}
         </Text>
@@ -357,8 +361,8 @@ const AllDetails = (props: PersonDetailsSnapshot) => {
         <Text style={{ flex: 4 }} preset={["text"]}>
           {props.officename}
         </Text>
-			</View>
-				<View style={styles.charaterRow}>
+      </View>
+      <View style={styles.charaterRow}>
         <BloodIcon style={{ flex: 1 }} size={23} />
         <Text style={{ flex: 4 }} preset={["text"]}>
           {props.bloodgroup}
@@ -416,8 +420,8 @@ const styles = StyleSheet.create({
   // user details (content)
   panel: {
     paddingHorizontal: `${spacing[1]}%`,
-	  backgroundColor: "#fff",
-	  paddingBottom:spacing[7]
+    backgroundColor: "#fff",
+    paddingBottom: spacing[7],
   },
 
   charaterRow: {

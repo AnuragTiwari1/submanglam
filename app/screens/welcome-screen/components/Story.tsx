@@ -11,6 +11,7 @@ import { useStores } from "../../../models/root-store"
 import { spacing } from "../../../theme"
 import { IUserStory } from "../../types"
 import { getProfilePic } from "../../../utils/links"
+import { getShortParagaph } from "../../../utils/errorMessages"
 
 const { width } = Dimensions.get("window")
 export interface StoryProps {
@@ -44,14 +45,6 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: "center",
   },
-  buttonContainer: {
-    backgroundColor: "#fff",
-    padding: spacing[4],
-    borderRadius: 45,
-    alignItems: "center",
-    justifyContent: "center",
-    margin: spacing[3],
-  },
   iconRowContainer: {
     flexDirection: "row",
     width: "80%",
@@ -61,7 +54,7 @@ const styles = StyleSheet.create({
 })
 
 const Story: React.FunctionComponent<StoryProps> = (props) => {
-  const { navigationStore,personStore } = useStores()
+  const { navigationStore, personStore } = useStores()
 
   const transY = new Animated.Value(0)
   const animatedOpacity = transY.interpolate({
@@ -70,7 +63,7 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
     extrapolate: "clamp",
   })
 
-  const { name, height, weight, profession, age, id, native } = props.story
+  const { name, height, weight, profession, age, id, native, expectations } = props.story
 
   const handleGesture = Animated.event([{ nativeEvent: { translationY: transY } }])
 
@@ -111,7 +104,6 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
             </SharedElement>
           </Animated.View>
 
-
           <Animated.View
             style={{
               ...styles.iconRowContainer,
@@ -127,15 +119,10 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
               ],
             }}
           >
-            <TouchableOpacity style={styles.buttonContainer}>
-              <AntIcons name="close" size={35} color={"red"} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonContainer}>
-              <AntIcons name="heart" size={35} color={"red"} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonContainer}>
-              <AntIcons name="pushpin" size={35} color={"red"} />
-            </TouchableOpacity>
+            <Text preset={["quote", "large", "white"]}>
+              <Text preset={["header"]}>“</Text>
+              {getShortParagaph(expectations)}
+            </Text>
           </Animated.View>
         </View>
         <PanGestureHandler
@@ -144,9 +131,9 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
             const hasEnded = e.nativeEvent.state === 5
             if (hasEnded) {
               if (e.nativeEvent.translationY < scrollOffset) {
-				  transY.setValue(0)
-				  personStore.updateProfile(props.story)
-				  navigationStore.navigateTo("demo")
+                transY.setValue(0)
+                personStore.updateProfile(props.story)
+                navigationStore.navigateTo("demo")
                 return null
               }
               transY.setValue(0)
@@ -160,7 +147,9 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
             <Text preset="dullWhite">
               {weight} kg, {`${height.split(".")[0]}`}"{`${height.split(".")?.[1]}`}'
             </Text>
-            <Text preset="dullWhite">{profession}, {native}</Text>
+            <Text preset="dullWhite">
+              {profession}, {native}
+            </Text>
 
             <View style={{ marginTop: `${spacing[2]}%`, alignItems: "center" }}>
               <AntIcons name="up" size={15} color={"white"} />

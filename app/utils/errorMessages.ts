@@ -10,4 +10,8 @@ export const errorMessage = (e: any) => {
   }
 }
 
-export const formErrorMessage = get
+export const getShortParagaph = (paragraph: string, numChar = 80) => {
+  const shortString = paragraph.substr(0, numChar - 3)
+  if (shortString === paragraph) return paragraph
+  else return `${shortString}...`
+}

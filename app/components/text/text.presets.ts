@@ -64,6 +64,10 @@ export const presets = {
     marginTop: 5,
     padding: "1%",
   },
+
+  quote: {
+    fontStyle: "italic"
+  }
 }
 
 /**
