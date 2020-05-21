@@ -142,7 +142,7 @@ const IntroCard = (
           source={{ uri: getProfilePic(props.profilepic) }}
           style={{ width: "100%", height: 300, borderRadius: 12 }}
         />
-        {status.isPending && <HeartLottie />}
+        {status.isPending && !props.isLiked && <HeartLottie />}
         <View
           style={{
             position: "absolute",
