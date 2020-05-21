@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, View } from "react-native"
 import FastImage from "react-native-fast-image"
 import { FlatList } from "react-native-gesture-handler"
 import Animated from "react-native-reanimated"
-import Carousel, { CarouselStatic } from "react-native-snap-carousel"
+import Carousel, { CarouselStatic, Pagination } from "react-native-snap-carousel"
 import { NavigationInjectedProps } from "react-navigation"
 import BottomSheet from "reanimated-bottom-sheet"
 import { spacing, color } from "../../theme"
@@ -45,6 +45,8 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
   const bottomSheetRef = React.createRef<BottomSheet>()
   const fall = new Animated.Value(1)
   const { personStore } = useStores()
+
+  const [activeItem, setActiveItem] = React.useState(0)
 
   const imgList = [
     personStore.photo || personStore.profilepic,
@@ -225,6 +227,29 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
     )
   }
 
+  const renderPagination = () => {
+    return (
+      <Pagination
+        dotsLength={imgList.length}
+        activeDotIndex={activeItem}
+        containerStyle={{ backgroundColor: "transparent", position: "absolute" }}
+        dotStyle={{
+          width: 15,
+          height: 15,
+          borderRadius: 7.5,
+          backgroundColor: "rgba(255, 255, 255, 0.92)",
+        }}
+        inactiveDotStyle={
+          {
+            // Define styles for inactive dots here
+          }
+        }
+        inactiveDotOpacity={0.4}
+        inactiveDotScale={0.6}
+      />
+    )
+  }
+
   return (
     <View style={styles.container}>
       <BottomSheet
@@ -240,7 +265,6 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
           ref={(c) => {
             _carousel.current = c
           }}
-          onTouchMove={() => bottomSheetRef.current!.snapTo(0)}
           data={imgList}
           renderItem={({ item, index }) => {
             return (
@@ -256,12 +280,14 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
               </SharedElement>
             )
           }}
+          onSnapToItem={setActiveItem}
           sliderWidth={width}
           itemWidth={width}
         />
       </View>
       {renderShadow()}
       {renderBottomButtons()}
+      {renderPagination()}
     </View>
   )
 })

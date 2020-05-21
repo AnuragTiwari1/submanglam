@@ -75,7 +75,7 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
         numColumns={2}
         extraData={actionStore.userActions}
         renderItem={({ item, index }) => {
-          const isLiked = actionStore.userActions[item.id] === "like"
+          const isLiked = actionStore?.userActions?.[item.id] === "like"
           return (
             <IntroCard
               {...item}
