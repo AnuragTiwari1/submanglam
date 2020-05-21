@@ -8,6 +8,7 @@ import { useFetch } from "use-fetch-lib"
 import { getProfilePic } from "../utils/links"
 import { IUserStory } from "./types"
 import { observer } from "mobx-react-lite"
+import { HeartLottie } from "../components/animated/lottie"
 export interface LandingScreenProps {
   navigation: NavigationScreenProp<{}>
 }
@@ -141,6 +142,7 @@ const IntroCard = (
           source={{ uri: getProfilePic(props.profilepic) }}
           style={{ width: "100%", height: 300, borderRadius: 12 }}
         />
+        {status.isPending && <HeartLottie />}
         <View
           style={{
             position: "absolute",
