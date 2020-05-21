@@ -13,7 +13,8 @@ const personModal = types.model("person", {
   weight: types.optional(types.string, "0"),
   profession: types.optional(types.string, "Student"),
   native: types.optional(types.string, ""),
-  expectations: types.optional(types.string, "")
+  expectations: types.optional(types.string, ""),
+  isLiked: types.optional(types.boolean, false),
 })
 
 export const PeopleModel = types
@@ -23,8 +24,11 @@ export const PeopleModel = types
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
-    setPeoples(newList) {
+    setPeoples(newList: SnapshotOut<typeof PeopleModel>) {
       self.peoplelist = newList
+    },
+    setPerson(index: number, newPerson: SnapshotOut<typeof personModal>) {
+      self.peoplelist[index] = newPerson
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 

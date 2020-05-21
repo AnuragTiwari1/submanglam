@@ -70,6 +70,10 @@ export const HeartIcon = (props) => {
   return <AntIcons name="heart" size={35} color={"red"} {...props} />
 }
 
+export const HeartIconOutlined = (props) => {
+  return <AntIcons name="hearto" size={35} color={"white"} {...props} />
+}
+
 export const Report = (props) => {
   return <AntIcons name="notification" size={25} color={"red"} {...props} />
 }
@@ -98,6 +102,6 @@ export const AddImages = (props) => {
   return <Entypo name="images" {...props} />
 }
 
-export const BloodIcon= props=> {
-	return <Entypo name="drop" {...props}/>
+export const BloodIcon = props => {
+  return <Entypo name="drop" {...props}/>
 }

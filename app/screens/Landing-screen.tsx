@@ -1,14 +1,13 @@
 import * as React from "react"
-import { Image, View, RefreshControl } from "react-native"
-import { FlatList, TouchableOpacity } from "react-native-gesture-handler"
-import AntIcons from "react-native-vector-icons/AntDesign"
+import { Image, View, RefreshControl, FlatList, TouchableOpacity } from "react-native"
 import { NavigationScreenProp } from "react-navigation"
-import { Text } from "../components"
+import { Text, HeartIcon, HeartIconOutlined } from "../components"
 import { useStores } from "../models/root-store"
 import { spacing } from "../theme"
 import { useFetch } from "use-fetch-lib"
 import { getProfilePic } from "../utils/links"
 import { IUserStory } from "./types"
+import { observer } from "mobx-react-lite"
 export interface LandingScreenProps {
   navigation: NavigationScreenProp<{}>
 }
@@ -20,11 +19,11 @@ interface IntroProps {
   profilepic: string
   isSaved?: boolean
   profession?: string
-  promoted?: boolean
+  isLiked?: boolean
 }
 
-export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props) => {
-  const { navigationStore, peopleStore } = useStores()
+export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observer(() => {
+  const { navigationStore, peopleStore, actionStore } = useStores()
 
   const [{ data, status }, service] = useFetch<{ profilelist: IntroProps[] }>({
     url: "/get/profilelist",
@@ -74,12 +73,22 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props
         }
         data={data?.profilelist || []}
         numColumns={2}
-        renderItem={({ item }) => {
+        extraData={actionStore.userActions}
+        renderItem={({ item, index }) => {
+          const isLiked = actionStore.userActions[item.id] === "like"
           return (
             <IntroCard
               {...item}
+              isLiked={isLiked}
               onPress={() => {
                 fetchPeople({ id: item.id })
+              }}
+              onLikePress={(doesLike) => {
+                if (doesLike) {
+                  actionStore.addUserActions({ [item.id]: "like" })
+                } else {
+                  actionStore.deleteUserAction(item.id)
+                }
               }}
             />
           )
@@ -107,11 +116,24 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = (props
       />
     </View>
   )
-}
+})
 
 const HEART_CONTAINER_DIMENSION = 40
 
-const IntroCard = (props: IntroProps & { onPress: (e: any) => void }) => {
+const IntroCard = (
+  props: IntroProps & { onPress: (e: any) => void; onLikePress: (e: any) => void },
+) => {
+  const [{ data, status }, setLike] = useFetch<ActionsResponse, ActionRequest>({
+    url: "/set/actions",
+    method: "post",
+  })
+
+  React.useEffect(() => {
+    if (status.isFulfilled && data) {
+      props.onLikePress(data.status)
+    }
+  }, [status])
+
   return (
     <View style={{ flex: 1, margin: 5 }}>
       <TouchableOpacity style={{ width: "100%" }} onPress={props.onPress}>
@@ -147,6 +169,14 @@ const IntroCard = (props: IntroProps & { onPress: (e: any) => void }) => {
               {props.profession || "Student"}
             </Text>
           </View>
+          <TouchableOpacity
+            style={{ paddingHorizontal: spacing[0] }}
+            onPress={() =>
+              setLike({ action: "like", id: props.id, type: props.isLiked ? "delete" : "insert" })
+            }
+          >
+            {props.isLiked ? <HeartIcon size={25} /> : <HeartIconOutlined size={25} />}
+          </TouchableOpacity>
         </View>
       </TouchableOpacity>
     </View>

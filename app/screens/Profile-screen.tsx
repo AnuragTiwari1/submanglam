@@ -19,7 +19,7 @@ const imageWidth = width * 0.48 // this will take 1/3  of screen
 const iconWidth = 65
 
 export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observer((props) => {
-  const { userProfile, authStore, navigationStore, userProfileForm } = useStores()
+  const { userProfile, authStore, navigationStore, userProfileForm, actionStore } = useStores()
   const [{ data, status }] = useFetch({
     url: "/get/myprofile",
     method: "get",
@@ -27,11 +27,26 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
     shouldDispatch: true,
   })
 
+  const [{ data: actions, status: actionStaus }] = useFetch({
+    url: "/get/actions",
+    method: "get",
+    shouldDispatch: true,
+    cache: true,
+  })
+
   React.useEffect(() => {
-    if (status.isFulfilled && data) {
+    if (status.isFulfilled) {
       userProfile.updateProfile(data.profile)
     }
   }, [status])
+
+  React.useEffect(() => {
+    if (actionStaus.isFulfilled && actions?.actionList) {
+      const userAction = {}
+      actions.actionList.map(({ action, id }) => (userAction[id] = action))
+      actionStore.setUserActions(userAction)
+    }
+  }, [actionStaus])
 
   return (
     <View style={styles.container}>
@@ -68,8 +83,8 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
             }}
           >
             <TouchableOpacity
-
-              style={[styles.iconContainer, { backgroundColor: color.palette.blue }]} onPress={() => {
+              style={[styles.iconContainer, { backgroundColor: color.palette.blue }]}
+              onPress={() => {
                 applySnapshot(userProfileForm, userProfile)
                 navigationStore.navigateTo("addMediaScreen")
               }}

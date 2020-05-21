@@ -1,4 +1,4 @@
-//signUpRoutes
+// signUpRoutes
 interface SignupFormRequest {
   fullName: string
   email: string
@@ -15,4 +15,14 @@ interface LoginFormResponse {
   token: string
   email: string
   isProfileComplete: string
+}
+
+interface ActionRequest {
+  action: "like" | "match"
+  id: string
+  type: "insert" | "delete"
+}
+
+interface ActionsResponse {
+  status: boolean
 }

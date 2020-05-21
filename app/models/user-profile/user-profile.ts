@@ -32,7 +32,7 @@ export const UserProfileModel = types
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
     updateProfile(newData) {
-      const keys = Object.keys(newData)
+      const keys = Object.keys(newData || {})
 
       keys.forEach((e, i) => {
         switch (e) {

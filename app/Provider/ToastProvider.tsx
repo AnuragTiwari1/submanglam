@@ -9,8 +9,8 @@ import { observer } from "mobx-react-lite"
 const getStyles = (style: keyof typeof palette): ViewStyle => {
   return typeof style === "string"
     ? {
-        backgroundColor: palette[style] || "rgba(0,0,0,0)",
-      }
+      backgroundColor: palette[style] || "rgba(0,0,0,0)",
+    }
     : ((style || {}) as ViewStyle)
 }
 
