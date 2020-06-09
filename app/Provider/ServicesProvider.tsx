@@ -10,9 +10,9 @@ export const ServicesProvider = observer(({ children }) => {
   const { authStore, navigationStore, appStateStore } = useStores()
 
   const refreshAuthLogic = (originalRequest) => {
-	  const expiredToken = originalRequest?.headers?.Authorization || ""
+    const expiredToken = originalRequest?.headers?.Authorization || ""
 
-	  console.log('Api url>>>',API_URL)
+    console.log("Api url>>>", API_URL)
 
     if (expiredToken) {
       axios
@@ -21,8 +21,8 @@ export const ServicesProvider = observer(({ children }) => {
           method: "post",
           baseURL: API_URL,
           headers: {
-			  Authorization: `${expiredToken}`,
-			  "Access-Control-Allow-Origin": "*"
+            Authorization: `${expiredToken}`,
+            "Access-Control-Allow-Origin": "*",
           },
         })
         .then(({ data }) => {

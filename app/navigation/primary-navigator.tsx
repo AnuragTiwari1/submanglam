@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { LandingScreen, ProfileScreen, ChatScreen, AddMediaScreen } from "../screens"
 import { ProfileNavigator } from "./profile-navigator"
 import { createStackNavigator } from "react-navigation-stack"
@@ -6,6 +6,10 @@ import { TabView, SceneMap, NavigationState } from "react-native-tab-view"
 import { TabBar, SearchIcon, ChatIcon, Face } from "../components"
 import { View, StatusBar } from "react-native"
 import { CreateProfileNavigator } from "./createProfile-navigator"
+import EventSource from 'react-native-event-source'
+import { API_URL } from "react-native-dotenv"
+import { observer } from "mobx-react-lite"
+import { useStores } from "../models/root-store"
 
 type Route = {
   key: string
@@ -15,7 +19,7 @@ type Route = {
 
 export type NavigationStateType = NavigationState<Route>
 
-export const PrimaryNavigatorTabs = () => {
+export const PrimaryNavigatorTabs = observer(() => {
   const [index, setIndex] = React.useState(0)
   const [routes] = React.useState([
     { key: "landing", title: "Explore", icon: SearchIcon },
@@ -23,11 +27,27 @@ export const PrimaryNavigatorTabs = () => {
     { key: "profile", title: "Profile", icon: Face },
   ])
 
+  const { authStore } = useStores()
+
   const renderScene = SceneMap({
     landing: LandingScreen,
     chat: ChatScreen,
     profile: ProfileScreen,
   })
+
+  const handleEvent = (data) => {
+    console.log("the event data >>>>>>>>>>>>>>>>>>>>>>>>", data)
+  }
+
+  useEffect(() => {
+    const options = { headers: { Authorization: `Bearer ${authStore.token}` } }
+    const eventSource = new EventSource(`${API_URL}/events`, options)
+    eventSource.addEventListener('message', message => {
+      handleEvent(message)
+    })
+
+    return eventSource.close()
+  }, [])
 
   return (
     <View style={{ paddingTop: StatusBar.currentHeight, flex: 1 }}>
@@ -44,7 +64,7 @@ export const PrimaryNavigatorTabs = () => {
       />
     </View>
   )
-}
+})
 
 export const PrimaryNavigator = createStackNavigator(
   {

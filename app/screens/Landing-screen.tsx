@@ -119,8 +119,6 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
   )
 })
 
-const HEART_CONTAINER_DIMENSION = 40
-
 const IntroCard = (
   props: IntroProps & { onPress: (e: any) => void; onLikePress: (e: any) => void },
 ) => {
