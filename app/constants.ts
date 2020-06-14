@@ -14,6 +14,8 @@ export const BLOODGROUP = [
 
 export const LOCATIONS = ["Kolhapur", "Sangli", "Satara", "Pune"]
 
+export const MARITAL_STATUS = ["Single", "Married", "Divorced", "Seprated"]
+
 export const SALARY = [
   { label: "Upto 10,000", value: 10000 },
   { label: "Upto 20,000", value: 20000 },

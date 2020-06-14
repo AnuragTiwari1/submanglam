@@ -16,7 +16,6 @@ export const ActionProvider = observer(() => {
   const activeAction = actionStore?.appActions?.[0] ?? {}
 
   const handleClose = () => {
-    console.log("the swipe has complete")
     actionStore.hideAppActions()
   }
 

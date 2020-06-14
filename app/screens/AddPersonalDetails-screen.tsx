@@ -14,6 +14,7 @@ import { spacing } from "../theme"
 import { addPersonalDetailsForm } from "../validators/shapes"
 import { withHandleFormReject } from "../hocs/withHandleFormReject"
 import { IAddPersonalDetailShape } from "./types"
+import {BLOODGROUP, COMPLEXION, LOCATIONS, MARITAL_STATUS} from "../constants"
 
 export interface AddPersonalDetailsScreenProps extends NavigationScreenProp<{}> {}
 
@@ -157,19 +158,19 @@ const PersonalDetailsForm = withHandleFormReject(() => {
       <FormPicker
         name="complexion"
         label="Complexion"
-        list={["Light Skin", "Fair Skin", "Olive Skin", "Brown"]}
+        list={COMPLEXION}
       />
 
       <FormPicker
         name="maritalstatus"
         label="Marital Status"
-        list={["Single", "Married", "Divorced", "Seprated"]}
+        list={MARITAL_STATUS}
       />
 
       <FormPicker
         name="bloodgroup"
         label="Blood Group"
-        list={["A +ve", "A -ve", "AB +ve", "AB -ve", "B +ve", "B -ve", "O +ve", "O -ve", "Unknown"]}
+        list={BLOODGROUP}
       />
 
       <FormPicker label="Physically Challenged" name="physically" list={["Yes", "No"]} />
@@ -184,7 +185,7 @@ const PersonalDetailsForm = withHandleFormReject(() => {
       <FormPicker
         name="location"
         label="Location"
-        list={["Kolhapur", "Sangli", "Satara", "Pune"]}
+        list={LOCATIONS}
       />
 
       <FormTextArea

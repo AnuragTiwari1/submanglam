@@ -6,6 +6,7 @@ import { UserProfileModel } from "../user-profile"
 import { PeopleModel } from "../people"
 import { PersonDetailsModel } from "../person-details"
 import { ActionsModel } from "../actions"
+import { PreferenceModel } from "../preference"
 
 /**
  * A RootStore model.
@@ -18,7 +19,8 @@ export const RootStoreModel = types.model("RootStore").props({
   userProfileForm: types.optional(UserProfileModel, {}),
   peopleStore: types.optional(PeopleModel, {}),
   personStore: types.optional(PersonDetailsModel, {}),
-  actionStore: types.optional(ActionsModel, {})
+  actionStore: types.optional(ActionsModel, {}),
+  preferenceStore: types.optional(PreferenceModel, {}),
 })
 
 /**

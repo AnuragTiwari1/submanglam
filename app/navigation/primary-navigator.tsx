@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { LandingScreen, ProfileScreen, ChatScreen, AddMediaScreen } from "../screens"
+import { LandingScreen, ProfileScreen, ChatScreen, AddMediaScreen, AddPreferencesScreen } from "../screens"
 import { ProfileNavigator } from "./profile-navigator"
 import { createStackNavigator } from "react-navigation-stack"
 import { TabView, SceneMap, NavigationState } from "react-native-tab-view"
@@ -75,6 +75,7 @@ export const PrimaryNavigator = createStackNavigator(
     profile: { screen: ProfileNavigator },
     updateProfile: { screen: CreateProfileNavigator },
     addMediaScreen: { screen: AddMediaScreen },
+    SetPreferences: { screen: AddPreferencesScreen },
   },
   {
     navigationOptions: { gesturesEnabled: false },

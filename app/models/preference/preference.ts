@@ -6,11 +6,21 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 
 export const PreferenceModel = types
   .model("Preference", {
-
+    maritalStatus: types.maybe(types.string),
+    city: types.maybe(types.string),
+    ageFrom: types.maybe(types.number),
+    ageTo: types.maybe(types.number),
+    minHeight: types.maybe(types.number),
+    maxHeight: types.maybe(types.number),
+    complexion: types.maybe(types.string),
   })
   .props({})
-  .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
-  .actions(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .actions((self) => ({
+    set(key, value) {
+      self[key] = value
+    },
+  })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 /**
   * Un-comment the following to omit model attributes from your snapshots (and from async storage).

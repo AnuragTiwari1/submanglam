@@ -5,7 +5,7 @@ import {
   FamilyDetailsScreen,
   AddPictureScreen,
 } from "../screens"
-import {StatusBar} from "react-native"
+import { StatusBar } from "react-native"
 
 export const CreateProfileNavigator = createStackNavigator(
   {
@@ -21,11 +21,11 @@ export const CreateProfileNavigator = createStackNavigator(
   {
     initialRouteName: "addPersonalDetails",
     headerMode: "none",
-	defaultNavigationOptions:{
-		cardStyle:{
-			paddingTop:StatusBar.currentHeight
-		}
-	}
+    defaultNavigationOptions: {
+      cardStyle: {
+        paddingTop: StatusBar.currentHeight,
+      },
+    },
   },
 )
 

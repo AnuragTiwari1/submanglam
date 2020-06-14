@@ -67,7 +67,7 @@ export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
 
     if (status.isFulfilled) {
       authStore.setUser({ email: watch("email"), token: data.success, firstName: watch("name") })
-      navigationStore.navigateTo("addPersonalDetails")
+      navigationStore.navigateTo("createProfileStack")
     }
     if (status.isRejected) {
       appStateStore.toast.setToast({ text: status.err, styles: "angry" })

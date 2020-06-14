@@ -39,7 +39,7 @@ export const ActionsModel = types
     },
     addAppActions(newActions: AppActionsSnapshotType) {
       const isActionPresent = self.appActions.find((e) => e.id === newActions.id)
-      if (!isActionPresent) {
+      if (!isActionPresent && typeof newActions === "object" && newActions.id) {
         self.appActions = [newActions, ...self.appActions]
         self.showAppActions = true
       }

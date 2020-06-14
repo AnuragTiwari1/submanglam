@@ -28,12 +28,13 @@ interface IntroProps {
 }
 
 export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observer(() => {
-  const { navigationStore, peopleStore, actionStore } = useStores()
+  const { navigationStore, peopleStore, actionStore, preferenceStore } = useStores()
 
   const [{ data, status }, service] = useFetch<{ profilelist: IntroProps[] }>({
     url: "/get/profilelist",
     method: "get",
     shouldDispatch: true,
+    dependencies: [preferenceStore],
   })
 
   const [{ data: people, status: peopleLoadingStatus }, fetchPeople] = useFetch<{
