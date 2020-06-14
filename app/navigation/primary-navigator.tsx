@@ -6,7 +6,7 @@ import { TabView, SceneMap, NavigationState } from "react-native-tab-view"
 import { TabBar, SearchIcon, ChatIcon, Face } from "../components"
 import { View, StatusBar } from "react-native"
 import { CreateProfileNavigator } from "./createProfile-navigator"
-import EventSource from 'react-native-event-source'
+import EventSource from "react-native-event-source"
 import { API_URL } from "react-native-dotenv"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../models/root-store"
@@ -27,7 +27,7 @@ export const PrimaryNavigatorTabs = observer(() => {
     { key: "profile", title: "Profile", icon: Face },
   ])
 
-  const { authStore } = useStores()
+  const { authStore, actionStore } = useStores()
 
   const renderScene = SceneMap({
     landing: LandingScreen,
@@ -36,17 +36,20 @@ export const PrimaryNavigatorTabs = observer(() => {
   })
 
   const handleEvent = (data) => {
-    console.log("the event data >>>>>>>>>>>>>>>>>>>>>>>>", data)
+    actionStore.addAppActions(JSON.parse(data.data))
   }
 
   useEffect(() => {
-    const options = { headers: { Authorization: `Bearer ${authStore.token}` } }
-    const eventSource = new EventSource(`${API_URL}/events`, options)
-    eventSource.addEventListener('message', message => {
+    const eventSource = new EventSource(`${API_URL}/events?email=${authStore.email}`)
+
+    eventSource.addEventListener("message", (message) => {
       handleEvent(message)
     })
 
-    return eventSource.close()
+    return () => {
+      eventSource.removeAllListeners()
+      eventSource.close()
+    }
   }, [])
 
   return (

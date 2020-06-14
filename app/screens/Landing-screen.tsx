@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Image, View, RefreshControl, FlatList, TouchableOpacity } from "react-native"
+import { Image, View, RefreshControl, FlatList, TouchableOpacity, Dimensions } from "react-native"
 import { NavigationScreenProp } from "react-navigation"
 import { Text, HeartIcon, HeartIconOutlined } from "../components"
 import { useStores } from "../models/root-store"
@@ -9,6 +9,10 @@ import { getProfilePic } from "../utils/links"
 import { IUserStory } from "./types"
 import { observer } from "mobx-react-lite"
 import { HeartLottie } from "../components/animated/lottie"
+
+const { width } = Dimensions.get("screen")
+const introCardWidth = width / 2 - width * 0.03
+
 export interface LandingScreenProps {
   navigation: NavigationScreenProp<{}>
 }
@@ -75,6 +79,8 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
         data={data?.profilelist || []}
         numColumns={2}
         extraData={actionStore.userActions}
+        columnWrapperStyle={{ justifyContent: "space-between" }}
+        contentContainerStyle={{ paddingBottom: spacing[5] }}
         renderItem={({ item, index }) => {
           const isLiked = actionStore?.userActions?.[item.id] === "like"
           return (
@@ -134,7 +140,7 @@ const IntroCard = (
   }, [status])
 
   return (
-    <View style={{ flex: 1, margin: 5 }}>
+    <View style={{ width: introCardWidth, margin: "1%" }}>
       <TouchableOpacity style={{ width: "100%" }} onPress={props.onPress}>
         <Image
           source={{ uri: getProfilePic(props.profilepic) }}

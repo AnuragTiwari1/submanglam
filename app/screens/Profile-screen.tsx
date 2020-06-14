@@ -34,13 +34,6 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
     cache: true,
   })
 
-  const [{ data: preferenceResponse, status: preferenceStatus }] = useFetch({
-    url: "/get/preference",
-    method: "get",
-    shouldDispatch: true,
-    cache: true
-  })
-
   React.useEffect(() => {
     if (status.isFulfilled) {
       userProfile.updateProfile(data.profile)
@@ -54,17 +47,6 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
       actionStore.setUserActions(userAction)
     }
   }, [actionStaus])
-
-  React.useEffect(() => {
-    if (preferenceStatus.isFulfilled && preferenceResponse) {
-      // preferenceResponse.preference exits
-      // set preference modal
-      //
-      // else
-      // if user is introduced to preference feature cool
-      // set appAction to show intro
-    }
-  }, [preferenceStatus])
 
   return (
     <View style={styles.container}>

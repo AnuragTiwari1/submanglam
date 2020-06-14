@@ -1,13 +1,24 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import omit from "ramda/src/omit"
 
+const appActionsModal = types.model("appAction", {
+  id: types.string,
+  type: types.string, // one of url and screen
+  value: types.string,
+  params: types.maybeNull(types.string),
+  templateId: types.string,
+})
+
+type AppActionsSnapshotType = SnapshotOut<typeof appActionsModal>
+
 /**
  * Model description here for TypeScript hints.
  */
 export const ActionsModel = types
   .model("Actions", {
     userActions: types.frozen<{ [id: string]: string }>(), // wil be used to store user actions across the platform
-    appActions: types.map(types.string), // will fetch actions which app will use for ads and matches mostly a websocket connection
+    appActions: types.optional(types.array(appActionsModal), []), // will fetch actions which app will use for ads and matches mostly a websocket connection
+    showAppActions: types.optional(types.boolean, false),
   })
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -25,6 +36,16 @@ export const ActionsModel = types
     },
     deleteUserAction(id) {
       self.userActions = omit([id], self.userActions)
+    },
+    addAppActions(newActions: AppActionsSnapshotType) {
+      const isActionPresent = self.appActions.find((e) => e.id === newActions.id)
+      if (!isActionPresent) {
+        self.appActions = [newActions, ...self.appActions]
+        self.showAppActions = true
+      }
+    },
+    hideAppActions() {
+      self.showAppActions = false
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .postProcessSnapshot(omit(["appActions"]))
