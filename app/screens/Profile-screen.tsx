@@ -119,9 +119,12 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
               left: 0,
             }}
           >
-            <View style={styles.iconContainer}>
+            <TouchableOpacity
+              onPress={() => navigationStore.navigateTo("Accounts")}
+              style={styles.iconContainer}
+            >
               <SettingsIcon size={45} color={color.palette.lightGrey} />
-            </View>
+            </TouchableOpacity>
             <Text preset="small">Settings</Text>
           </View>
         </View>

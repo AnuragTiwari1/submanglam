@@ -14,8 +14,8 @@ export const emptyPreferenceStyles = {
     elevation: 2,
     padding: spacing[3],
     marginTop: spacing[2],
-	marginBottom:spacing[3],
-    borderRadius: 3,
-	  flexDirection:'row'
+    marginBottom: spacing[3],
+    borderRadius: 8,
+    flexDirection: "row",
   } as ViewStyle,
 }

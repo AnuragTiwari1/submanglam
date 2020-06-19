@@ -40,11 +40,13 @@ const AnimatedView = Animated.View
 
 const snapPoints = ["30%", "70%"]
 
+const IS_MATCH_MAKING_ENABLED = false
+
 const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
   const _carousel = React.useRef<CarouselStatic<string> | null>(null)
   const bottomSheetRef = React.createRef<BottomSheet>()
   const fall = new Animated.Value(1)
-  const { personStore } = useStores()
+  const { personStore, preferenceStore } = useStores()
 
   const [activeItem, setActiveItem] = React.useState(0)
 
@@ -109,7 +111,6 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
             }}
           />
 		  */}
-        <EmptyPreference message="Set your preference to know your compatibilty. We won't disappoint you." />
 
         <AllDetails {...getSnapshot(personStore)} />
       </View>
@@ -448,6 +449,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: `${spacing[1]}%`,
     backgroundColor: "#fff",
     paddingBottom: spacing[7],
+    paddingTop: spacing[3],
   },
 
   charaterRow: {

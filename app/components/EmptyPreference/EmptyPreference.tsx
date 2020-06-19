@@ -1,7 +1,9 @@
 import * as React from "react"
-import { View } from "react-native"
+import { View, TouchableOpacity } from "react-native"
 import { Text } from "../"
 import { emptyPreferenceStyles as styles } from "./EmptyPreference.styles"
+import { useStores } from "../../models/root-store"
+import { spacing } from "../../theme"
 
 export interface EmptyPreferenceProps {
   message: string
@@ -13,15 +15,15 @@ export interface EmptyPreferenceProps {
  * Component description here for TypeScript tips.
  */
 export const EmptyPreference: React.FunctionComponent<EmptyPreferenceProps> = (props) => {
-  // const { someStore } = useStores()
+  const { navigationStore } = useStores()
 
   return (
     <View style={styles.WRAPPER}>
-      <Text style={{ flex: 1 }} preset={["text"]}>
+      <Text style={{ flex: 1 }} preset={["text"]} onPress={() => console.log("i am here")}>
         {props.message}
-      </Text>
-      <Text style={{ alignSelf: "flex-end", flex: 0 }} preset={["primary", "bold"]}>
-        OK
+        <Text onPress={() => console.log("this is touching")} preset={["bold", "primary"]}>
+          Click to proceed
+        </Text>
       </Text>
     </View>
   )

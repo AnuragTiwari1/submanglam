@@ -83,7 +83,7 @@ export const AddPreferencesScreen: React.FunctionComponent<AddPreferencesScreenP
         </View>
         <View
           style={{
-            marginBottom: spacing[7],
+            marginBottom: spacing[6],
             marginHorizontal: "10%",
             flexDirection: "row",
             justifyContent: "space-between",
@@ -112,6 +112,15 @@ export const AddPreferencesScreen: React.FunctionComponent<AddPreferencesScreenP
             {currentStep !== SETTINGS_LIST[SETTINGS_LIST.length - 1] ? "Next" : "Done"}
           </Text>
         </View>
+        {currentStep === SETTINGS_LIST[SETTINGS_LIST.length - 1] ? (
+          <Text
+            preset={["primary", "center"]}
+            style={{ marginBottom: spacing[2] }}
+            onPress={() => navigationStore.navigateTo("Accounts")}
+          >
+            Click to refine more
+          </Text>
+        ) : null}
       </Screen>
     )
   },
