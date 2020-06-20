@@ -9,6 +9,7 @@ import { trimEmail } from "../utils/links"
 import { PreferenceSnapshot } from "../models/preference"
 import { TextInput, Button } from "react-native-paper"
 import { useFetch } from "use-fetch-lib"
+import { ERROR_MESSAGE } from "../constants"
 
 export interface AccountScreenProps {
   navigation: NavigationScreenProp<{}>
@@ -21,14 +22,19 @@ const ROOT: ViewStyle = {
 }
 
 export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observer(() => {
-  const { authStore, preferenceStore } = useStores()
+  const rootStore = useStores()
+  const { authStore, preferenceStore, appStateStore, navigationStore } = rootStore
+
+  const handleSuccess = (msg) => appStateStore.toast.setToast({ text: msg, styles: "success" })
+  const handleFailure = (msg = ERROR_MESSAGE) =>
+    appStateStore.toast.setToast({ text: msg, styles: "angry" })
   return (
     <Screen style={ROOT} preset="scroll">
       <Text preset={["header", "center"]}>Settings</Text>
       <Text preset={["center", "small"]}>tinker the app according to your needs</Text>
       <StatusBar barStyle="dark-content" />
       <Ads />
-      <AccountSection email={authStore.email} />
+      <AccountSection email={authStore.email} onSuccess={handleSuccess} onFailure={handleFailure} />
       <PreferenceSection {...preferenceStore} />
       <ContactUs />
       <Legal />
@@ -36,6 +42,10 @@ export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observ
         style={{
           padding: spacing[1],
           marginBottom: spacing[3],
+        }}
+        onPress={() => {
+          navigationStore.navigateTo("login")
+          rootStore.resetRoot()
         }}
         preset={["bold", "center", "primary"]}
       >
@@ -129,11 +139,18 @@ const PreferenceSection = (props: PreferenceSnapshot) => {
   )
 }
 
-const AccountSection = ({ email }) => {
+const AccountSection = ({ email, onSuccess, onFailure }) => {
   const [newPassword, setNewPassword] = React.useState("")
   const [{ status }, services] = useFetch({ url: "/set/password", method: "post" })
 
   const passwordExpandableRef = React.useRef(null)
+
+  React.useEffect(() => {
+    if (status.isFulfilled) {
+      passwordExpandableRef.current.setExpanded(false)
+      onSuccess("Password updated successfully")
+    } else if (status.isRejected) onFailure()
+  }, [status])
 
   return (
     <View style={{ margin: spacing[3] }}>
@@ -150,6 +167,7 @@ const AccountSection = ({ email }) => {
           title="Password"
           ref={passwordExpandableRef}
           value={"*****"}
+          isDisabled={status.isPending}
           onStateChange={() => setNewPassword("")}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -161,9 +179,11 @@ const AccountSection = ({ email }) => {
             />
             <Button
               compact={true}
+              loading={status.isPending}
+              disabled={status.isPending}
               onPress={() => {
                 if (newPassword) {
-                  passwordExpandableRef.current.setExpanded(false)
+                  services({ newPassword })
                 }
               }}
             >

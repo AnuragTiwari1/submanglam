@@ -18,11 +18,13 @@ const ExpandebleInputComponent = ({
   value,
   children,
   onStateChange,
+  isDisabled = false
 }: {
   title: string
   value: string
   children?: React.ReactChild
   onStateChange?: Function
+  isDisabled?: boolean
 }, ref) => {
   const [isExpanded, setExpanded] = React.useState(false)
 
@@ -41,6 +43,7 @@ const ExpandebleInputComponent = ({
         ExpandAnimation()
         setExpanded(!isExpanded)
       }}
+	  disabled={isDisabled}
     >
       <View
         pointerEvents="none"

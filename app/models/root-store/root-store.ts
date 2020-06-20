@@ -1,4 +1,4 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { Instance, SnapshotOut, types, applySnapshot } from "mobx-state-tree"
 import { NavigationStoreModel } from "../../navigation/navigation-store"
 import { AppStateModel, DEFAULT_APPSTATE } from "../app-state-model"
 import { AuthModel } from "../auth"
@@ -11,17 +11,24 @@ import { PreferenceModel } from "../preference"
 /**
  * A RootStore model.
  */
-export const RootStoreModel = types.model("RootStore").props({
-  navigationStore: types.optional(NavigationStoreModel, {}),
-  appStateStore: types.optional(AppStateModel, DEFAULT_APPSTATE),
-  authStore: types.optional(AuthModel, {}),
-  userProfile: types.optional(UserProfileModel, {}),
-  userProfileForm: types.optional(UserProfileModel, {}),
-  peopleStore: types.optional(PeopleModel, {}),
-  personStore: types.optional(PersonDetailsModel, {}),
-  actionStore: types.optional(ActionsModel, {}),
-  preferenceStore: types.optional(PreferenceModel, {}),
-})
+export const RootStoreModel = types
+  .model("RootStore")
+  .props({
+    navigationStore: types.optional(NavigationStoreModel, {}),
+    appStateStore: types.optional(AppStateModel, DEFAULT_APPSTATE),
+    authStore: types.optional(AuthModel, {}),
+    userProfile: types.optional(UserProfileModel, {}),
+    userProfileForm: types.optional(UserProfileModel, {}),
+    peopleStore: types.optional(PeopleModel, {}),
+    personStore: types.optional(PersonDetailsModel, {}),
+    actionStore: types.optional(ActionsModel, {}),
+    preferenceStore: types.optional(PreferenceModel, {}),
+  })
+  .actions((self) => ({
+    resetRoot() {
+      applySnapshot(self, {})
+    },
+  }))
 
 /**
  * The RootStore instance.
