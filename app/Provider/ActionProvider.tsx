@@ -28,7 +28,7 @@ export const ActionProvider = observer(() => {
         handleLinkPress(value)
         break
       case "action":
-        console.log("not supported yet")
+        value(params)
         break
     }
 

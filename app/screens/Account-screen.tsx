@@ -1,12 +1,14 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, StatusBar, View, TouchableOpacity, LayoutAnimation } from "react-native"
-import { Screen, Text, HeartIcon } from "../components"
+import { ViewStyle, StatusBar, View } from "react-native"
+import { Screen, Text, HeartIcon, ExpandebleInput, ExpandAnimation } from "../components"
 import { useStores } from "../models/root-store"
 import { color, spacing } from "../theme"
 import { NavigationScreenProp } from "react-navigation"
 import { trimEmail } from "../utils/links"
 import { PreferenceSnapshot } from "../models/preference"
+import { TextInput, Button } from "react-native-paper"
+import { useFetch } from "use-fetch-lib"
 
 export interface AccountScreenProps {
   navigation: NavigationScreenProp<{}>
@@ -18,7 +20,7 @@ const ROOT: ViewStyle = {
   flexGrow: 1,
 }
 
-export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observer((props) => {
+export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observer(() => {
   const { authStore, preferenceStore } = useStores()
   return (
     <Screen style={ROOT} preset="scroll">
@@ -31,7 +33,10 @@ export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observ
       <ContactUs />
       <Legal />
       <Text
-        style={{ padding: spacing[1], marginBottom: spacing[3] }}
+        style={{
+          padding: spacing[1],
+          marginBottom: spacing[3],
+        }}
         preset={["bold", "center", "primary"]}
       >
         Sign out
@@ -97,10 +102,13 @@ const PreferenceSection = (props: PreferenceSnapshot) => {
         <ExpandebleInput title="Marital status" value={props.maritalStatus || EMPTY_STRING} />
         {isDetailed ? (
           <View>
-            <ExpandebleInput title="Age" value={props.ageTo || EMPTY_STRING} />
+            <ExpandebleInput
+              title="Age"
+              value={props.ageTo ? `${props.ageFrom}-${props.ageTo}` : EMPTY_STRING}
+            />
             <ExpandebleInput
               title="Height"
-              value={props.maxHeight || EMPTY_STRING}
+              value={props.maxHeight ? `${props.minHeight}-${props.maxHeight}` : EMPTY_STRING}
             ></ExpandebleInput>
             <ExpandebleInput title="Education" value={props.education || EMPTY_STRING} />
             <ExpandebleInput title="Religon" value={props.religion || EMPTY_STRING} />
@@ -111,13 +119,7 @@ const PreferenceSection = (props: PreferenceSnapshot) => {
         preset={["muted"]}
         style={{ alignSelf: "flex-end" }}
         onPress={() => {
-          LayoutAnimation.configureNext(
-            LayoutAnimation.create(
-              500,
-              LayoutAnimation.Types.easeInEaseOut,
-              LayoutAnimation.Properties.scaleY,
-            ),
-          )
+          ExpandAnimation()
           setIsDetailed(!isDetailed)
         }}
       >
@@ -128,6 +130,11 @@ const PreferenceSection = (props: PreferenceSnapshot) => {
 }
 
 const AccountSection = ({ email }) => {
+  const [newPassword, setNewPassword] = React.useState("")
+  const [{ status }, services] = useFetch({ url: "/set/password", method: "post" })
+
+  const passwordExpandableRef = React.useRef(null)
+
   return (
     <View style={{ margin: spacing[3] }}>
       <Text preset={["bold", "large"]}>Account settings</Text>
@@ -139,24 +146,33 @@ const AccountSection = ({ email }) => {
         }}
       >
         <ExpandebleInput title="Email" value={trimEmail(email)}></ExpandebleInput>
-        <ExpandebleInput title="Password" value={"*****"} />
+        <ExpandebleInput
+          title="Password"
+          ref={passwordExpandableRef}
+          value={"*****"}
+          onStateChange={() => setNewPassword("")}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TextInput
+              label="New Password"
+              style={{ height: 50, margin: spacing[3], flex: 1 }}
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
+            <Button
+              compact={true}
+              onPress={() => {
+                if (newPassword) {
+                  passwordExpandableRef.current.setExpanded(false)
+                }
+              }}
+            >
+              done
+            </Button>
+          </View>
+        </ExpandebleInput>
       </View>
     </View>
-  )
-}
-
-const ExpandebleInput = ({ title, value }) => {
-  const [isExpanded, setExpanded] = React.useState(false)
-  return (
-    <TouchableOpacity onPress={() => console.log("this will be logged")}>
-      <View
-        pointerEvents="none"
-        style={{ flexDirection: "row", padding: spacing[3], justifyContent: "space-between" }}
-      >
-        <Text>{title}</Text>
-        <Text>{value}</Text>
-      </View>
-    </TouchableOpacity>
   )
 }
 
