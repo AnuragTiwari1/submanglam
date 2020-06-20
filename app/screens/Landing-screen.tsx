@@ -34,8 +34,14 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
     url: "/get/profilelist",
     method: "get",
     shouldDispatch: true,
-    dependencies: [preferenceStore],
   })
+
+  React.useEffect(() => {
+    if (preferenceStore.actionComplete) {
+      service()
+      preferenceStore.set("actionComplete", false)
+    }
+  }, [preferenceStore.actionComplete])
 
   const [{ data: people, status: peopleLoadingStatus }, fetchPeople] = useFetch<{
     peoplelist: IUserStory[]

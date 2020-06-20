@@ -13,28 +13,35 @@ export const ExpandAnimation = () =>
     ),
   )
 
-const ExpandebleInputComponent = ({
-  title,
-  value,
-  children,
-  onStateChange,
-  isDisabled = false
-}: {
-  title: string
-  value: string
-  children?: React.ReactChild
-  onStateChange?: Function
-  isDisabled?: boolean
-}, ref) => {
+const ExpandebleInputComponent = (
+  {
+    title,
+    value,
+    children,
+    onStateChange,
+    isDisabled = false,
+  }: {
+    title: string
+    value: string
+    children?: React.ReactChild
+    onStateChange?: Function
+    isDisabled?: boolean
+  },
+  ref,
+) => {
   const [isExpanded, setExpanded] = React.useState(false)
+  const isFirstRender = React.useRef(true)
 
   React.useImperativeHandle(ref, () => ({
     setExpanded,
-  }
-  ))
+  }))
 
   React.useEffect(() => {
-    typeof onStateChange === "function" && onStateChange()
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+    } else {
+      typeof onStateChange === "function" && onStateChange(isExpanded)
+    }
   }, [isExpanded])
 
   return (
@@ -43,7 +50,7 @@ const ExpandebleInputComponent = ({
         ExpandAnimation()
         setExpanded(!isExpanded)
       }}
-	  disabled={isDisabled}
+      disabled={isDisabled}
     >
       <View
         pointerEvents="none"

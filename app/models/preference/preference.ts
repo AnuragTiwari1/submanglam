@@ -13,6 +13,7 @@ export const PreferenceModel = types
     minHeight: types.maybe(types.number),
     maxHeight: types.maybe(types.number),
     complexion: types.maybe(types.string),
+    actionComplete: types.optional(types.boolean, false),
   })
   .props({})
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

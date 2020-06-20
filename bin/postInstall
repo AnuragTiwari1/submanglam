@@ -9,7 +9,7 @@ const os = require("os")
  * Yes, it slows down package installation a little, but it's nice to not
  * have to remember these extra steps.
  */
-[
+;[
   // Make sure we're set up correctly
   { command: "solidarity" },
 

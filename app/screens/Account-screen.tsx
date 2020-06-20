@@ -1,15 +1,26 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, StatusBar, View } from "react-native"
+import { ViewStyle, StatusBar, View, TouchableWithoutFeedback } from "react-native"
 import { Screen, Text, HeartIcon, ExpandebleInput, ExpandAnimation } from "../components"
 import { useStores } from "../models/root-store"
 import { color, spacing } from "../theme"
 import { NavigationScreenProp } from "react-navigation"
-import { trimEmail } from "../utils/links"
+import { trimEmail, handleLinkPress } from "../utils/links"
 import { PreferenceSnapshot } from "../models/preference"
 import { TextInput, Button } from "react-native-paper"
 import { useFetch } from "use-fetch-lib"
-import { ERROR_MESSAGE } from "../constants"
+import {
+  ERROR_MESSAGE,
+  LOCATIONS,
+  MARITAL_STATUS,
+  COMPLEXION,
+  HELP_AND_SUPPORT_LINK,
+  LICENSES,
+  PRIVACY_POLICY,
+  TERMS_OF_SERVICES,
+} from "../constants"
+import { SelectGroup } from "./AddPreferences-screen"
+import RangeSlider from "rn-range-slider"
 
 export interface AccountScreenProps {
   navigation: NavigationScreenProp<{}>
@@ -35,7 +46,15 @@ export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observ
       <StatusBar barStyle="dark-content" />
       <Ads />
       <AccountSection email={authStore.email} onSuccess={handleSuccess} onFailure={handleFailure} />
-      <PreferenceSection {...preferenceStore} />
+      <PreferenceSection
+        {...preferenceStore}
+        onSuccess={(msg) => {
+          preferenceStore.set("actionComplete", true)
+          handleSuccess(msg)
+        }}
+        onFailure={handleFailure}
+        onChange={preferenceStore.set}
+      />
       <ContactUs />
       <Legal />
       <Text
@@ -67,9 +86,15 @@ const Legal = () => {
           padding: spacing[3],
         }}
       >
-        <Text style={{ padding: spacing[3] }}>Licenses</Text>
-        <Text style={{ padding: spacing[3] }}>Privacy Policy</Text>
-        <Text style={{ padding: spacing[3] }}>Terms of Services</Text>
+        <Text style={{ padding: spacing[3] }} onPress={() => handleLinkPress(LICENSES)}>
+          Licenses
+        </Text>
+        <Text style={{ padding: spacing[3] }} onPress={() => handleLinkPress(PRIVACY_POLICY)}>
+          Privacy Policy
+        </Text>
+        <Text onPress={() => handleLinkPress(TERMS_OF_SERVICES)} style={{ padding: spacing[3] }}>
+          Terms of Services
+        </Text>
       </View>
     </View>
   )
@@ -87,15 +112,72 @@ const ContactUs = () => {
           padding: spacing[3],
         }}
       >
-        <Text preset={["bold", "center"]}>Help & Support</Text>
+        <Text preset={["bold", "center"]} onPress={() => handleLinkPress(HELP_AND_SUPPORT_LINK)}>
+          Help & Support
+        </Text>
       </View>
     </View>
   )
 }
 
 const EMPTY_STRING = "Not set"
-const PreferenceSection = (props: PreferenceSnapshot) => {
+const PreferenceSection = (
+  props: PreferenceSnapshot & {
+    onChange: Function
+    onSuccess: Function
+    onFailure: Function
+  },
+) => {
   const [isDetailed, setIsDetailed] = React.useState(false)
+
+  const prevPreference = React.useRef<PreferenceSnapshot | null>()
+
+  const cityRef = React.useRef(null)
+
+  React.useEffect(() => {
+    prevPreference.current = {
+      city: props.city,
+      maritalStatus: props.maritalStatus,
+      complexion: props.complexion,
+      ageTo: props.ageTo,
+      ageFrom: props.ageFrom,
+      minHeight: props.minHeight,
+      maxHeight: props.maxHeight,
+    }
+  }, [])
+
+  const [{ data, status }, sevicesCaller] = useFetch({
+    url: "/set/preference",
+    method: "post",
+  })
+
+  React.useEffect(() => {
+    if (status.isFulfilled) {
+      props.onSuccess("You are all set. Preferences updated successfully")
+    } else if (status.isRejected) {
+      props.onFailure()
+    }
+  }, [status])
+
+  const onExpandableStateChange = (isOpening) => {
+    if (!isOpening) {
+      const preference = {
+        city: props.city,
+        maritalStatus: props.maritalStatus,
+        complexion: props.complexion,
+        ageTo: props.ageTo,
+        ageFrom: props.ageFrom,
+        minHeight: props.minHeight,
+        maxHeight: props.maxHeight,
+      }
+
+      if (JSON.stringify(prevPreference.current) !== JSON.stringify(preference)) {
+        sevicesCaller(preference)
+        prevPreference.current = preference
+      }
+    }
+  }
+
   return (
     <View style={{ margin: spacing[3] }}>
       <Text preset={["bold", "large"]}>Preferences settings</Text>
@@ -106,22 +188,87 @@ const PreferenceSection = (props: PreferenceSnapshot) => {
           marginVertical: spacing[3],
         }}
       >
-        <ExpandebleInput title="City" value={props.city || EMPTY_STRING}></ExpandebleInput>
-        <ExpandebleInput title="Marital status" value={props.maritalStatus || EMPTY_STRING} />
-        <ExpandebleInput title="Complexion" value={props.complexion || EMPTY_STRING} />
-        <ExpandebleInput title="Marital status" value={props.maritalStatus || EMPTY_STRING} />
+        <ExpandebleInput
+          title="City"
+          value={props.city || EMPTY_STRING}
+          onStateChange={onExpandableStateChange}
+          ref={cityRef}
+        >
+          <View style={{ backgroundColor: "#f9f9f9" }}>
+            <SelectGroup
+              value={props.city}
+              onChange={(value) => props.onChange("city", value)}
+              options={LOCATIONS}
+            />
+          </View>
+        </ExpandebleInput>
+        <ExpandebleInput
+          title="Marital status"
+          onStateChange={onExpandableStateChange}
+          value={props.maritalStatus || EMPTY_STRING}
+        >
+          <View style={{ backgroundColor: "#f9f9f9" }}>
+            <SelectGroup
+              value={props.maritalStatus}
+              onChange={(value) => props.onChange("maritalStatus", value)}
+              options={MARITAL_STATUS}
+            />
+          </View>
+        </ExpandebleInput>
+        <ExpandebleInput
+          title="Complexion"
+          onStateChange={onExpandableStateChange}
+          value={props.complexion || EMPTY_STRING}
+        >
+          <View style={{ backgroundColor: "#f9f9f9" }}>
+            <SelectGroup
+              value={props.complexion}
+              onChange={(value) => props.onChange("complexion", value)}
+              options={COMPLEXION}
+            />
+          </View>
+        </ExpandebleInput>
         {isDetailed ? (
           <View>
             <ExpandebleInput
               title="Age"
+              onStateChange={onExpandableStateChange}
               value={props.ageTo ? `${props.ageFrom}-${props.ageTo}` : EMPTY_STRING}
-            />
+            >
+              <Slider
+                msg="Please select the age(in years) from slider"
+                isSelected={props.ageTo}
+                min={18}
+                max={80}
+                initialLowValue={props.ageFrom}
+                initialHighValue={props.ageTo}
+                onValueChanged={(low, high) => {
+                  props.onChange("ageFrom", low)
+                  props.onChange("ageTo", high)
+                }}
+              />
+            </ExpandebleInput>
             <ExpandebleInput
+              onStateChange={onExpandableStateChange}
               title="Height"
               value={props.maxHeight ? `${props.minHeight}-${props.maxHeight}` : EMPTY_STRING}
-            ></ExpandebleInput>
-            <ExpandebleInput title="Education" value={props.education || EMPTY_STRING} />
-            <ExpandebleInput title="Religon" value={props.religion || EMPTY_STRING} />
+            >
+              <Slider
+                msg="Please select the height(in feet) from slider"
+                isSelected={props.ageTo}
+                min={0}
+                max={7}
+                step={1}
+                initialLowValue={props.minHeight}
+                initialHighValue={props.maxHeight}
+                onValueChanged={(low, high) => {
+                  props.onChange("minHeight", low)
+                  props.onChange("maxHeight", high)
+                }}
+              />
+            </ExpandebleInput>
+            {/** <ExpandebleInput title="Education" value={props.education || EMPTY_STRING} />
+					<ExpandebleInput title="Religon" value={props.religion || EMPTY_STRING} />**/}
           </View>
         ) : null}
       </View>
@@ -136,6 +283,34 @@ const PreferenceSection = (props: PreferenceSnapshot) => {
         {isDetailed ? "view less" : "view more"}
       </Text>
     </View>
+  )
+}
+
+const Slider = ({ msg, onValueChanged, ...rest }) => {
+  const [isSelected, setSelected] = React.useState(rest.initialLowValue)
+  return (
+    <TouchableWithoutFeedback>
+      <View style={{ alignItems: "center" }}>
+        <Text style={{ position: "absolute" }}>{msg}</Text>
+        <RangeSlider
+          style={{ width: "80%", height: 80 }}
+          gravity={"center"}
+          step={2}
+          selectionColor={isSelected ? color.primary : color.line}
+          blankColor={color.palette.black}
+          onValueChanged={(low, high, fromUser) => {
+            if (low !== rest.min || high !== rest.max) {
+              onValueChanged(low, high)
+              setSelected(true)
+            } else {
+              setSelected(false)
+              onValueChanged(undefined, undefined)
+            }
+          }}
+          {...rest}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 

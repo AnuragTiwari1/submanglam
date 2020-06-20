@@ -10,6 +10,7 @@ import { useStores } from "../models/root-store"
 import { registerForm } from "../validators/shapes"
 import { withHandleFormReject } from "../hocs/withHandleFormReject"
 import { useFetch } from "use-fetch-lib"
+import { TERMS_OF_SERVICES, PRIVACY_POLICY } from "../constants"
 
 export interface SignupScreenProps {
   navigation: NavigationScreenProp<SignupScreenProps>
@@ -113,13 +114,13 @@ export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
 
         <Text preset={["center", "dullWhite", "small"]}>
           By continuing you agree to our{" "}
-          <Text preset={["link", "small"]} url="https://github.com/site/terms">
+          <Text preset={["link", "small"]} url={TERMS_OF_SERVICES}>
             terms and conditions
           </Text>{" "}
           and{" "}
           <Text
             preset={["link", "small"]}
-            url="https://help.github.com/en/github/site-policy/github-terms-of-service"
+            url={PRIVACY_POLICY}
           >
             privacy policy
           </Text>

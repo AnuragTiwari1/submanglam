@@ -37,7 +37,7 @@ export const AddPreferencesScreen: React.FunctionComponent<AddPreferencesScreenP
           text: "You are all set. Preferences updated successfully",
           styles: "success",
         })
-
+        preferenceStore.set("actionComplete", true)
         navigationStore.navigateTo("landingScreen")
       }
     }, [status])
@@ -149,11 +149,11 @@ const CheckboxView = ({ status, label, ...rest }) => {
   )
 }
 
-const SelectGroup = ({ value, onChange, options }) => {
+export const SelectGroup = ({ value, onChange, options }) => {
   return (
     <View>
       <Text preset={["large"]} style={{ paddingStart: spacing[2] }}>
-        Select one of the city
+        Select one of the from the list
       </Text>
       <FlatList
         data={options}
