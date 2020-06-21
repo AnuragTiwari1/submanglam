@@ -1,5 +1,13 @@
 import * as React from "react"
-import { Dimensions, StyleSheet, View } from "react-native"
+import {
+  Dimensions,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Linking,
+  Alert,
+  ActivityIndicator,
+} from "react-native"
 import FastImage from "react-native-fast-image"
 import { FlatList } from "react-native-gesture-handler"
 import Animated from "react-native-reanimated"
@@ -21,8 +29,8 @@ import {
   HeartIcon,
   Report,
   SendIcon,
-  EmptyPreference,
   BloodIcon,
+  HeartIconOutlined,
 } from "../../components"
 import { SharedElement } from "react-navigation-shared-element"
 import { useStores } from "../../models/root-store"
@@ -32,6 +40,7 @@ import { PersonDetailsSnapshot } from "../../models/person-details"
 import { getProfilePic } from "../../utils/links"
 import { getSnapshot } from "mobx-state-tree"
 import { SALARY } from "../../constants"
+import Modal from "react-native-modal"
 
 const { width, height } = Dimensions.get("window")
 export interface DemoScreenProps extends NavigationInjectedProps<{}> {}
@@ -46,9 +55,10 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
   const _carousel = React.useRef<CarouselStatic<string> | null>(null)
   const bottomSheetRef = React.createRef<BottomSheet>()
   const fall = new Animated.Value(1)
-  const { personStore, preferenceStore } = useStores()
+  const { personStore, actionStore, likedPeople, appStateStore } = useStores()
 
   const [activeItem, setActiveItem] = React.useState(0)
+  const [showContact, setShowContact] = React.useState(false)
 
   const imgList = [
     personStore.photo || personStore.profilepic,
@@ -67,15 +77,82 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
     shouldDispatch: true,
   })
 
+  const isLiked = actionStore?.userActions?.[personStore.id] === "like"
+
+  const [{ data: likeData, status: likeStatus }, setLike] = useFetch<
+    ActionsResponse,
+    ActionRequest
+  >({
+    url: "/set/actions",
+    method: "post",
+  })
+
+  React.useEffect(() => {
+    if (likeStatus.isFulfilled && likeData) {
+      if (likeData.status) {
+        actionStore.addUserActions({ [personStore.id]: "like" })
+      } else {
+        actionStore.deleteUserAction(personStore.id)
+      }
+
+      isLiked
+        ? likedPeople.deletePerson(personStore.id)
+        : likedPeople.setPerson(likedPeople.peoplelist.length, {
+          id: personStore.id,
+          profilepic: personStore.profilepic,
+          name: personStore.name,
+          age: String(personStore.age),
+          height: String(personStore.height),
+          weight: String(personStore.weight),
+          profession: personStore.profession,
+          native: personStore.native,
+          expectations: personStore.expectations,
+          isLiked: likeData.status,
+        })
+    }
+  }, [likeStatus])
+
+  const [{ status: reportStatus }, reportServices] = useFetch({
+    url: "/report/user",
+    method: "post",
+  })
+
   React.useEffect(() => {
     return personStore.reset()
   }, [])
+
+  React.useEffect(() => {
+    if (reportStatus.isFulfilled) {
+      appStateStore.toast.setToast({
+        text: "You request is recieved and we will get back to you soon.",
+        styles: "success",
+      })
+    } else if (reportStatus.isRejected) {
+      appStateStore.toast.setToast({ text: reportStatus.err, styles: "angry" })
+    }
+  }, [reportServices])
 
   React.useEffect(() => {
     if (status.isFulfilled) {
       personStore.updateProfile(data.person)
     }
   }, [status])
+
+  const reportUser = () => {
+    Alert.alert(
+      "Report User",
+      "Are you sure you want to report this user?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => reportServices({ id: personStore.id }) },
+      ],
+      { cancelable: false },
+    )
+  }
 
   const renderContent = () => {
     return (
@@ -98,21 +175,46 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
         <Text preset={["paragraph"]} style={{ marginTop: `${spacing[1]}%`, color: "black" }}>
           {personStore.expectations}
         </Text>
-        {/*
-			see this is how the prop should look
-          <Matches
-            traits={{
-              maritalStatus: "Married Before",
-              education: "Graduate",
-              native: "Patna, Bihar",
-              hobbies: "Travelling",
-              complexion: "Fair",
-              salary: "20k/Month",
-            }}
-          />
-		  */}
-
         <AllDetails {...getSnapshot(personStore)} />
+        <Modal
+          isVisible={showContact}
+          onSwipeComplete={() => setShowContact(false)}
+          swipeDirection={["right", "left"]}
+          onBackdropPress={() => setShowContact(false)}
+        >
+          <View
+            style={{
+              backgroundColor: "white",
+              padding: 22,
+              borderRadius: 5,
+              paddingTop: 28,
+              borderColor: "rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Text preset={["xLarge", "center"]}>Contacts</Text>
+            <Text style={{ marginVertical: spacing[3] }}>
+              Phone:
+              <Text
+                preset={["link"]}
+                onPress={() => Linking.openURL(`tel:${personStore.parentsmob1}`)}
+              >
+                &nbsp;{personStore.parentsmob1}
+              </Text>
+            </Text>
+            <Text>
+              Parents Contacts:
+              <Text
+                preset={["link"]}
+                onPress={() => Linking.openURL(`tel:${personStore.parentsmob2}`)}
+              >
+                &nbsp;{personStore.parentsmob2}
+              </Text>
+            </Text>
+            <Text style={{ marginTop: spacing[5] }} preset={["small", "muted"]}>
+              Tip: make sure to ask for appointment. Be polite and things are bound to be easy
+            </Text>
+          </View>
+        </Modal>
       </View>
     )
   }
@@ -159,7 +261,6 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
 
     return (
       <AnimatedView
-        pointerEvents="none"
         style={{
           zIndex: 1000,
           position: "absolute",
@@ -174,7 +275,11 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
           translateY: translateFromBottom,
         }}
       >
-        <View
+        <TouchableOpacity
+          onPress={() => {
+            bottomSheetRef.current.snapTo(0)
+            setShowContact(true)
+          }}
           style={[
             styles.traitIcon,
             {
@@ -187,8 +292,13 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
           ]}
         >
           <SendIcon color={"#0088cc"} />
-        </View>
-        <View
+        </TouchableOpacity>
+        <TouchableOpacity
+          disabled={likeStatus.isPending}
+          onPress={() => {
+            bottomSheetRef.current.snapTo(0)
+            setLike({ action: "like", id: personStore.id, type: isLiked ? "delete" : "insert" })
+          }}
           style={[
             styles.traitIcon,
             {
@@ -200,9 +310,16 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
             },
           ]}
         >
-          <HeartIcon />
-        </View>
-        <View
+          {likeStatus.isPending ? (
+            <ActivityIndicator />
+          ) : isLiked ? (
+            <HeartIcon />
+          ) : (
+            <HeartIconOutlined color="black" />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={reportUser}
           style={[
             styles.traitIcon,
             {
@@ -215,7 +332,7 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
           ]}
         >
           <Report size={32} color={color.palette.blue} style={{ marginTop: spacing[2] }} />
-        </View>
+        </TouchableOpacity>
       </AnimatedView>
     )
   }

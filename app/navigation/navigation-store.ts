@@ -47,8 +47,8 @@ export const NavigationStoreModel = NavigationEvents.named("NavigationStore")
       // make sure react-navigation can handle our state
       RootNavigator.router.getPathAndParamsForState(snapshot.state)
 
-      // return snapshot // >>use in dev
-      return { ...snapshot, state: { ...DEFAULT_STATE, index: findActiveKeyIndex(snapshot.state) } }
+      return snapshot // >>use in dev
+      // return { ...snapshot, state: { ...DEFAULT_STATE, index: findActiveKeyIndex(snapshot.state) } } // >>use in prod
     } catch (e) {
       // otherwise restore default state
       return { ...snapshot, state: DEFAULT_STATE }

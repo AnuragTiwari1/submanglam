@@ -6,6 +6,7 @@ import {
   AddMediaScreen,
   AddPreferencesScreen,
   AccountScreen,
+  PeopleScreen,
 } from "../screens"
 import { ProfileNavigator } from "./profile-navigator"
 import { createStackNavigator } from "react-navigation-stack"
@@ -38,7 +39,7 @@ export const PrimaryNavigatorTabs = observer(() => {
 
   const renderScene = SceneMap({
     landing: LandingScreen,
-    chat: ChatScreen,
+    chat: PeopleScreen,
     profile: ProfileScreen,
   })
 
@@ -61,6 +62,7 @@ export const PrimaryNavigatorTabs = observer(() => {
 
   return (
     <View style={{ paddingTop: StatusBar.currentHeight, flex: 1 }}>
+      <StatusBar barStyle="dark-content"/>
       <TabView
         navigationState={{
           index,

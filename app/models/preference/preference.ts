@@ -21,6 +21,16 @@ export const PreferenceModel = types
     set(key, value) {
       self[key] = value
     },
+    init(preferences) {
+      const { maritalStatus, city, ageFrom, ageTo, minHeight, maxHeight, complexion } = preferences
+      self.maritalStatus = maritalStatus || undefined
+      self.maxHeight = Number(maxHeight) || undefined
+      self.minHeight = Number(minHeight) || undefined
+      self.complexion = complexion || undefined
+      self.ageFrom = Number(ageFrom) || undefined
+      self.ageTo = Number(ageTo) || undefined
+      self.city = city || undefined
+    },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
 /**

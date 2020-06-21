@@ -140,9 +140,14 @@ const IntroCard = (
     method: "post",
   })
 
+  const { likedPeople } = useStores()
+
   React.useEffect(() => {
     if (status.isFulfilled && data) {
       props.onLikePress(data.status)
+      props.isLiked
+        ? likedPeople.deletePerson(props.id)
+        : likedPeople.setPerson(likedPeople.peoplelist.length, props)
     }
   }, [status])
 

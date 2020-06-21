@@ -19,7 +19,14 @@ const imageWidth = width * 0.48 // this will take 1/3  of screen
 const iconWidth = 65
 
 export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observer((props) => {
-  const { userProfile, authStore, navigationStore, userProfileForm, actionStore } = useStores()
+  const {
+    userProfile,
+    authStore,
+    navigationStore,
+    userProfileForm,
+    actionStore,
+    preferenceStore,
+  } = useStores()
   const [{ data, status }] = useFetch({
     url: "/get/myprofile",
     method: "get",
@@ -33,6 +40,19 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
     shouldDispatch: true,
     cache: true,
   })
+
+  const [{ data: preferences, status: preferenceStaus }] = useFetch({
+    url: "/get/preferences",
+    method: "get",
+    shouldDispatch: true,
+    cache: true,
+  })
+
+  React.useEffect(() => {
+    if (preferenceStaus.isFulfilled) {
+      preferenceStore.init(preferences.data)
+    }
+  }, [status])
 
   React.useEffect(() => {
     if (status.isFulfilled) {

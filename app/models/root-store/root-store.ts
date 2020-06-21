@@ -23,6 +23,8 @@ export const RootStoreModel = types
     personStore: types.optional(PersonDetailsModel, {}),
     actionStore: types.optional(ActionsModel, {}),
     preferenceStore: types.optional(PreferenceModel, {}),
+    likedPeople: types.optional(PeopleModel, {}),
+    interstedPeople: types.optional(PeopleModel, {})
   })
   .actions((self) => ({
     resetRoot() {

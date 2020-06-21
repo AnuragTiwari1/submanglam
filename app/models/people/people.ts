@@ -1,4 +1,5 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import omit from "ramda/es/omit"
 
 /**
  * Model description here for TypeScript hints.
@@ -30,15 +31,18 @@ export const PeopleModel = types
     setPerson(index: number, newPerson: SnapshotOut<typeof personModal>) {
       self.peoplelist[index] = newPerson
     },
+    deletePerson(id: number) {
+      self.peoplelist = self.peoplelist.filter((e) => e.id !== id)
+    },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
-/**
+  /**
   * Un-comment the following to omit model attributes from your snapshots (and from async storage).
   * Useful for sensitive data like passwords, or transitive state like whether a modal is open.
 
   * Note that you'll need to import `omit` from ramda, which is already included in the project!
-  *  .postProcessSnapshot(omit(["password", "socialSecurityNumber", "creditCardNumber"]))
   */
+  .postProcessSnapshot(omit(["peoplelist"]))
 
 type PeopleType = Instance<typeof PeopleModel>
 export interface People extends PeopleType {}
