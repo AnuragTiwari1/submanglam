@@ -18,6 +18,7 @@ import EventSource from "react-native-event-source"
 import { API_URL } from "react-native-dotenv"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../models/root-store"
+import { PrimaryTabNavigator } from "./primary-tab-navigator"
 
 type Route = {
   key: string
@@ -27,21 +28,8 @@ type Route = {
 
 export type NavigationStateType = NavigationState<Route>
 
-export const PrimaryNavigatorTabs = observer(() => {
-  const [index, setIndex] = React.useState(0)
-  const [routes] = React.useState([
-    { key: "landing", title: "Explore", icon: SearchIcon },
-    { key: "chat", title: "Connect", icon: ChatIcon },
-    { key: "profile", title: "Profile", icon: Face },
-  ])
-
+export const PrimaryNavigatorTabs = observer((props) => {
   const { authStore, actionStore } = useStores()
-
-  const renderScene = SceneMap({
-    landing: LandingScreen,
-    chat: PeopleScreen,
-    profile: ProfileScreen,
-  })
 
   const handleEvent = (data) => {
     actionStore.addAppActions(JSON.parse(data.data))
@@ -62,21 +50,13 @@ export const PrimaryNavigatorTabs = observer(() => {
 
   return (
     <View style={{ paddingTop: StatusBar.currentHeight, flex: 1 }}>
-      <StatusBar barStyle="dark-content"/>
-      <TabView
-        navigationState={{
-          index,
-          routes,
-        }}
-        renderScene={renderScene}
-        renderTabBar={TabBar}
-        tabBarPosition="bottom"
-        onIndexChange={setIndex}
-        swipeEnabled={false}
-      />
+      <StatusBar barStyle="dark-content" />
+      <PrimaryTabNavigator navigation={props.navigation}/>
     </View>
   )
 })
+
+PrimaryNavigatorTabs.router = PrimaryTabNavigator.router
 
 export const PrimaryNavigator = createStackNavigator(
   {
@@ -101,4 +81,4 @@ export const PrimaryNavigator = createStackNavigator(
  * Anything not on this list will be a standard `back` action in
  * react-navigation.
  */
-export const exitRoutes: string[] = ["landingScreen"]
+export const exitRoutes: string[] = ["landing"]

@@ -9,6 +9,7 @@ import { getProfilePic } from "../utils/links"
 import { IUserStory } from "./types"
 import { observer } from "mobx-react-lite"
 import { HeartLottie } from "../components/animated/lottie"
+import { findCurrentRoute } from "../navigation/navigation-store"
 
 const { width } = Dimensions.get("screen")
 const introCardWidth = width / 2 - width * 0.03

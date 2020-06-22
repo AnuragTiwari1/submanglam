@@ -12,7 +12,7 @@ import { contains } from "ramda"
 import { enableScreens } from "react-native-screens"
 import { ToastProvider } from "./Provider/ToastProvider"
 import { ServicesProvider } from "./Provider/ServicesProvider"
-import {ActionProvider} from "./Provider/ActionProvider"
+import { ActionProvider } from "./Provider/ActionProvider"
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
 // This puts screens in a native ViewController or Activity. If you want fully native
