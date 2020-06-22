@@ -41,19 +41,6 @@ export const ProfileScreen: React.FunctionComponent<ProfileScreenProps> = observ
     cache: true,
   })
 
-  const [{ data: preferences, status: preferenceStaus }] = useFetch({
-    url: "/get/preferences",
-    method: "get",
-    shouldDispatch: true,
-    cache: true,
-  })
-
-  React.useEffect(() => {
-    if (preferenceStaus.isFulfilled) {
-      preferenceStore.init(preferences.data)
-    }
-  }, [status])
-
   React.useEffect(() => {
     if (status.isFulfilled) {
       userProfile.updateProfile(data.profile)

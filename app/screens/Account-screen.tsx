@@ -39,6 +39,20 @@ export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observ
   const handleSuccess = (msg) => appStateStore.toast.setToast({ text: msg, styles: "success" })
   const handleFailure = (msg = ERROR_MESSAGE) =>
     appStateStore.toast.setToast({ text: msg, styles: "angry" })
+
+  const [{ data: preferences, status: preferenceStaus }] = useFetch({
+    url: "/get/preferences",
+    method: "get",
+    shouldDispatch: true,
+    cache: true,
+  })
+
+  React.useEffect(() => {
+    if (preferenceStaus.isFulfilled) {
+      preferenceStore.init(preferences.data)
+    }
+  }, [preferenceStaus])
+
   return (
     <Screen style={ROOT} preset="scroll">
       <Text preset={["header", "center"]}>Settings</Text>
@@ -121,6 +135,21 @@ const ContactUs = () => {
 }
 
 const EMPTY_STRING = "Not set"
+const RoundedButton = (props: React.ComponentType<Button>) => (
+  <Button
+    style={{
+      marginHorizontal: `${spacing[6]}%`,
+      marginVertical: spacing[2],
+      paddingVertical: spacing[1],
+      borderRadius: spacing[5],
+    }}
+    mode="contained"
+    {...props}
+  >
+    Done
+  </Button>
+)
+
 const PreferenceSection = (
   props: PreferenceSnapshot & {
     onChange: Function
@@ -133,6 +162,10 @@ const PreferenceSection = (
   const prevPreference = React.useRef<PreferenceSnapshot | null>()
 
   const cityRef = React.useRef(null)
+  const maritalStatusRef = React.useRef(null)
+  const complexionRef = React.useRef(null)
+  const ageRef = React.useRef(null)
+  const heightRef = React.useRef(null)
 
   React.useEffect(() => {
     prevPreference.current = {
@@ -200,12 +233,18 @@ const PreferenceSection = (
               onChange={(value) => props.onChange("city", value)}
               options={LOCATIONS}
             />
+            <RoundedButton
+              onPress={() => {
+                cityRef.current.setExpanded(false)
+              }}
+            />
           </View>
         </ExpandebleInput>
         <ExpandebleInput
           title="Marital status"
           onStateChange={onExpandableStateChange}
           value={props.maritalStatus || EMPTY_STRING}
+          ref={maritalStatusRef}
         >
           <View style={{ backgroundColor: "#f9f9f9" }}>
             <SelectGroup
@@ -213,18 +252,29 @@ const PreferenceSection = (
               onChange={(value) => props.onChange("maritalStatus", value)}
               options={MARITAL_STATUS}
             />
+            <RoundedButton
+              onPress={() => {
+                maritalStatusRef.current.setExpanded(false)
+              }}
+            />
           </View>
         </ExpandebleInput>
         <ExpandebleInput
           title="Complexion"
           onStateChange={onExpandableStateChange}
           value={props.complexion || EMPTY_STRING}
+          ref={complexionRef}
         >
           <View style={{ backgroundColor: "#f9f9f9" }}>
             <SelectGroup
               value={props.complexion}
               onChange={(value) => props.onChange("complexion", value)}
               options={COMPLEXION}
+            />
+            <RoundedButton
+              onPress={() => {
+                complexionRef.current.setExpanded(false)
+              }}
             />
           </View>
         </ExpandebleInput>
@@ -234,38 +284,55 @@ const PreferenceSection = (
               title="Age"
               onStateChange={onExpandableStateChange}
               value={props.ageTo ? `${props.ageFrom}-${props.ageTo}` : EMPTY_STRING}
+              ref={ageRef}
             >
-              <Slider
-                msg="Please select the age(in years) from slider"
-                isSelected={props.ageTo}
-                min={18}
-                max={80}
-                initialLowValue={props.ageFrom}
-                initialHighValue={props.ageTo}
-                onValueChanged={(low, high) => {
-                  props.onChange("ageFrom", low)
-                  props.onChange("ageTo", high)
-                }}
-              />
+              <View>
+                <Slider
+                  msg="Please select the age(in years) from slider"
+                  isSelected={props.ageTo}
+                  min={18}
+                  max={80}
+                  initialLowValue={props.ageFrom}
+                  initialHighValue={props.ageTo}
+                  onValueChanged={(low, high) => {
+                    props.onChange("ageFrom", low)
+                    props.onChange("ageTo", high)
+                  }}
+                />
+
+                <RoundedButton
+                  onPress={() => {
+                    ageRef.current.setExpanded(false)
+                  }}
+                />
+              </View>
             </ExpandebleInput>
             <ExpandebleInput
               onStateChange={onExpandableStateChange}
               title="Height"
               value={props.maxHeight ? `${props.minHeight}-${props.maxHeight}` : EMPTY_STRING}
+              ref={heightRef}
             >
-              <Slider
-                msg="Please select the height(in feet) from slider"
-                isSelected={props.ageTo}
-                min={0}
-                max={7}
-                step={1}
-                initialLowValue={props.minHeight}
-                initialHighValue={props.maxHeight}
-                onValueChanged={(low, high) => {
-                  props.onChange("minHeight", low)
-                  props.onChange("maxHeight", high)
-                }}
-              />
+              <View>
+                <Slider
+                  msg="Please select the height(in feet) from slider"
+                  isSelected={props.ageTo}
+                  min={0}
+                  max={7}
+                  step={1}
+                  initialLowValue={props.minHeight}
+                  initialHighValue={props.maxHeight}
+                  onValueChanged={(low, high) => {
+                    props.onChange("minHeight", low)
+                    props.onChange("maxHeight", high)
+                  }}
+                />
+                <RoundedButton
+                  onPress={() => {
+                    heightRef.current.setExpanded(false)
+                  }}
+                />
+              </View>
             </ExpandebleInput>
             {/** <ExpandebleInput title="Education" value={props.education || EMPTY_STRING} />
 					<ExpandebleInput title="Religon" value={props.religion || EMPTY_STRING} />**/}
@@ -359,10 +426,12 @@ const AccountSection = ({ email, onSuccess, onFailure }) => {
               onPress={() => {
                 if (newPassword) {
                   services({ newPassword })
+                } else {
+                  passwordExpandableRef.current.setExpanded(false)
                 }
               }}
             >
-              done
+              {newPassword ? "done" : "close"}
             </Button>
           </View>
         </ExpandebleInput>

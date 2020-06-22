@@ -98,6 +98,8 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
             <Button
               style={{ padding: spacing[2], marginTop: spacing[2] }}
               mode="contained"
+              disabled={status.isPending}
+              loading={status.isPending}
               onPress={methods.handleSubmit(handleFormSubmit)}
             >
               Sign In

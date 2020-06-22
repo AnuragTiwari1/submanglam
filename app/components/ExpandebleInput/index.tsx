@@ -1,5 +1,5 @@
 import * as React from "react"
-import { View, TouchableOpacity, LayoutAnimation } from "react-native"
+import { View, TouchableOpacity, LayoutAnimation, TouchableWithoutFeedback } from "react-native"
 import { Text } from "../"
 import { spacing } from "../../theme"
 import { forwardRef } from "react"
@@ -48,7 +48,7 @@ const ExpandebleInputComponent = (
     <TouchableOpacity
       onPress={() => {
         ExpandAnimation()
-        setExpanded(!isExpanded)
+        setExpanded(true)
       }}
       disabled={isDisabled}
     >
@@ -59,7 +59,9 @@ const ExpandebleInputComponent = (
         <Text>{title}</Text>
         <Text>{value}</Text>
       </View>
-      {isExpanded && children ? <View>{children}</View> : null}
+      {isExpanded && children ? (
+        <TouchableWithoutFeedback touchSoundDisabled>{children}</TouchableWithoutFeedback>
+      ) : null}
     </TouchableOpacity>
   )
 }
