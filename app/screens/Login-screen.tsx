@@ -1,16 +1,17 @@
 import * as React from "react"
 import { FormContext, useForm } from "react-hook-form"
-import { StyleSheet, View, ImageBackground } from "react-native"
+import { StyleSheet, View, ImageBackground, StatusBar } from "react-native"
 import { Button } from "react-native-paper"
 import { NavigationScreenProp } from "react-navigation"
 import { Text, DismissKeyboardView } from "../components"
 import { FormInput } from "../components/formInput"
 import { useStores } from "../models/root-store"
-import { spacing } from "../theme"
+import { spacing, color } from "../theme"
 import { withHandleFormReject } from "../hocs/withHandleFormReject"
 import * as Yup from "yup"
 import { emailValidator } from "../validators/fields"
 import { useFetch } from "use-fetch-lib"
+import { TERMS_OF_SERVICES, PRIVACY_POLICY } from "../constants"
 
 export interface LoginScreenProps extends NavigationScreenProp<{}> {}
 
@@ -69,10 +70,12 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/login_image.jpg")}
+      source={require("../../assets/images/login_image.jpeg")}
       style={{ width: "100%", height: "100%" }}
       blurRadius={2.2}
     >
+      <StatusBar backgroundColor={color.primary} barStyle="light-content" />
+
       <DismissKeyboardView style={{ flex: 1 }}>
         <View style={styles.ROOT}>
           <View style={styles.LOGO_CONTAINER}>
@@ -84,8 +87,8 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
             >
               Welcome
             </Text>
-            <Text preset={["large", "white", "center"]}>
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit "
+            <Text style={{ fontSize: 27 }} preset={["white", "center"]}>
+              "Sign up for free to connect with the one for you"
             </Text>
           </View>
           <View style={styles.INPUT_CONTAINER}>
@@ -112,14 +115,11 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
           </View>
           <Text style={{ marginBottom: spacing[2] }} preset={["center", "dullWhite", "small"]}>
             By continuing you agree to our{" "}
-            <Text preset={["link", "small"]} url="https://github.com/site/terms">
+            <Text preset={["link", "small"]} url={TERMS_OF_SERVICES}>
               terms and conditions
             </Text>{" "}
             and{" "}
-            <Text
-              preset={["link", "small"]}
-              url="https://help.github.com/en/github/site-policy/github-terms-of-service"
-            >
+            <Text preset={["link", "small"]} url={PRIVACY_POLICY}>
               privacy policy
             </Text>
           </Text>

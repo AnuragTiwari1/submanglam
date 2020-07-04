@@ -29,9 +29,9 @@ export const SALARY = [
   { label: "Upto 1 Lakh", value: 100000 },
 ]
 
-export const HELP_AND_SUPPORT_LINK = "https://github.com/anuragtiwari1"
-export const LICENSES = "https://github.com/anuragtiwari1"
-export const PRIVACY_POLICY = "https://help.github.com/en/github/site-policy/github-terms-of-service"
-export const TERMS_OF_SERVICES = "https://github.com/site/terms"
+export const HELP_AND_SUPPORT_LINK = "mailto:sumitkalyana25@gmail.com"
+export const PAYMENT_POLICY = "http://sabbmanglam.com/home/payment-policy.php"
+export const PRIVACY_POLICY = "http://sabbmanglam.com/home/privacy.php"
+export const TERMS_OF_SERVICES = "http://sabbmanglam.com/home/terms.php"
 
 export const ERROR_MESSAGE = "Opps! something went wrong. Please try after some time"

@@ -15,7 +15,7 @@ import {
   MARITAL_STATUS,
   COMPLEXION,
   HELP_AND_SUPPORT_LINK,
-  LICENSES,
+  PAYMENT_POLICY,
   PRIVACY_POLICY,
   TERMS_OF_SERVICES,
 } from "../constants"
@@ -100,8 +100,8 @@ const Legal = () => {
           padding: spacing[3],
         }}
       >
-        <Text style={{ padding: spacing[3] }} onPress={() => handleLinkPress(LICENSES)}>
-          Licenses
+        <Text style={{ padding: spacing[3] }} onPress={() => handleLinkPress(PAYMENT_POLICY)}>
+          Payment Policy
         </Text>
         <Text style={{ padding: spacing[3] }} onPress={() => handleLinkPress(PRIVACY_POLICY)}>
           Privacy Policy

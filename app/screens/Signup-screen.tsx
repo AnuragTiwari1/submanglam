@@ -81,12 +81,12 @@ export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/login_image.jpg")}
+      source={require("../../assets/images/login_image.jpeg")}
       style={{ width: "100%", height: "100%" }}
       blurRadius={2.2}
     >
       <DismissKeyboardView style={styles.ROOT}>
-        <Text preset="header">Let's get you on board ...</Text>
+        <Text preset={["header", "white"]}>Let's get you on board ...</Text>
         <View style={styles.INPUT_CONTAINER}>
           <FormContext {...methods}>
             <SignupForm
@@ -118,10 +118,7 @@ export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
             terms and conditions
           </Text>{" "}
           and{" "}
-          <Text
-            preset={["link", "small"]}
-            url={PRIVACY_POLICY}
-          >
+          <Text preset={["link", "small"]} url={PRIVACY_POLICY}>
             privacy policy
           </Text>
         </Text>
