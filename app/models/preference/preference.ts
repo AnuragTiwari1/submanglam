@@ -8,11 +8,12 @@ export const PreferenceModel = types
   .model("Preference", {
     maritalStatus: types.maybe(types.string),
     city: types.maybe(types.string),
+    state: types.maybe(types.string),
+    religion: types.maybe(types.string),
     ageFrom: types.maybe(types.number),
     ageTo: types.maybe(types.number),
     minHeight: types.maybe(types.number),
     maxHeight: types.maybe(types.number),
-    complexion: types.maybe(types.string),
     actionComplete: types.optional(types.boolean, false),
   })
   .props({})
@@ -26,7 +27,6 @@ export const PreferenceModel = types
       self.maritalStatus = maritalStatus || undefined
       self.maxHeight = Number(maxHeight) || undefined
       self.minHeight = Number(minHeight) || undefined
-      self.complexion = complexion || undefined
       self.ageFrom = Number(ageFrom) || undefined
       self.ageTo = Number(ageTo) || undefined
       self.city = city || undefined

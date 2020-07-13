@@ -6,7 +6,9 @@ import { Instance, SnapshotOut, types, applySnapshot } from "mobx-state-tree"
 export const UserProfileModel = types
   .model("UserProfile", {
     gender: types.optional(types.string, ""),
-    location: types.optional(types.string, "Pune"),
+    city: types.optional(types.string, ""),
+    state: types.optional(types.string, ""),
+    religion: types.optional(types.string, ""),
     age: types.optional(types.number, 0),
     height: types.optional(types.number, 0),
     weight: types.optional(types.number, 0),
@@ -16,7 +18,7 @@ export const UserProfileModel = types
     address: types.optional(types.string, ""),
     physically: types.optional(types.string, ""),
     dob: types.optional(types.string, ""),
-    profession: types.optional(types.string, "Student"),
+    profession: types.optional(types.string, ""),
     officename: types.optional(types.string, ""),
     maritalstatus: types.optional(types.string, "Single"),
     salary: types.optional(types.number, 0),

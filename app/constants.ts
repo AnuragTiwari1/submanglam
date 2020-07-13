@@ -33,5 +33,6 @@ export const HELP_AND_SUPPORT_LINK = "mailto:sumitkalyana25@gmail.com"
 export const PAYMENT_POLICY = "http://sabbmanglam.com/home/payment-policy.php"
 export const PRIVACY_POLICY = "http://sabbmanglam.com/home/privacy.php"
 export const TERMS_OF_SERVICES = "http://sabbmanglam.com/home/terms.php"
+export const PAYMENT_LINK = "https://sabbmanglam.com/home/subscribe/3.php"
 
 export const ERROR_MESSAGE = "Opps! something went wrong. Please try after some time"

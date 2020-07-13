@@ -12,7 +12,7 @@ const personModal = types.model("person", {
   age: types.optional(types.string, "0"),
   height: types.optional(types.string, "0"),
   weight: types.optional(types.string, "0"),
-  profession: types.optional(types.string, "Student"),
+  profession: types.optional(types.string, ""),
   native: types.optional(types.string, ""),
   expectations: types.optional(types.string, ""),
   isLiked: types.optional(types.boolean, false),

@@ -3,6 +3,7 @@ import { Image, ImageStyle, View } from "react-native"
 import AntIcons from "react-native-vector-icons/AntDesign"
 import Entypo from "react-native-vector-icons/Entypo"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons"
 import { icons } from "./icons"
 
@@ -104,4 +105,8 @@ export const AddImages = (props) => {
 
 export const BloodIcon = props => {
   return <Entypo name="drop" {...props}/>
+}
+
+export const Religion = props => {
+  return <FontAwesome name="font-awesome" {...props}/>
 }

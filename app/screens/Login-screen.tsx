@@ -59,9 +59,10 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
     if (status.isFulfilled) {
       const { isProfileComplete } = data
       authStore.setUser(data)
-      isProfileComplete
-        ? navigationStore.navigateTo("primaryStack")
-        : navigationStore.navigateTo("addPersonalDetails")
+      // isProfileComplete
+      //   ? navigationStore.navigateTo("primaryStack")
+      //   : navigationStore.navigateTo("addPersonalDetails")
+      navigationStore.navigateTo("primaryStack")
     }
     if (status.isRejected) {
       appStateStore.toast.setToast({ text: status.err, styles: "angry" })

@@ -9,7 +9,6 @@ import { getProfilePic } from "../utils/links"
 import { IUserStory } from "./types"
 import { observer } from "mobx-react-lite"
 import { HeartLottie } from "../components/animated/lottie"
-import { findCurrentRoute } from "../navigation/navigation-store"
 
 const { width } = Dimensions.get("screen")
 const introCardWidth = width / 2 - width * 0.03
@@ -172,9 +171,10 @@ const IntroCard = (
             borderBottomRightRadius: 12,
             flexDirection: "row",
             justifyContent: "space-between",
+            alignItems: 'center'
           }}
         >
-          <View>
+          <View style={{ flex: 1 }}>
             <Text preset={["white", "small"]}>
               <Text>{props.name.split(" ")[0]}</Text>, &nbsp;<Text>{props.age}</Text>
             </Text>
@@ -185,7 +185,7 @@ const IntroCard = (
               }}
               preset={["bold", "small"]}
             >
-              {props.profession || "Student"}
+              {props.profession}
             </Text>
           </View>
           <TouchableOpacity

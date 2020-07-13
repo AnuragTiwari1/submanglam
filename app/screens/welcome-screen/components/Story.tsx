@@ -141,15 +141,14 @@ const Story: React.FunctionComponent<StoryProps> = (props) => {
           }}
         >
           <Animated.View style={[styles.details, { opacity: animatedOpacity }]}>
-            <Text preset={["header", "white"]}>
+            <Text preset={["header", "white", "center"]}>
               {name} <Text>{age}</Text>
             </Text>
-            <Text preset="dullWhite">
-              {weight} kg, {`${height.split(".")[0]}`}"{`${height.split(".")?.[1]}`}'
+            <Text preset={["dullWhite", "center"]}>
+              {weight} kg, {`${height.split(".")[0]}`}"{`${height.split(".")?.[1] ?? 0}`}'
             </Text>
-            <Text preset="dullWhite">
-              {profession}, {native}
-            </Text>
+            <Text preset={["dullWhite", "center"]}>{profession} </Text>
+            <Text preset={["dullWhite", "center"]}>lives @ {native} </Text>
 
             <View style={{ marginTop: `${spacing[2]}%`, alignItems: "center" }}>
               <AntIcons name="up" size={15} color={"white"} />

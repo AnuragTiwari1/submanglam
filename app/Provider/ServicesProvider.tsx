@@ -12,8 +12,6 @@ export const ServicesProvider = observer(({ children }) => {
   const refreshAuthLogic = (originalRequest) => {
     const expiredToken = originalRequest?.headers?.Authorization || ""
 
-    console.log("Api url>>>", API_URL)
-
     if (expiredToken) {
       axios
         .request({

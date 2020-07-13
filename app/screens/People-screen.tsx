@@ -179,7 +179,7 @@ const IntroCard = (
               }}
               preset={["bold", "small"]}
             >
-              {props.profession || "Student"}
+              {props.profession}
             </Text>
           </View>
         </View>

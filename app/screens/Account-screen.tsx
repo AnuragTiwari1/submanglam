@@ -1,6 +1,13 @@
 import * as React from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, StatusBar, View, TouchableWithoutFeedback } from "react-native"
+import {
+  ViewStyle,
+  StatusBar,
+  View,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Linking,
+} from "react-native"
 import { Screen, Text, HeartIcon, ExpandebleInput, ExpandAnimation } from "../components"
 import { useStores } from "../models/root-store"
 import { color, spacing } from "../theme"
@@ -18,6 +25,7 @@ import {
   PAYMENT_POLICY,
   PRIVACY_POLICY,
   TERMS_OF_SERVICES,
+  PAYMENT_LINK,
 } from "../constants"
 import { SelectGroup } from "./AddPreferences-screen"
 import RangeSlider from "rn-range-slider"
@@ -442,7 +450,8 @@ const AccountSection = ({ email, onSuccess, onFailure }) => {
 
 const Ads = () => {
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => Linking.openURL(PAYMENT_LINK)}
       style={{
         padding: spacing[3],
         margin: spacing[3],
@@ -455,6 +464,6 @@ const Ads = () => {
         <Text preset={["text", "bold"]}>Increase Your Chances</Text>
       </View>
       <Text preset="center">Get unlimited likes with premium</Text>
-    </View>
+    </TouchableOpacity>
   )
 }

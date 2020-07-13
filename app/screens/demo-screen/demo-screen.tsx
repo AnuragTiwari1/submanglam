@@ -7,8 +7,8 @@ import {
   Linking,
   Alert,
   ActivityIndicator,
+  Image
 } from "react-native"
-import FastImage from "react-native-fast-image"
 import { FlatList } from "react-native-gesture-handler"
 import Animated from "react-native-reanimated"
 import Carousel, { CarouselStatic, Pagination } from "react-native-snap-carousel"
@@ -31,6 +31,7 @@ import {
   SendIcon,
   BloodIcon,
   HeartIconOutlined,
+  Religion,
 } from "../../components"
 import { SharedElement } from "react-navigation-shared-element"
 import { useStores } from "../../models/root-store"
@@ -49,8 +50,6 @@ const AnimatedView = Animated.View
 
 const snapPoints = ["30%", "70%"]
 
-const IS_MATCH_MAKING_ENABLED = false
-
 const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
   const _carousel = React.useRef<CarouselStatic<string> | null>(null)
   const bottomSheetRef = React.createRef<BottomSheet>()
@@ -67,7 +66,7 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
     personStore.photo4,
     personStore.photo5,
   ]
-    .filter((e) => e !== "profile.png")
+    .filter((e) => e.trim().length > 0)
     .map((e) => getProfilePic(e))
 
   const [{ data, status }] = useFetch({
@@ -387,13 +386,12 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
           renderItem={({ item, index }) => {
             return (
               <SharedElement id={personStore.id}>
-                <FastImage
+                <Image
                   style={{ width: width, height: height * 0.7 }}
                   source={{
                     uri: item,
-                    priority: FastImage.priority.high,
                   }}
-                  resizeMode={FastImage.resizeMode.cover}
+                  resizeMode="cover"
                 />
               </SharedElement>
             )
@@ -486,6 +484,12 @@ const AllDetails = (props: PersonDetailsSnapshot) => {
         <Hobbies style={{ flex: 1 }} size={23} />
         <Text style={{ flex: 4 }} preset={["text"]}>
           {props.hobbies}
+        </Text>
+      </View>
+      <View style={styles.charaterRow}>
+        <Religion style={{ flex: 1 }} size={23} />
+        <Text style={{ flex: 4 }} preset={["text"]}>
+          {props.religion}
         </Text>
       </View>
       <View style={styles.charaterRow}>

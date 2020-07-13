@@ -68,7 +68,7 @@
     "reactotron-react-native": "^4.0.0-beta.1",
     "reanimated-bottom-sheet": "1.0.0-alpha.19",
     "rn-range-slider": "^1.3.2",
-    "use-fetch-lib": "^2.0.0",
+    "use-fetch-lib": "latest",
     "validate.js": "0.13.1",
     "yup": "^0.28.3"
   },
