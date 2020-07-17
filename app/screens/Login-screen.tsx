@@ -133,8 +133,8 @@ export const LoginScreen: React.FunctionComponent<LoginScreenProps> = () => {
 const FormComponent = withHandleFormReject(() => {
   return (
     <View>
-      <FormInput name="email" label="Email" />
-      <FormInput name="password" label="Password" />
+      <FormInput name="email" label="Email" autoCompleteType="email" keyboardType="email-address"/>
+      <FormInput name="password" label="Password" secureTextEntry/>
     </View>
   )
 })

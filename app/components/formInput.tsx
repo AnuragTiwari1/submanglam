@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ComponentProps } from "react"
 import { Controller, ControllerProps, useFormContext } from "react-hook-form"
 import { TextInput } from "react-native-paper"
 import TextInputMask from "react-native-text-input-mask"
@@ -6,8 +6,7 @@ import { color, spacing } from "../theme"
 import { Text } from "./text/text"
 import { View } from "react-native"
 
-export interface FormInputProps
-  extends React.ComponentProps<typeof TextInput>,
+export interface FormInputProps extends
     Omit<ControllerProps<any>, "as"> {
   required?: boolean
   placeholder?: string
@@ -29,7 +28,7 @@ export const inputContainerStyle = {
   marginVertical: `${spacing[1]}%`,
 }
 
-export const FormInput = (props: FormInputProps) => {
+export const FormInput = (props: FormInputProps & ComponentProps<typeof TextInput>) => {
   const {
     name,
     required = false,
@@ -69,16 +68,16 @@ export const StyledTextInput = (props) => {
   const { mask, ...rest } = props
   const extraProps = mask
     ? {
-        render: (renderProps) => {
-          return (
-            <TextInputMask
-              mask={mask}
-              {...renderProps}
-              value={renderProps.value?.value || renderProps.value}
-            />
-          )
-        },
-      }
+      render: (renderProps) => {
+        return (
+          <TextInputMask
+            mask={mask}
+            {...renderProps}
+            value={renderProps.value?.value || renderProps.value}
+          />
+        )
+      },
+    }
     : {}
   return <TextInput {...rest} {...extraProps} />
 }

@@ -130,9 +130,9 @@ export const SignupScreen: React.FunctionComponent<SignupScreenProps> = () => {
 const SignupForm: React.FC<IFormCommon<SignFormShape>> = withHandleFormReject(() => {
   return (
     <View>
-      <FormInput name="name" label="Full Name" />
-      <FormInput name="email" label="Email" />
-      <FormInput name="password" label="Password" />
+      <FormInput name="name" label="Full Name" autoCompleteType="name"/>
+      <FormInput name="email" label="Email" autoCompleteType="email"/>
+      <FormInput name="password" label="Password" secureTextEntry/>
     </View>
   )
 })
