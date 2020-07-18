@@ -2,7 +2,8 @@ import * as React from "react"
 import { observer } from "mobx-react-lite"
 import {
   ViewStyle,
-  StyleSheet,
+  RefreshControl,
+  ScrollView,
   View,
   Image,
   FlatList,
@@ -27,7 +28,9 @@ const ROOT: ViewStyle = {
 }
 
 export const PeopleScreen: React.FunctionComponent<PeopleScreenProps> = observer((props) => {
-  const { likedPeople, interstedPeople } = useStores()
+  const { likedPeople, peopleStore, navigationStore } = useStores()
+
+  const [refreshing, setRefreshing] = React.useState(false)
 
   const [{ data: peopleLiked, status: peopleLikedStatus }] = useFetch({
     url: "/get/people/liked",
@@ -41,20 +44,46 @@ export const PeopleScreen: React.FunctionComponent<PeopleScreenProps> = observer
     }
   }, [peopleLikedStatus])
 
-  const [{ data: peopleIntrested, status: peopleIntrestedStatus }] = useFetch({
-    url: "/get/people/intersted?type=summary",
-    method: "post",
+  const [{ data: peopleIntrested, status: peopleIntrestedStatus }, fetchInterested] = useFetch({
+    url: "/get/people/interested",
+    method: "get",
     dependencies: [],
-    shouldDispatch: false
   })
 
+  React.useEffect(() => {
+    if (peopleIntrestedStatus.isFulfilled) {
+      setRefreshing(false)
+    }
+  }, [peopleIntrestedStatus])
+
+  const [{ data: people, status: peopleLoadingStatus }, fetchPeople] = useFetch({
+    url: "/get/people",
+    method: "post",
+  })
+
+  React.useEffect(() => {
+    if (peopleLoadingStatus.isFulfilled) {
+      peopleStore.setPeoples(people.peoplelist)
+      navigationStore.navigateTo("profile")
+    }
+  }, [peopleLoadingStatus])
+
   return (
-    <Screen style={ROOT} preset="scroll">
+    <ScrollView
+      contentContainerStyle={ROOT}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => {
+        setRefreshing(true)
+        fetchInterested()
+      }} />}
+    >
       <Text preset={["header", "center"]}>Connects</Text>
       <Text style={{ marginBottom: spacing[3] }} preset={["center", "muted"]}>
         View all of your connection in one place
       </Text>
-      <NewMatches />
+      <NewMatches
+        matchesData={peopleIntrested?.peopleList || []}
+        handlePress={(id) => fetchPeople({ id })}
+      />
       <LinearGradient
         colors={["#ffffff", "#f0f0f0"]}
         locations={[0, 0.7]}
@@ -74,7 +103,9 @@ export const PeopleScreen: React.FunctionComponent<PeopleScreenProps> = observer
           data={likedPeople.peoplelist}
           numColumns={2}
           contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item, index }) => <IntroCard {...item} />}
+          renderItem={({ item }) => (
+            <IntroCard {...item} onPeoplePress={(id) => fetchPeople({ id })} />
+          )}
           ListEmptyComponent={() => (
             <View style={{ flex: 1, justifyContent: "center" }}>
               <Text preset={["center", "large", "primary"]}>Like people to view them here.</Text>
@@ -82,13 +113,13 @@ export const PeopleScreen: React.FunctionComponent<PeopleScreenProps> = observer
           )}
         />
       </LinearGradient>
-    </Screen>
+    </ScrollView>
   )
 })
 
 const _imageWidth = 100
 
-const NewMatches = ({ matchesData }) => {
+const NewMatches = ({ matchesData, handlePress }) => {
   return (
     <View style={{ marginHorizontal: `${spacing[1]}%` }}>
       <Text preset="primary">New Matches</Text>
@@ -104,13 +135,15 @@ const NewMatches = ({ matchesData }) => {
         }
         renderItem={({ item }) => {
           return (
-            <View style={{ margin: spacing[1] }}>
-              <Image
-                source={{ uri: item.imgUrl }}
-                style={{ borderRadius: _imageWidth / 2, width: _imageWidth, height: _imageWidth }}
-              />
-              <Text preset={["small", "center"]}>{item.name}</Text>
-            </View>
+            <TouchableOpacity onPress={() => handlePress(item.id)}>
+              <View style={{ margin: spacing[1] }}>
+                <Image
+                  source={{ uri: getProfilePic(item.profilepic) }}
+                  style={{ borderRadius: _imageWidth / 2, width: _imageWidth, height: _imageWidth }}
+                />
+                <Text preset={["small", "center"]}>{item.name}</Text>
+              </View>
+            </TouchableOpacity>
           )
         }}
       />
@@ -126,6 +159,7 @@ interface IntroProps {
   isSaved?: boolean
   profession?: string
   isLiked?: boolean
+  onPeoplePress: (id: string) => void
 }
 const { width } = Dimensions.get("screen")
 const introCardWidth = width / 2 - width * 0.09
@@ -133,23 +167,9 @@ const introCardWidth = width / 2 - width * 0.09
 const IntroCard = (
   props: IntroProps & { onPress: (e: any) => void; onLikePress: (e: any) => void },
 ) => {
-  const { navigationStore, peopleStore } = useStores()
-
-  const [{ data: people, status: peopleLoadingStatus }, fetchPeople] = useFetch({
-    url: "/get/people",
-    method: "post",
-  })
-
-  React.useEffect(() => {
-    if (peopleLoadingStatus.isFulfilled) {
-      peopleStore.setPeoples(people.peoplelist)
-      navigationStore.navigateTo("profile")
-    }
-  }, [peopleLoadingStatus])
-
   return (
     <View style={{ width: introCardWidth, margin: "1%" }}>
-      <TouchableOpacity style={{ width: "100%" }} onPress={() => fetchPeople({ id: props.id })}>
+      <TouchableOpacity style={{ width: "100%" }} onPress={() => props.onPeoplePress(props.id)}>
         <Image
           source={{ uri: getProfilePic(props.profilepic) }}
           style={{ width: "100%", height: 250, borderRadius: 12 }}
