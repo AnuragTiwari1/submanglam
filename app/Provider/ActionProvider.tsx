@@ -54,10 +54,10 @@ export const ActionProvider = observer(() => {
 
 const DefaultModalContent = (props) => (
   <View style={styles.content}>
-    <Text preset={["header"]} style={styles.contentTitle}>
+    <Text preset={["header", "center"]} style={styles.contentTitle}>
       {props.title}
     </Text>
-    <Text preset={["large"]}>{props.subtitle}</Text>
+    <Text preset={["large", "center"]}>{props.subtitle}</Text>
     <Text preset={["center", "small"]} style={{ marginBottom: 12 }}>
       {props.paragraph}
     </Text>

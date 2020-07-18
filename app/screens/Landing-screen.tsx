@@ -9,6 +9,7 @@ import { getProfilePic } from "../utils/links"
 import { IUserStory } from "./types"
 import { observer } from "mobx-react-lite"
 import { HeartLottie } from "../components/animated/lottie"
+import { PAYMENT_LINK } from "../constants"
 
 const { width } = Dimensions.get("screen")
 const introCardWidth = width / 2 - width * 0.03
@@ -88,6 +89,15 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
         extraData={actionStore.userActions}
         columnWrapperStyle={{ justifyContent: "space-between" }}
         contentContainerStyle={{ paddingBottom: spacing[5] }}
+        onEndReachedThreshold={1}
+        onEndReached={({ distanceFromEnd }) => {
+          actionStore.addAppActions({
+            id: `${Math.random() * 100}`,
+            type: "url",
+            value: PAYMENT_LINK,
+            templateId: "restricted",
+          })
+        }}
         renderItem={({ item, index }) => {
           const isLiked = actionStore?.userActions?.[item.id] === "like"
           return (
@@ -171,7 +181,7 @@ const IntroCard = (
             borderBottomRightRadius: 12,
             flexDirection: "row",
             justifyContent: "space-between",
-            alignItems: 'center'
+            alignItems: "center",
           }}
         >
           <View style={{ flex: 1 }}>

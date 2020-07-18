@@ -140,7 +140,6 @@ const PersonalDetailsForm = withHandleFormReject(() => {
   const [selectedState, setSelectedState] = React.useState(undefined)
 
   React.useEffect(() => {
-    console.log("the states value >>>>", watch("state"))
     setSelectedState(watch("state"))
   }, [watch("state")])
 

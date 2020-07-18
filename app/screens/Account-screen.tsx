@@ -20,15 +20,16 @@ import {
   ERROR_MESSAGE,
   LOCATIONS,
   MARITAL_STATUS,
-  COMPLEXION,
   HELP_AND_SUPPORT_LINK,
   PAYMENT_POLICY,
   PRIVACY_POLICY,
   TERMS_OF_SERVICES,
   PAYMENT_LINK,
+  RELIGION,
 } from "../constants"
 import { SelectGroup } from "./AddPreferences-screen"
 import RangeSlider from "rn-range-slider"
+import { SearchBar } from "../components/SearchComponent"
 
 export interface AccountScreenProps {
   navigation: NavigationScreenProp<{}>
@@ -170,26 +171,44 @@ const PreferenceSection = (
   const prevPreference = React.useRef<PreferenceSnapshot | null>()
 
   const cityRef = React.useRef(null)
+  const stateRef = React.useRef(null)
   const maritalStatusRef = React.useRef(null)
-  const complexionRef = React.useRef(null)
   const ageRef = React.useRef(null)
   const heightRef = React.useRef(null)
+  const religionRef = React.useRef(null)
 
   React.useEffect(() => {
     prevPreference.current = {
       city: props.city,
+      state: props.state,
       maritalStatus: props.maritalStatus,
-      complexion: props.complexion,
       ageTo: props.ageTo,
       ageFrom: props.ageFrom,
       minHeight: props.minHeight,
       maxHeight: props.maxHeight,
+      religion: props.religion,
     }
   }, [])
 
   const [{ data, status }, sevicesCaller] = useFetch({
     url: "/set/preference",
     method: "post",
+  })
+
+  const [statesQuery, setStatesQuery] = React.useState("")
+  const [cityQuery, setCityQuery] = React.useState("")
+  const [selectedState, setSelectedState] = React.useState(undefined)
+
+  const [{ data: statesData }] = useFetch({
+    url: `/get/states?match=${statesQuery}`,
+    method: "get",
+    dependencies: [statesQuery],
+  })
+
+  const [{ data: citiesData }] = useFetch({
+    url: `/get/city?match=${cityQuery}&sid=${selectedState?.id}`,
+    method: "get",
+    dependencies: [cityQuery, selectedState?.id],
   })
 
   React.useEffect(() => {
@@ -204,12 +223,13 @@ const PreferenceSection = (
     if (!isOpening) {
       const preference = {
         city: props.city,
+        state: props.state,
         maritalStatus: props.maritalStatus,
-        complexion: props.complexion,
         ageTo: props.ageTo,
         ageFrom: props.ageFrom,
         minHeight: props.minHeight,
         maxHeight: props.maxHeight,
+        religion: props.religion,
       }
 
       if (JSON.stringify(prevPreference.current) !== JSON.stringify(preference)) {
@@ -230,16 +250,53 @@ const PreferenceSection = (
         }}
       >
         <ExpandebleInput
+          title="State"
+          value={props.state || EMPTY_STRING}
+          onStateChange={onExpandableStateChange}
+          ref={stateRef}
+        >
+          <View style={{ backgroundColor: "#f9f9f9" }}>
+            <SearchBar
+              onChangeText={setStatesQuery}
+              value={statesQuery}
+              placeholder="enter what you are looking for"
+              style={{ marginTop: spacing[4] }}
+            />
+            <SelectGroup
+              value={props.state}
+              onChange={(value) => {
+                setSelectedState(value)
+                props.onChange("city", undefined)
+                props.onChange("state", value.name)
+              }}
+              options={statesData?.states || []}
+            />
+            <RoundedButton
+              onPress={() => {
+                stateRef.current.setExpanded(false)
+              }}
+            />
+          </View>
+        </ExpandebleInput>
+
+        <ExpandebleInput
           title="City"
           value={props.city || EMPTY_STRING}
           onStateChange={onExpandableStateChange}
           ref={cityRef}
         >
           <View style={{ backgroundColor: "#f9f9f9" }}>
+            <SearchBar
+              onChangeText={setCityQuery}
+              value={cityQuery}
+              placeholder="enter what you are looking for"
+              style={{ marginTop: spacing[4] }}
+            />
+
             <SelectGroup
               value={props.city}
-              onChange={(value) => props.onChange("city", value)}
-              options={LOCATIONS}
+              onChange={(value) => props.onChange("city", value.name)}
+              options={citiesData?.cities || []}
             />
             <RoundedButton
               onPress={() => {
@@ -267,25 +324,7 @@ const PreferenceSection = (
             />
           </View>
         </ExpandebleInput>
-        <ExpandebleInput
-          title="Complexion"
-          onStateChange={onExpandableStateChange}
-          value={props.complexion || EMPTY_STRING}
-          ref={complexionRef}
-        >
-          <View style={{ backgroundColor: "#f9f9f9" }}>
-            <SelectGroup
-              value={props.complexion}
-              onChange={(value) => props.onChange("complexion", value)}
-              options={COMPLEXION}
-            />
-            <RoundedButton
-              onPress={() => {
-                complexionRef.current.setExpanded(false)
-              }}
-            />
-          </View>
-        </ExpandebleInput>
+
         {isDetailed ? (
           <View>
             <ExpandebleInput
@@ -342,8 +381,26 @@ const PreferenceSection = (
                 />
               </View>
             </ExpandebleInput>
-            {/** <ExpandebleInput title="Education" value={props.education || EMPTY_STRING} />
-					<ExpandebleInput title="Religon" value={props.religion || EMPTY_STRING} />**/}
+
+            <ExpandebleInput
+              title="Religion"
+              onStateChange={onExpandableStateChange}
+              value={props.religion || EMPTY_STRING}
+              ref={religionRef}
+            >
+              <View style={{ backgroundColor: "#f9f9f9" }}>
+                <SelectGroup
+                  value={props.religion}
+                  onChange={(value) => props.onChange("religion", value)}
+                  options={RELIGION}
+                />
+                <RoundedButton
+                  onPress={() => {
+                    religionRef.current.setExpanded(false)
+                  }}
+                />
+              </View>
+            </ExpandebleInput>
           </View>
         ) : null}
       </View>

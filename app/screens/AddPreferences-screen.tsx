@@ -6,9 +6,10 @@ import { color, spacing } from "../theme"
 import { NavigationScreenProp } from "react-navigation"
 import { Checkbox } from "react-native-paper"
 import { useStores } from "../models/root-store"
-import { LOCATIONS, MARITAL_STATUS, COMPLEXION } from "../constants"
+import { MARITAL_STATUS, RELIGION } from "../constants"
 import { FlatList } from "react-native-gesture-handler"
 import { useFetch } from "use-fetch-lib"
+import { SearchBar } from "../components/SearchComponent"
 
 export interface AddPreferencesScreenProps {
   navigation: NavigationScreenProp<{}>
@@ -19,11 +20,11 @@ const ROOT: ViewStyle = {
   paddingHorizontal: spacing[3],
 }
 
-const SETTINGS_LIST = ["city", "status", "complexion"]
+const SETTINGS_LIST = ["state", "city", "status", "religion"]
 
 export const AddPreferencesScreen: React.FunctionComponent<AddPreferencesScreenProps> = observer(
   (props) => {
-    const [currentStep, setStep] = React.useState("city")
+    const [currentStep, setStep] = React.useState("state")
     const { preferenceStore, navigationStore, appStateStore } = useStores()
 
     const [{ data, status }, sevicesCaller] = useFetch({
@@ -42,6 +43,22 @@ export const AddPreferencesScreen: React.FunctionComponent<AddPreferencesScreenP
       }
     }, [status])
 
+    const [statesQuery, setStatesQuery] = React.useState("")
+    const [cityQuery, setCityQuery] = React.useState("")
+    const [selectedState, setSelectedState] = React.useState(undefined)
+
+    const [{ data: statesData }] = useFetch({
+      url: `/get/states?match=${statesQuery}`,
+      method: "get",
+      dependencies: [statesQuery],
+    })
+
+    const [{ data: citiesData }] = useFetch({
+      url: `/get/city?match=${cityQuery}&sid=${selectedState?.id}`,
+      method: "get",
+      dependencies: [cityQuery, selectedState?.id],
+    })
+
     return (
       <Screen style={ROOT} preset="fixed">
         <Text preset={["header", "center"]}>Set your Preference</Text>
@@ -51,14 +68,42 @@ export const AddPreferencesScreen: React.FunctionComponent<AddPreferencesScreenP
         <View style={{ flex: 1, marginHorizontal: spacing[3], marginTop: spacing[8] }}>
           {
             {
+              state: (
+                <>
+                  <SearchBar
+                    onChangeText={setStatesQuery}
+                    value={statesQuery}
+                    placeholder="enter what you are looking for"
+                    style={{ marginBottom: spacing[4] }}
+                  />
+
+                  <SelectGroup
+                    value={preferenceStore.state}
+                    onChange={(value) => {
+                      preferenceStore.set("state", value.name)
+                      setSelectedState(value)
+                      preferenceStore.set("city", "")
+                    }}
+                    options={statesData?.states || []}
+                  />
+                </>
+              ),
+
               city: (
-                <SelectGroup
-                  value={preferenceStore.city}
-                  onChange={(city) => {
-                    preferenceStore.set("city", city)
-                  }}
-                  options={LOCATIONS}
-                />
+                <>
+                  <SearchBar
+                    onChangeText={setCityQuery}
+                    value={cityQuery}
+                    placeholder="enter what you are looking for"
+                    style={{ marginBottom: spacing[4] }}
+                  />
+
+                  <SelectGroup
+                    value={preferenceStore.city}
+                    onChange={(value) => preferenceStore.set("city", value.name)}
+                    options={citiesData?.cities || []}
+                  />
+                </>
               ),
               status: (
                 <SelectGroup
@@ -69,13 +114,13 @@ export const AddPreferencesScreen: React.FunctionComponent<AddPreferencesScreenP
                   options={MARITAL_STATUS}
                 />
               ),
-              complexion: (
+              religion: (
                 <SelectGroup
-                  value={preferenceStore.complexion}
+                  value={preferenceStore.religion}
                   onChange={(status) => {
-                    preferenceStore.set("complexion", status)
+                    preferenceStore.set("religion", status)
                   }}
-                  options={COMPLEXION}
+                  options={RELIGION}
                 />
               ),
             }[currentStep]
@@ -151,20 +196,21 @@ const CheckboxView = ({ status, label, ...rest }) => {
 
 export const SelectGroup = ({ value, onChange, options }) => {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Text preset={["large"]} style={{ paddingStart: spacing[2] }}>
-        Select one of the from the list
+        Select one from the list
       </Text>
       <FlatList
         data={options}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item: e }) => (
           <CheckboxView
-            label={e}
-            status={value === e}
+            label={typeof e === "string" ? e : e.name}
+            status={typeof e === "string" ? value === e : value === e.name}
             onPress={() => onChange(value === e ? undefined : e)}
           />
         )}
-        keyExtractor={(item, index) => `${item}-${index}`}
+        keyExtractor={(item, index) => `${typeof item === "string" ? item : item.name}-${index}`}
         extraData={value}
       />
     </View>

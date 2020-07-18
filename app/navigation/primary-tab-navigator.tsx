@@ -3,11 +3,14 @@ import { createBottomTabNavigator } from "react-navigation-tabs"
 import { LandingScreen, PeopleScreen, ProfileScreen } from "../screens"
 import { SearchIcon, ChatIcon, Face, Text } from "../components"
 import { color } from "../theme"
+import { View } from "react-native"
 
 const TabLabel = ({ children, tintColor }) => (
-  <Text style={{ color: tintColor }} preset={["small", "center"]}>
-    {children}
-  </Text>
+  <View pointerEvents="none">
+    <Text style={{ color: tintColor }} preset={["small", "center"]}>
+      {children}
+    </Text>
+  </View>
 )
 
 export const PrimaryTabNavigator = createBottomTabNavigator(

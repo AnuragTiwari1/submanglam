@@ -29,6 +29,8 @@ export const SALARY = [
   { label: "Upto 1 Lakh", value: 100000 },
 ]
 
+export const RELIGION = ["Buddist", "Hindu", "Christain", "Muslim", "Sikh", "Parsi", "Jain"]
+
 export const HELP_AND_SUPPORT_LINK = "mailto:sumitkalyana25@gmail.com"
 export const PAYMENT_POLICY = "http://sabbmanglam.com/home/payment-policy.php"
 export const PRIVACY_POLICY = "http://sabbmanglam.com/home/privacy.php"
