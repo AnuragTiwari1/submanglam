@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import moment from "moment"
 import * as React from "react"
-import { FormContext, useForm } from "react-hook-form"
+import { FormContext, useForm, useFormContext } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { Button } from "react-native-paper"
 import { NavigationScreenProp } from "react-navigation"
@@ -14,7 +14,9 @@ import { spacing } from "../theme"
 import { addPersonalDetailsForm } from "../validators/shapes"
 import { withHandleFormReject } from "../hocs/withHandleFormReject"
 import { IAddPersonalDetailShape } from "./types"
-import {BLOODGROUP, COMPLEXION, LOCATIONS, MARITAL_STATUS} from "../constants"
+import { BLOODGROUP, COMPLEXION, LOCATIONS, MARITAL_STATUS } from "../constants"
+import { FormSearchView, SearchPlaceItem } from "../components/FormComponents/SearchInput"
+import { useFetch } from "use-fetch-lib"
 
 export interface AddPersonalDetailsScreenProps extends NavigationScreenProp<{}> {}
 
@@ -31,6 +33,7 @@ const defaultData: IAddPersonalDetailShape = {
   physically: "",
   dob: "",
   maritalstatus: "Single",
+  religion: "",
 }
 
 const getPersonalDetails = (object) =>
@@ -47,6 +50,9 @@ const getPersonalDetails = (object) =>
     physically,
     dob,
     maritalstatus,
+    religion,
+    state,
+    city,
   }) => ({
     gender,
     location,
@@ -60,15 +66,24 @@ const getPersonalDetails = (object) =>
     physically,
     dob,
     maritalstatus,
+    religion,
+    state: {
+      value: state,
+    },
+    city: {
+      value: city,
+    },
   }))(object)
 
 const getCleanFormData = (data) => {
-  const { age, height, weight, ...rest } = data
+  const { age, height, weight, state, city, ...rest } = data
   return {
     ...rest,
     age: Number(age.split(" ")[0]),
     weight: Number(weight),
     height: parseFloat(height.replace("' ", ".")),
+    state: state?.value ?? "",
+    city: city?.value ?? "",
   }
 }
 
@@ -118,6 +133,29 @@ export const AddPersonalDetailsScreen: React.FunctionComponent<AddPersonalDetail
 )
 
 const PersonalDetailsForm = withHandleFormReject(() => {
+  const [statesQuery, setStatesQuery] = React.useState("")
+  const [cityQuery, setCityQuery] = React.useState("")
+
+  const { watch, setValue, errors } = useFormContext()
+  const [selectedState, setSelectedState] = React.useState(undefined)
+
+  React.useEffect(() => {
+    console.log("the states value >>>>", watch("state"))
+    setSelectedState(watch("state"))
+  }, [watch("state")])
+
+  const [{ data: statesData }] = useFetch({
+    url: `/get/states?match=${statesQuery}`,
+    method: "get",
+    dependencies: [statesQuery],
+  })
+
+  const [{ data: citiesData }] = useFetch({
+    url: `/get/city?match=${cityQuery}&sid=${selectedState?.id}`,
+    method: "get",
+    dependencies: [cityQuery, selectedState?.id],
+  })
+
   return (
     <View style={styles.personalFormContainer}>
       <FormPicker name="gender" label="Select your gender" list={["male", "female"]} />
@@ -138,6 +176,7 @@ const PersonalDetailsForm = withHandleFormReject(() => {
         mask={"[00] Years"}
         keyboardType="numeric"
       />
+
       <FormInput
         name="height"
         label="Height"
@@ -146,6 +185,7 @@ const PersonalDetailsForm = withHandleFormReject(() => {
         mask="[0]' [09]"
         keyboardType="numeric"
       />
+
       <FormInput
         name="weight"
         label="Weight (in kg)"
@@ -155,23 +195,11 @@ const PersonalDetailsForm = withHandleFormReject(() => {
         mask="[009]"
       />
 
-      <FormPicker
-        name="complexion"
-        label="Complexion"
-        list={COMPLEXION}
-      />
+      <FormPicker name="complexion" label="Complexion" list={COMPLEXION} />
 
-      <FormPicker
-        name="maritalstatus"
-        label="Marital Status"
-        list={MARITAL_STATUS}
-      />
+      <FormPicker name="maritalstatus" label="Marital Status" list={MARITAL_STATUS} />
 
-      <FormPicker
-        name="bloodgroup"
-        label="Blood Group"
-        list={BLOODGROUP}
-      />
+      <FormPicker name="bloodgroup" label="Blood Group" list={BLOODGROUP} />
 
       <FormPicker label="Physically Challenged" name="physically" list={["Yes", "No"]} />
 
@@ -182,10 +210,43 @@ const PersonalDetailsForm = withHandleFormReject(() => {
         required
       />
 
-      <FormPicker
-        name="location"
-        label="Location"
-        list={LOCATIONS}
+      <FormInput name="religion" label="Religion" placeholder="Select your religion" required />
+
+      <FormSearchView
+        label="State"
+        placeholder="Pick your state"
+        name="state"
+        errorMessage={errors?.state?.value?.message}
+        data={statesData?.states || []}
+        handleQuery={setStatesQuery}
+        renderItem={(eleProps) => <Text style={eleProps.style}>{eleProps?.value?.value}</Text>}
+        renderListItem={({ item, onSelectValue }) => (
+          <SearchPlaceItem
+            {...item}
+            handleSelect={(data) => {
+              setValue("city", undefined)
+              onSelectValue(data)
+            }}
+          />
+        )}
+      />
+
+      <FormSearchView
+        label="City"
+        placeholder="Pick your city"
+        name="city"
+        errorMessage={errors?.city?.value?.message}
+        data={citiesData?.cities || []}
+        handleQuery={setCityQuery}
+        renderItem={(eleProps) => <Text style={eleProps.style}>{eleProps?.value?.value}</Text>}
+        renderListItem={({ item, onSelectValue }) => (
+          <SearchPlaceItem
+            {...item}
+            handleSelect={(data) => {
+              onSelectValue(data)
+            }}
+          />
+        )}
       />
 
       <FormTextArea

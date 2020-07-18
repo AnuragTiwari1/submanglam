@@ -39,8 +39,8 @@ export const DateInput = (props: IDatePickerInput) => {
       const newvalue = isValidDate(value)
         ? value
         : typeof value === "string"
-        ? moment(value, Config.dateFormatString).toDate()
-        : null
+          ? moment(value, Config.dateFormatString).toDate()
+          : null
       isValidDate(newvalue) && setSelectedDate(newvalue)
     }
   }, [value])

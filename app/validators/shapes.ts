@@ -27,6 +27,18 @@ export const addPersonalDetailsForm: yup.ObjectSchema<IAddPersonalDetailShape> =
     bloodgroup: yup.mixed().oneOf(BLOODGROUP, fields.SELECT_DROPDOWN),
     complexion: yup.mixed().oneOf(COMPLEXION, fields.SELECT_DROPDOWN),
     physically: yup.mixed().oneOf(["Yes", "No"], fields.SELECT_DROPDOWN),
+    state: yup
+      .object()
+      .shape({
+        id: yup.string().notRequired(),
+        value: yup.string().required(fields.REQUIRED_FEILD),
+      })
+      .required(fields.REQUIRED_FEILD),
+    city: yup
+      .object()
+      .shape({ value: yup.string().required(fields.REQUIRED_FEILD) })
+      .required(fields.REQUIRED_FEILD),
+    religion: yup.string().required(fields.REQUIRED_FEILD),
   })
 
 export const addProfessinolDetails = yup.object().shape({

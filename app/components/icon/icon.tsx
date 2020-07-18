@@ -3,7 +3,6 @@ import { Image, ImageStyle, View } from "react-native"
 import AntIcons from "react-native-vector-icons/AntDesign"
 import Entypo from "react-native-vector-icons/Entypo"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import MaterialCommunity from "react-native-vector-icons/MaterialCommunityIcons"
 import { icons } from "./icons"
 
