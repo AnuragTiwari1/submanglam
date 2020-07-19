@@ -3,6 +3,7 @@ package com.matchup;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import org.devio.rn.splashscreen.SplashScreen;
 import android.view.View;
 
 import com.facebook.react.ReactActivity;
@@ -24,6 +25,7 @@ public class MainActivity extends ReactActivity {
   }
 
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.show(this);
         super.onCreate(savedInstanceState);
 
         View decorView = getWindow().getDecorView();

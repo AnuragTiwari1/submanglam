@@ -1,5 +1,4 @@
 import { Linking, Alert } from "react-native"
-import { API_URL } from "react-native-dotenv"
 
 export const handleLinkPress = async (url: string) => {
   // Checking if the link is supported for links with custom URL scheme.
@@ -16,7 +15,7 @@ export const getProfilePic = (img: string) => {
   const defaultImg = 'https://sabbmanglam.com/home/profile.png'
   return __DEV__
     ? img && img !== "images/" ? `https://sabbmanglam.com/home/${img}` : defaultImg
-    : img && img !== "images/" ? `${API_URL}/${img}` : defaultImg
+    : img && img !== "images/" ? `https://sabbmanglam.com/home/${img}` : defaultImg
 }
 
 export const trimEmail = (user_email) => {
