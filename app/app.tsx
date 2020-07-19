@@ -5,7 +5,7 @@
 import "./i18n"
 import React, { useState, useEffect } from "react"
 import { AppRegistry, YellowBox, UIManager, StatusBar } from "react-native"
-import { StatefulNavigator, BackButtonHandler, exitRoutes } from "./navigation"
+import { StatefulNavigator, BackButtonHandler } from "./navigation"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 
 import { contains } from "ramda"
@@ -13,7 +13,7 @@ import { enableScreens } from "react-native-screens"
 import { ToastProvider } from "./Provider/ToastProvider"
 import { ServicesProvider } from "./Provider/ServicesProvider"
 import { ActionProvider } from "./Provider/ActionProvider"
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from "react-native-splash-screen"
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -44,13 +44,16 @@ Object.defineProperty(ReactNative, "AsyncStorage", {
   },
 })
 
+const exitRoutes = ['landing', 'login']
 /**
  * Are we allowed to exit the app?  This is called when the back button
  * is pressed on android.
  *
  * @param routeName The currently active route name.
  */
-const canExit = (routeName: string) => contains(routeName, exitRoutes)
+const canExit = (routeName: string) => {
+  return contains(routeName, exitRoutes)
+}
 
 /**
  * This is the root component of our app.

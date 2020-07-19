@@ -16,3 +16,4 @@ export const RootNavigator = createSwitchNavigator(
     initialRouteName: "authStack",
   },
 )
+

@@ -111,25 +111,13 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
     }
   }, [likeStatus])
 
-  const [{ status: reportStatus }, reportServices] = useFetch({
-    url: "/report/user",
-    method: "post",
-  })
+  const reportServices = (id) => {
+    Linking.openURL(`mailto:bsmmf2018@gmail.com?subject=Report User id :${id}&body=I would like to report this user because`)
+  }
 
   React.useEffect(() => {
     return personStore.reset()
   }, [])
-
-  React.useEffect(() => {
-    if (reportStatus.isFulfilled) {
-      appStateStore.toast.setToast({
-        text: "You request is recieved and we will get back to you soon.",
-        styles: "success",
-      })
-    } else if (reportStatus.isRejected) {
-      appStateStore.toast.setToast({ text: reportStatus.err, styles: "angry" })
-    }
-  }, [reportServices])
 
   React.useEffect(() => {
     if (status.isFulfilled) {
@@ -147,7 +135,7 @@ const DemoScreen: React.FunctionComponent<DemoScreenProps> = observer(() => {
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
-        { text: "OK", onPress: () => reportServices({ id: personStore.id }) },
+        { text: "OK", onPress: () => reportServices(personStore.id) },
       ],
       { cancelable: false },
     )

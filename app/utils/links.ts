@@ -13,9 +13,7 @@ export const handleLinkPress = async (url: string) => {
 
 export const getProfilePic = (img: string) => {
   const defaultImg = 'https://sabbmanglam.com/home/profile.png'
-  return __DEV__
-    ? img && img !== "images/" ? `https://sabbmanglam.com/home/${img}` : defaultImg
-    : img && img !== "images/" ? `https://sabbmanglam.com/home/${img}` : defaultImg
+  return img && img !== "images/" ? `https://sabbmanglam.com/home/${img}` : defaultImg
 }
 
 export const trimEmail = (user_email) => {

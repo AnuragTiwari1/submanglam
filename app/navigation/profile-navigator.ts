@@ -12,4 +12,3 @@ export const ProfileNavigator = createSharedElementStackNavigator(
   },
 )
 
-export const exitRoutes: string[] = ["welcome"]

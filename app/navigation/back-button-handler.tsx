@@ -11,7 +11,7 @@ interface BackButtonHandlerProps {
   canExit(routeName: string): boolean
 }
 
-export const BackButtonHandler: FunctionComponent<BackButtonHandlerProps> = observer(props => {
+export const BackButtonHandler: FunctionComponent<BackButtonHandlerProps> = observer((props) => {
   const { navigationStore } = useStores()
 
   useEffect(() => {
@@ -19,6 +19,7 @@ export const BackButtonHandler: FunctionComponent<BackButtonHandlerProps> = obse
     const onBackPress = () => {
       // grab the current route
       const routeName = navigationStore.findCurrentRoute().routeName
+      console.log("the routeName is >>>>>>>>>>>>>>>", routeName, props.canExit(routeName))
 
       // are we allowed to exit?
       if (props.canExit(routeName)) {

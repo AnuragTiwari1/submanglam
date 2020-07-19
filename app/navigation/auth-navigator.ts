@@ -19,4 +19,4 @@ export const AuthNavigator = createStackNavigator(
  * Anything not on this list will be a standard `back` action in
  * react-navigation.
  */
-export const exitRoutes: string[] = ["login"]
+export const exitRoutes = ['login']
