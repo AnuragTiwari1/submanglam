@@ -119,7 +119,7 @@ export const LandingScreen: React.FunctionComponent<LandingScreenProps> = observ
         }}
         ListEmptyComponent={
           <Text preset={["header", "center"]}>
-            {status.isPending ? "Fetching" : "No profile found"}
+            {status.isPending ? "Fetching" : "No profile found. Pull to refresh"}
           </Text>
         }
         keyExtractor={(item, index) => `${index}-${item.name}`}
