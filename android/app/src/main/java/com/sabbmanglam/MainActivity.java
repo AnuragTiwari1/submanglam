@@ -1,4 +1,4 @@
-package com.matchup;
+package com.sabbmanglam;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -41,6 +41,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "Matchup";
+    return "sabbmanglam";
   }
 }

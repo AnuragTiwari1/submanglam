@@ -44,7 +44,7 @@ Object.defineProperty(ReactNative, "AsyncStorage", {
   },
 })
 
-const exitRoutes = ['landing', 'login']
+const exitRoutes = ["landing", "login"]
 /**
  * Are we allowed to exit the app?  This is called when the back button
  * is pressed on android.
