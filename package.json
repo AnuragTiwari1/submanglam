@@ -39,7 +39,7 @@
     "ramda": "0.26.1",
     "react": "16.8.1",
     "react-hook-form": "git+https://github.com/AnuragTiwari1/react-hook-form.git",
-    "react-native": "0.61.5",
+    "react-native": "0.62.3",
     "react-native-event-source": "^1.1.0",
     "react-native-fast-image": "^7.0.2",
     "react-native-gesture-handler": "^1.5.0",
